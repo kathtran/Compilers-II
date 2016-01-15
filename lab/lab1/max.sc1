@@ -1,0 +1,102 @@
+# Return the largest element of the array a
+
+StrLit 0: "Array max:"
+
+Func 1: 2
+
+# ... to be filled ...
+0.  CONST 0  # 0
+1.  STORE 2  # max = 0
+2.  CONST 0  # 0
+3.  STORE 3  # i = 0
+4.  LOAD 3   # i
+5.  LOAD 1   # n
+6.  IFGE +15 # if i >= n goto line 21
+7.  LOAD 2   # load current max
+8.  LOAD 0   # a
+9.  LOAD 3   # i
+10. ALOAD    # load array element a[i]
+11. IFGE +5  # if val > a[i] goto line 13
+12. LOAD 0
+13. LOAD 3
+14. ALOAD
+15. STORE 2  # save new max
+16. LOAD 3   # i
+17. CONST 1  # 1
+18. ADD      # i = i + 1
+19. STORE 3  # i
+20. GOTO -16 # goto line 4
+21. LOAD 2   # max
+22. VRETURN
+
+
+
+
+# initialize array to 12 elements
+Func 2: 0
+0.  CONST 12
+1.  NEWARRAY
+2.  STORE 0
+3.  LOAD 0
+4.  CONST 0
+5.  CONST 5
+6.  ASTORE
+7.  LOAD 0
+8.  CONST 1
+9.  CONST 3
+10. ASTORE
+11. LOAD 0
+12. CONST 2
+13. CONST 6
+14. ASTORE
+15. LOAD 0
+16. CONST 3
+17. CONST 8
+18. ASTORE
+19. LOAD 0
+20. CONST 4
+21. CONST 2
+22. ASTORE
+23. LOAD 0
+24. CONST 5
+25. CONST 10
+26. ASTORE
+27. LOAD 0
+28. CONST 6
+29. CONST 11
+30. ASTORE
+31. LOAD 0
+32. CONST 7
+33. CONST 9
+34. ASTORE
+35. LOAD 0
+36. CONST 8
+37. CONST 1
+38. ASTORE
+39. LOAD 0
+40. CONST 9
+41. CONST 4
+42. ASTORE
+43. LOAD 0
+44. CONST 10
+45. CONST 7
+46. ASTORE
+47. LOAD 0
+48. CONST 11
+49. CONST 0
+50. ASTORE
+51. LOAD 0
+52. VRETURN
+
+# main func
+Func 0: 0
+0.  CALL 2
+1.  STORE 0
+2.  LOAD 0
+3.  CONST 12
+4.  CALL 1
+5.  STORE 1
+6.  SPRINT 0
+7.  LOAD 1
+8.  PRINT
+9.  RETURN

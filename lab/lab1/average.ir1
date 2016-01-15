@@ -1,0 +1,44 @@
+# Return the average value of array a's elements
+#
+_average (a, n)
+(sum, i)
+{
+
+# ... to be filled ...
+	sum = 0
+	i = 0
+L0:
+	if i >= n goto L1
+	t1 = i * 4
+	t2 = a + t1
+	t3 = [t2]
+	sum = sum + t3
+	i = i + 1
+	goto L0
+L1:
+	sum = sum / n
+	return sum
+
+}
+
+_main ()
+(a, ave)
+{
+  a = call _malloc(48)
+  [a] = 5
+  4[a] = 3
+  8[a] = 6
+  12[a] = 8
+  16[a] = 2
+  20[a] = 10
+  24[a] = 11
+  28[a] = 9
+  32[a] = 1
+  36[a] = 4
+  40[a] = 7
+  44[a] = 0
+  ave = call _average(a, 12)
+  call _printStr("Array average:")
+  call _printInt(ave)
+  return 
+}
