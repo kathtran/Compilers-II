@@ -76,7 +76,7 @@ class IR0Gen {
     List<IR0.Inst> code = new ArrayList<IR0.Inst>();
 
     // ... need code ...
-    for (Ast.Stmt s : n.stmts)
+    for (Ast0.Stmt s : n.stmts)
       code.addAll(gen(s)); 
     return code;
   }
@@ -117,18 +117,19 @@ class IR0Gen {
 
     // ... need code ...
     IR0.Label L1 = new IR0.Label();
-    if (n.s2 != null)
-      IR0.Label L2 = new IR0.Label();
+    IR0.Label L2 = new IR0.Label();
     CodePack condCodePack = gen(n.cond);
     code.addAll(condCodePack.code);
-    code.add(new IR0.CJump(IR0.ROP.EQ, condCodePack.src, IRO.FALSE, new IR0.Jump(L1)));
-    code.add(n.s1);
+    code.add(new IR0.CJump(IR0.ROP.EQ, condCodePack.src, IR0.FALSE, L1));
+    for (IR0.Inst s : gen(n.s1))
+      code.add(s);
     if (n.s2 != null)
-      code.add(new IRO.Jump(L2));
-    code.add(L1);
+      code.add(new IR0.Jump(L2));
+    code.add(new IR0.LabelDec(L1));
     if (n.s2 != null) {
-      code.add(n.s2);
-      code.add(L2);
+      for (IR0.Inst s : gen(n.s2))
+        code.add(s);
+      code.add(new IR0.LabelDec(L2));
     }
     return code;
   }
@@ -150,7 +151,16 @@ class IR0Gen {
     List<IR0.Inst> code = new ArrayList<IR0.Inst>();
 
     // ... need code ...
-    
+    IR0.Label L1 = new IR0.Label();
+    IR0.Label L2 = new IR0.Label();
+    CodePack condCP = gen(n.cond);
+    code.add(new IR0.LabelDec(L1));
+    code.addAll(condCP.code);
+    code.add(new IR0.CJump(IR0.ROP.EQ, condCP.src, IR0.FALSE, L2));
+    for (IR0.Inst s : gen(n.s))
+      code.add(s);
+    code.add(new IR0.Jump(L1));
+    code.add(new IR0.LabelDec(L2));
     return code;
   }
   
@@ -164,8 +174,9 @@ class IR0Gen {
     List<IR0.Inst> code = new ArrayList<IR0.Inst>();
 
     // ... need code ...
-    
-
+    CodePack argCP = gen(n.arg);
+    code.addAll(argCP.code);
+    code.add(new IR0.Print(argCP.src)); 
     return code;
   }
 
@@ -193,7 +204,13 @@ class IR0Gen {
     List<IR0.Inst> code = new ArrayList<IR0.Inst>();
 
     // ... need code ...
-
+    CodePack e1CP = gen(n.e1);
+    CodePack e2CP = gen(n.e2);
+    code.addAll(e1CP.code);
+    code.addAll(e2CP.code);
+    IR0.Temp t = new IR0.Temp();
+    code.add(new IR0.Binop(gen(n.op), t, e1CP.src, e2CP.src)); 
+    return new CodePack(new IR0.Src(), code);
   }
 
   // Ast0.Unop ---
