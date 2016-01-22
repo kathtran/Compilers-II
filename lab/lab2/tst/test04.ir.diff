@@ -1,14 +1,16 @@
-0a1,13
-> # IR0 Program
->  b = false
+3,4c3,6
+< L0:
+<  t1 = true || b
+---
 >  t1 = true
 >  if true == true goto L1
 >  t1 = b
 > L1:
->  if t1 == false goto L0
->  x = 1
+7c9
+<  goto L1
+---
 >  goto L2
-> L0:
->  x = 2
+10c12
+< L1:
+---
 > L2:
->  print (x)

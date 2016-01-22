@@ -1,17 +1,19 @@
-0a1,16
-> # IR0 Program
->  a = 0
->  b = 0
+4c4
+< L0:
+---
 >  t1 = true
->  t2 = a > 0
+5a6
 >  if t2 == true goto L1
->  t3 = b > 0
+7c8,9
+<  t1 = t2 || t3
+---
 >  t1 = t3
 > L1:
->  if t1 == false goto L0
->  x = 1
+10c12
+<  goto L1
+---
 >  goto L2
-> L0:
->  x = 2
+13c15
+< L1:
+---
 > L2:
->  print (x)

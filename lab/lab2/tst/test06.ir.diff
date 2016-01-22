@@ -1,15 +1,19 @@
-0a1,14
-> # IR0 Program
+1a2
 >  t1 = true
->  t2 = 1 > 0
+2a4
 >  if t2 == true goto L0
->  t3 = 1 > 2
+4c6,7
+<  t1 = t2 || t3
+---
 >  t1 = t3
 > L0:
->  x = t1
+6,9c9,12
+<  t5 = 1 + 2
+<  t6 = 3 - 1
+<  t4 = t5 * t6
+<  y = t4
+---
 >  t4 = 1 + 2
 >  t5 = 3 - 1
 >  t6 = t4 * t5
 >  y = t6
->  print (x)
->  print (y)
