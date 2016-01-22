@@ -66,7 +66,7 @@ public class IR1Gen {
     public static IR1.Func gen(Ast1.Func n) throws Exception {
         List<IR1.Id> params = new ArrayList<IR1.Id>();
         List<IR1.Id> locals = new ArrayList<IR1.Id>();
-        List<IR1.Inst> stmts = new ArrayList<IR1.Inst>();
+        List<IR1.Inst> code = new ArrayList<IR1.Inst>();
 
         for (Ast1.Param p : n.params) {
             IR1.Id temp = new IR1.Id(p.nm);
@@ -79,10 +79,13 @@ public class IR1Gen {
         }
 
         for (Ast1.Stmt s : n.stmts) {
-            stmts.addAll(gen(s));
+            code.addAll(gen(s));
         }
 
-        return new IR1.Func(new IR1.Global(n.t.toString()), params, locals, stmts);
+        if (n.t == null)
+            code.add(new IR1.Return());
+
+        return new IR1.Func(new IR1.Global(n.t.toString()), params, locals, code);
     }
 
     // STATEMENTS
@@ -198,10 +201,14 @@ public class IR1Gen {
     //   code: arg.c + "print (arg.v)"
     //
     static List<IR1.Inst> gen(Ast1.Print n) throws Exception {
+
         List<IR1.Inst> code = new ArrayList<IR1.Inst>();
+        List<IR1.Src> src = new ArrayList<IR1.Src>();
+        CodePack argCP = gen(n.arg);
 
-
-
+        code.addAll(argCP.code);
+        src.add(argCP.src);
+        code.add(new IR1.Call(new IR1.Global("void"), src));
         return code;
     }
 
@@ -272,6 +279,59 @@ public class IR1Gen {
 
     }
 
+    // Ast1.NewArray
+    // Ast1.Type et;
+    // int len;
+    //
+    // AG:
+    //   newTemp: t1, t2
+    //   code: "t1 = <IntLit>.i * 4"
+    //         + "t2 = malloc (t1)"
+    //
+    static CodePack gen(Ast1.NewArray n) throws Exception {
+
+        IR1.Temp temp1 = new IR1.Temp();
+        IR1.Temp temp2 = new IR1.Temp();
+        List<IR1.Inst> code = new ArrayList<IR1.Inst>();
+        List<IR1.Src> t1 = new ArrayList<IR1.Src>();
+
+        code.add(new IR1.Binop(IR1.AOP.MUL, temp1, new IR1.IntLit(n.len), new IR1.IntLit(4)));
+        t1.add(temp1);
+        code.add(new IR1.Call(new IR1.Global(n.et.toString()), t1, temp2));
+        return new CodePack(temp2, code);
+
+    }
+
+    // Ast1.ArrayElm
+    // Ast1.Exp ar;
+    // Ast1.Exp idx;
+    //
+    // AG:
+    //   newTemp t1, t2, t3
+    //   code: exp1.c
+    //         + exp2.c
+    //         + "t1 = exp2.v * 4"
+    //         + "t2 = exp1.v + t1"
+    //         + "t3 = [t2]"
+    //
+    static CodePack gen(Ast1.ArrayElm n) throws Exception {
+
+        IR1.Temp temp1 = new IR1.Temp();
+        IR1.Temp temp2 = new IR1.Temp();
+        IR1.Temp temp3 = new IR1.Temp();
+        List<IR1.Inst> code = new ArrayList<IR1.Inst>();
+        CodePack arCP = gen(n.ar);
+        CodePack idxCP = gen(n.idx);
+
+        code.addAll(arCP.code);
+        code.addAll(idxCP.code);
+        code.add(new IR1.Binop(IR1.AOP.MUL, temp1, idxCP.src, new IR1.IntLit(4)));
+        code.add(new IR1.Binop(IR1.AOP.ADD, temp2, arCP.src, temp1));
+        code.add(new IR1.Load(temp3, new IR1.Addr(temp2)));
+        return new CodePack(temp3, code);
+
+    }
+
     // Ast1.Id ---
     // String nm;
     //
@@ -313,7 +373,7 @@ public class IR1Gen {
         IR1.Src src = new IR1.StrLit(n.s);
         List<IR1.Inst> code = new ArrayList<IR1.Inst>();
         return new CodePack(src, code);
-        
+
     }
 
     // OPERATORS
