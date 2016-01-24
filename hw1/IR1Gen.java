@@ -297,7 +297,7 @@ public class IR1Gen {
 
         List<IR1.Inst> code = new ArrayList<IR1.Inst>();
         List<IR1.Src> src = new ArrayList<IR1.Src>();
-        
+
         if (n.arg != null) {
             CodePack arg = gen(n.arg);
             code.addAll(arg.code);
@@ -307,10 +307,11 @@ public class IR1Gen {
             } else if (arg.src instanceof IR1.IntLit || arg.src instanceof IR1.BoolLit) {
                 src.add(arg.src);
                 code.add(new IR1.Call(new IR1.Global("_printInt"), src));
-            } else {
-                src.add(arg.src);
-                code.add(new IR1.Call(new IR1.Global("_print"), src));
             }
+//            } else {
+//                src.add(arg.src);
+//                code.add(new IR1.Call(new IR1.Global("_print"), src));
+//            }
         } else
             code.add(new IR1.Call(new IR1.Global("_printStr"), src));
 
