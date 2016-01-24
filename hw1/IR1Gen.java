@@ -306,8 +306,10 @@ public class IR1Gen {
         } else if (arg.src instanceof IR1.StrLit) {
             src.add(arg.src);
             code.add(new IR1.Call(new IR1.Global("_printStr"), src));
-        } else
-            throw new GenException("Unknown print arg: " + n.arg);
+        } else {
+            src.add(arg.src);
+            code.add(new IR1.Call(new IR1.Global("print"), src));
+        }
 
         return code;
     }
