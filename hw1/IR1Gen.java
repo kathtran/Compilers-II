@@ -115,11 +115,13 @@ public class IR1Gen {
     // STATEMENTS
 
     static List<IR1.Inst> gen(Ast1.Stmt n) throws Exception {
-        if (n instanceof Ast1.Block)  return gen((Ast1.Block) n);
-        if (n instanceof Ast1.Assign) return gen((Ast1.Assign) n);
-        if (n instanceof Ast1.If)     return gen((Ast1.If) n);
-        if (n instanceof Ast1.While)  return gen((Ast1.While) n);
-        if (n instanceof Ast1.Print)  return gen((Ast1.Print) n);
+        if (n instanceof Ast1.Block)    return gen((Ast1.Block) n);
+        if (n instanceof Ast1.Assign)   return gen((Ast1.Assign) n);
+        if (n instanceof Ast1.CallStmt) return gen((Ast1.CallStmt) n);
+        if (n instanceof Ast1.If)       return gen((Ast1.If) n);
+        if (n instanceof Ast1.While)    return gen((Ast1.While) n);
+        if (n instanceof Ast1.Print)    return gen((Ast1.Print) n);
+        if (n instanceof Ast1.Return)   return gen((Ast1.Return) n);
         throw new GenException("Unknown Stmt: " + n);
     }
 
@@ -165,6 +167,7 @@ public class IR1Gen {
         return code;
     }
 
+    /////////////////////////////////////////////////////////////////////////
     // Helper method ---
     // Generates address of some Ast1.ArrayElm n
     //
@@ -190,6 +193,9 @@ public class IR1Gen {
 
         return new CodePack(t2, code);
     }
+    //
+    // Helper method ---
+    /////////////////////////////////////////////////////////////////////////
 
     // Ast1.CallStmt ---
     // Ast1.String nm;
@@ -319,9 +325,13 @@ public class IR1Gen {
     static CodePack gen(Ast1.Exp n) throws Exception {
         if (n instanceof Ast1.Binop)    return gen((Ast1.Binop) n);
         if (n instanceof Ast1.Unop)     return gen((Ast1.Unop) n);
+        if (n instanceof Ast1.Call)     return gen((Ast1.Call) n);
+        if (n instanceof Ast1.NewArray) return gen((Ast1.NewArray) n);
+        if (n instanceof Ast1.ArrayElm) return gen((Ast1.ArrayElm) n);
         if (n instanceof Ast1.Id)       return gen((Ast1.Id) n);
         if (n instanceof Ast1.IntLit)   return gen((Ast1.IntLit) n);
         if (n instanceof Ast1.BoolLit)  return gen((Ast1.BoolLit) n);
+        if (n instanceof Ast1.StrLit)   return gen((Ast1.StrLit) n);
         throw new GenException("Unknown Exp node: " + n);
     }
 
@@ -368,6 +378,23 @@ public class IR1Gen {
         code.add(new IR1.Unop(op, t, e.src));
 
         return new CodePack(t, code);
+    }
+
+    // Ast1.Call
+    // String nm;
+    // Ast1.Exp[] args;
+    //
+    // AG:
+    //   "(" "Call" <Id> "(" {Exp} "}" ")"
+    static CodePack gen(Ast1.Call n) throws Exception {
+
+        IR1.Src src = new IR1.Id(n.nm);
+        List<IR1.Inst> code = new ArrayList<IR1.Inst>();
+        for (Ast1.Exp arg : n.args) {
+            CodePack e = gen(arg);
+            code.addAll(e.code);
+        }
+        return new CodePack(src, code);
     }
 
     // Ast1.NewArray
