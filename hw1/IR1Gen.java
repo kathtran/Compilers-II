@@ -68,22 +68,20 @@ public class IR1Gen {
         List<IR1.Id> locals = new ArrayList<IR1.Id>();
         List<IR1.Inst> code = new ArrayList<IR1.Inst>();
 
-        for (Ast1.Param p : n.params) {
-            IR1.Id temp = gen(p);
-            params.add(temp);
-        }
+        for (Ast1.Param p : n.params)
+            params.add(gen(p));
 
         for (Ast1.VarDecl v : n.vars) {
-            IR1.Id temp = gen(v);
-            locals.add(temp);
+            locals.add(gen(v));
 
-            CodePack init = gen(v.init);
-            code.add(new IR1.Move(temp, init.src));
+            if (v.init != null) {
+                CodePack init = gen(v.init);
+                code.add(new IR1.Move(gen(v), init.src));
+            }
         }
 
-        for (Ast1.Stmt s : n.stmts) {
+        for (Ast1.Stmt s : n.stmts)
             code.addAll(gen(s));
-        }
 
         if (n.t == null)
             code.add(new IR1.Return());
@@ -134,9 +132,8 @@ public class IR1Gen {
     static List<IR1.Inst> gen(Ast1.Block n) throws Exception {
         List<IR1.Inst> code = new ArrayList<IR1.Inst>();
 
-        for (Ast1.Stmt s : n.stmts) {
+        for (Ast1.Stmt s : n.stmts)
             code.addAll(gen(s));
-        }
 
         return code;
     }
@@ -294,11 +291,10 @@ public class IR1Gen {
 
         List<IR1.Inst> code = new ArrayList<IR1.Inst>();
         List<IR1.Src> src = new ArrayList<IR1.Src>();
-        CodePack arg = gen(n.arg);
 
+        CodePack arg = gen(n.arg);
         code.addAll(arg.code);
-        src.add(arg.src);
-        code.add(new IR1.Call(new IR1.Global("print"), src));
+        code.add(new IR1.Call(new IR1.Global(arg.src.toString()), src));
 
         return code;
     }
@@ -392,7 +388,7 @@ public class IR1Gen {
 
         code.add(new IR1.Binop(IR1.AOP.MUL, t1, new IR1.IntLit(n.len), new IR1.IntLit(4)));
         temp.add(t1);
-        code.add(new IR1.Call(new IR1.Global("malloc"), temp, t2));
+        code.add(new IR1.Call(new IR1.Global(""), temp, t2));
 
         return new CodePack(t2, code);
     }
