@@ -298,18 +298,35 @@ public class IR1Gen {
         List<IR1.Inst> code = new ArrayList<IR1.Inst>();
         List<IR1.Src> src = new ArrayList<IR1.Src>();
 
-        CodePack arg = gen(n.arg);
-        code.addAll(arg.code);
-        if (n.arg instanceof Ast1.IntLit || n.arg instanceof Ast1.BoolLit) {
-            src.add(arg.src);
-            code.add(new IR1.Call(new IR1.Global("_printInt"), src));
-        } else if (n.arg instanceof Ast1.StrLit) {
+        if (n.arg == null || n.arg instanceof Ast1.StrLit) {
+            CodePack arg = gen(n.arg);
+            code.addAll(arg.code);
             src.add(arg.src);
             code.add(new IR1.Call(new IR1.Global("_printStr"), src));
+        } else if (n.arg instanceof Ast1.IntLit || n.arg instanceof Ast1.BoolLit) {
+            CodePack arg = gen(n.arg);
+            code.addAll(arg.code);
+            src.add(arg.src);
+            code.add(new IR1.Call(new IR1.Global("_printInt"), src));
         } else {
+            CodePack arg = gen(n.arg);
+            code.addAll(arg.code);
             src.add(arg.src);
             code.add(new IR1.Call(new IR1.Global("_print"), src));
         }
+
+//        CodePack arg = gen(n.arg);
+//        code.addAll(arg.code);
+//        if (n.arg instanceof Ast1.IntLit || n.arg instanceof Ast1.BoolLit) {
+//            src.add(arg.src);
+//            code.add(new IR1.Call(new IR1.Global("_printInt"), src));
+//        } else if (n.arg instanceof Ast1.StrLit) {
+//            src.add(arg.src);
+//            code.add(new IR1.Call(new IR1.Global("_printStr"), src));
+//        } else {
+//            src.add(arg.src);
+//            code.add(new IR1.Call(new IR1.Global("_print"), src));
+//        }
 
         return code;
     }
