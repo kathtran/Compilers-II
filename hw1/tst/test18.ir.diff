@@ -1,0 +1,16 @@
+5c5,6
+<  return value
+---
+>  t1 = call _value(1, 2, 3)
+>  return t1
+10c11,13
+<  return t1
+---
+>  t2 = i + j
+>  t3 = t2 + k
+>  return t3
+15c18,19
+<  call _print(go)
+---
+>  t4 = call _go()
+>  call _printInt(t4)

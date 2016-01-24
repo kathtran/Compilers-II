@@ -1,0 +1,18 @@
+9,10c9,12
+<  t2 = k + foo
+<  [k] = t2
+---
+>  t2 = call _bar(i)
+>  t3 = call _foo(t2)
+>  t4 = k + t3
+>  k = t4
+17c19,20
+<  return t3
+---
+>  t5 = i - 1
+>  return t5
+22c25,26
+<  call _print(foo)
+---
+>  t6 = call _foo(2)
+>  call _printInt(t6)

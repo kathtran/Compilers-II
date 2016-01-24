@@ -1,0 +1,19 @@
+4a5
+>  t1 = i + j
+11,17c12,19
+<  [b] = true
+<  [i] = foo
+<  t2 = 2 * 3
+<  [j] = t2
+<  call _print(b)
+<  call _print(i)
+<  call _print(j)
+---
+>  b = true
+>  t2 = call _foo(1, 2)
+>  i = t2
+>  t3 = 2 * 3
+>  j = t3
+>  call _printInt(b)
+>  call _printInt(i)
+>  call _printInt(j)

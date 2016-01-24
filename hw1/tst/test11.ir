@@ -1,0 +1,27 @@
+# IR1 Program
+
+_go (n)
+(i)
+{
+ [i] = 0
+ t1 = n > 0
+ if t1 == false goto L0
+ call _print(n)
+ t2 = n - 1
+ [i] = back
+L0:
+ return i
+}
+
+_back (n)
+(i)
+{
+ i = go
+ return 0
+}
+
+_main ()
+{
+ call _print(go)
+ return 
+}

@@ -86,7 +86,7 @@ public class IR1Gen {
         if (n.t == null)
             code.add(new IR1.Return());
 
-        return new IR1.Func(new IR1.Global(n.nm), params, locals, code);
+        return new IR1.Func(new IR1.Global("_" + n.nm), params, locals, code);
     }
 
     // Ast1.VarDecl ---
@@ -308,7 +308,7 @@ public class IR1Gen {
             code.add(new IR1.Call(new IR1.Global("_printStr"), src));
         } else {
             src.add(arg.src);
-            code.add(new IR1.Call(new IR1.Global("print"), src));
+            code.add(new IR1.Call(new IR1.Global("_print"), src));
         }
 
         return code;

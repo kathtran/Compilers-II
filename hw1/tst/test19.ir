@@ -1,0 +1,25 @@
+# IR1 Program
+
+_foo (i)
+{
+ t1 = i > 1
+ if t1 == false goto L0
+ return bar
+ goto L1
+L0:
+ return 3
+L1:
+}
+
+_bar ()
+{
+ return foo
+}
+
+_main ()
+(i)
+{
+ i = foo
+ call _print(i)
+ return 
+}

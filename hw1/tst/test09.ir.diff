@@ -1,0 +1,36 @@
+6c6
+<  [a] = true
+---
+>  a = true
+8,14c8,12
+<  [b] = t1
+<  t3 = a && b
+<  t2 = t3 || a
+<  [c] = t2
+<  if c == false goto L0
+<  [x] = 1
+<  goto L1
+---
+>  b = t1
+>  t3 = true
+>  t2 = false
+>  if a == false goto L0
+>  t2 = b
+16c14,15
+<  [x] = 0
+---
+>  if t2 == true goto L1
+>  t3 = a
+17a17,23
+>  c = t3
+>  if c == false goto L2
+>  x = 1
+>  goto L3
+> L2:
+>  x = 0
+> L3:
+23c29,30
+<  call _print(go)
+---
+>  t4 = call _go()
+>  call _printInt(t4)

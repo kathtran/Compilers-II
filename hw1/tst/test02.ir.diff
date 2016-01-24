@@ -1,0 +1,8 @@
+9,11c9,11
+<  call _print(b)
+<  call _print(i)
+<  call _print(j)
+---
+>  call _printInt(b)
+>  call _printInt(i)
+>  call _printInt(j)

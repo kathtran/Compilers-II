@@ -1,0 +1,23 @@
+6c6
+<  [i] = 0
+---
+>  i = 0
+9c9
+<  call _print(n)
+---
+>  call _printInt(n)
+11c11,12
+<  [i] = back
+---
+>  t3 = call _back(t2)
+>  i = t3
+19c20,21
+<  i = go
+---
+>  t4 = call _go(n)
+>  i = t4
+25c27,28
+<  call _print(go)
+---
+>  t5 = call _go(5)
+>  call _printInt(t5)

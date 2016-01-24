@@ -1,0 +1,19 @@
+# IR1 Program
+
+_foo (i, j)
+{
+ return t1
+}
+
+_main ()
+(b, i, j)
+{
+ [b] = true
+ [i] = foo
+ t2 = 2 * 3
+ [j] = t2
+ call _print(b)
+ call _print(i)
+ call _print(j)
+ return 
+}

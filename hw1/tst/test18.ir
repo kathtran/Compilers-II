@@ -1,0 +1,17 @@
+# IR1 Program
+
+_go ()
+{
+ return value
+}
+
+_value (i, j, k)
+{
+ return t1
+}
+
+_main ()
+{
+ call _print(go)
+ return 
+}

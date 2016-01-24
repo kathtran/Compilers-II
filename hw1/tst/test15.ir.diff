@@ -1,0 +1,12 @@
+19,22c19,24
+<  [i] = foo
+<  [j] = bar
+<  call _print(i)
+<  call _print(j)
+---
+>  t1 = call _foo(1)
+>  i = t1
+>  t2 = call _bar(1)
+>  j = t2
+>  call _printInt(i)
+>  call _printInt(j)

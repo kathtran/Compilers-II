@@ -1,0 +1,17 @@
+7c7,8
+<  return bar
+---
+>  t2 = call _bar()
+>  return t2
+16c17,18
+<  return foo
+---
+>  t3 = call _foo(1)
+>  return t3
+22,23c24,26
+<  i = foo
+<  call _print(i)
+---
+>  t4 = call _foo(2)
+>  i = t4
+>  call _printInt(i)

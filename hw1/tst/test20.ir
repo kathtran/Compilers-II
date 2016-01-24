@@ -1,0 +1,24 @@
+# IR1 Program
+
+_foo (i)
+(k)
+{
+ k = 10
+ t1 = i > 0
+ if t1 == false goto L0
+ t2 = k + foo
+ [k] = t2
+L0:
+ return k
+}
+
+_bar (i)
+{
+ return t3
+}
+
+_main ()
+{
+ call _print(foo)
+ return 
+}

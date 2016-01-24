@@ -1,0 +1,24 @@
+5c5,6
+<  return value
+---
+>  t1 = call _value(true)
+>  return t1
+11,12c12,13
+<  [i] = 5
+<  [j] = 6
+---
+>  i = 5
+>  j = 6
+14c15
+<  [k] = i
+---
+>  k = i
+17c18
+<  [k] = j
+---
+>  k = j
+24c25,26
+<  call _print(go)
+---
+>  t2 = call _go()
+>  call _printInt(t2)
