@@ -69,13 +69,16 @@ public class IR1Gen {
         List<IR1.Inst> code = new ArrayList<IR1.Inst>();
 
         for (Ast1.Param p : n.params) {
-            IR1.Id temp = new IR1.Id(p.nm);
+            IR1.Id temp = gen(p);
             params.add(temp);
         }
 
         for (Ast1.VarDecl v : n.vars) {
-            IR1.Id temp = new IR1.Id(v.nm);
+            IR1.Id temp = gen(v);
             locals.add(temp);
+
+            CodePack init = gen(v.init);
+            code.add(new IR1.Move(temp, init.src));
         }
 
         for (Ast1.Stmt s : n.stmts) {
@@ -96,12 +99,8 @@ public class IR1Gen {
     // AG:
     //  "VarDecl" Type <Id> [Exp]
     //
-    static List<IR1.Inst> gen(Ast1.VarDecl n) throws Exception {
-        List<IR1.Inst> code = new ArrayList<IR1.Inst>();
-
-        
-
-        return code;
+    static IR1.Id gen(Ast1.VarDecl n) throws Exception {
+        return new IR1.Id(n.nm);
     }
 
     // Ast1.Param ---
@@ -111,11 +110,8 @@ public class IR1Gen {
     // AG:
     //   "(" "Param" Type <Id> ")"
     //
-    static List<IR1.Inst> gen(Ast1.Param n) throws Exception {
-        List<IR1.Inst> code = new ArrayList<IR1.Inst>();
-
-
-        return code;
+    static IR1.Id gen(Ast1.Param n) throws Exception {
+        return new IR1.Id(n.nm);
     }
 
     // STATEMENTS
