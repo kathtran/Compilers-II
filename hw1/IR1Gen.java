@@ -118,8 +118,23 @@ public class IR1Gen {
     // Ast1.Assign ---
     // Ast1.Exp lhs;
     // Ast1.Exp rhs;
+    //
+    // AG:
+    //   rhs.c + lhs.lc
+    //   +  ("lhs.l = rhs.v"     # if lhs is an Id
+    //   |   "[lhs.l] = rhs.v")  # if lhs is an ArrayElm
     static List<IR1.Inst> gen(Ast1.Assign n) throws Exception {
         List<IR1.Inst> code = new ArrayList<IR1.Inst>();
+
+        CodePack rhs = gen(n.rhs);
+        code.addAll(rhs.code);
+        if (n.lhs instanceof Ast1.Id) {
+            code.add(new IR1.Move(new IR1.Id(((Ast1.Id) n.lhs).nm), rhs.src));
+        } else if (n.lhs instanceof Ast1.ArrayElm) {
+            IR1.Src src = new IR1.Id(((Ast1.ArrayElm)n.lhs).ar.toString());
+            IR1.Addr ar = new IR1.Addr(src);
+            code.add(new IR1.Store(ar, rhs.src));
+        }
 
         return code;
     }
@@ -158,9 +173,9 @@ public class IR1Gen {
         IR1.Label L1 = new IR1.Label();
         IR1.Label L2 = new IR1.Label();
 
-        CodePack condCP = gen(n.cond);
-        code.addAll(condCP.code);
-        code.add(new IR1.CJump(IR1.ROP.EQ, condCP.src, IR1.FALSE, L1));
+        CodePack cond = gen(n.cond);
+        code.addAll(cond.code);
+        code.add(new IR1.CJump(IR1.ROP.EQ, cond.src, IR1.FALSE, L1));
         code.addAll(gen(n.s1));
         if (opt)
             code.add(new IR1.Jump(L2));
@@ -189,7 +204,17 @@ public class IR1Gen {
     static List<IR1.Inst> gen(Ast1.While n) throws Exception {
         List<IR1.Inst> code = new ArrayList<IR1.Inst>();
 
-        // ... need code ...
+        IR1.Label L1 = new IR1.Label();
+        IR1.Label L2 = new IR1.Label();
+
+        code.add(new IR1.LabelDec(L1));
+        CodePack cond = gen(n.cond);
+        code.addAll(cond.code);
+        code.add(new IR1.CJump(IR1.ROP.EQ, cond.src, IR1.FALSE, L2));
+        for (IR1.Inst s : gen(n.s))
+            code.add(s);
+        code.add(new IR1.Jump(L1));
+        code.add(new IR1.LabelDec(L2));
 
         return code;
     }
@@ -204,11 +229,12 @@ public class IR1Gen {
 
         List<IR1.Inst> code = new ArrayList<IR1.Inst>();
         List<IR1.Src> src = new ArrayList<IR1.Src>();
-        CodePack argCP = gen(n.arg);
+        CodePack arg = gen(n.arg);
 
-        code.addAll(argCP.code);
-        src.add(argCP.src);
+        code.addAll(arg.code);
+        src.add(arg.src);
         code.add(new IR1.Call(new IR1.Global("void"), src));
+
         return code;
     }
 
@@ -217,6 +243,12 @@ public class IR1Gen {
     //
     static List<IR1.Inst> gen(Ast1.Return n) throws Exception {
         List<IR1.Inst> code = new ArrayList<IR1.Inst>();
+
+        if (n.val != null) {
+            CodePack val = gen(n.val);
+            code.add(new IR1.Return(val.src));
+        } else
+            code.add(new IR1.Return());
 
         return code;
     }
@@ -243,18 +275,17 @@ public class IR1Gen {
     //
     static CodePack gen(Ast1.Binop n) throws Exception {
 
-        IR1.Temp temp = new IR1.Temp();
+        IR1.Temp t = new IR1.Temp();
         List<IR1.Inst> code = new ArrayList<IR1.Inst>();
 
-        CodePack e1CP = gen(n.e1);
-        CodePack e2CP = gen(n.e2);
-        code.addAll(e1CP.code);
-        code.addAll(e2CP.code);
+        CodePack e1 = gen(n.e1);
+        CodePack e2 = gen(n.e2);
+        code.addAll(e1.code);
+        code.addAll(e2.code);
         IR1.BOP op = gen(n.op);
-        code.add(new IR1.Binop(op, temp, e1CP.src, e2CP.src));
+        code.add(new IR1.Binop(op, t, e1.src, e2.src));
 
-        return new CodePack(temp, code);
-
+        return new CodePack(t, code);
     }
 
     // Ast1.Unop ---
@@ -267,16 +298,15 @@ public class IR1Gen {
     //
     static CodePack gen(Ast1.Unop n) throws Exception {
 
-        IR1.Temp temp = new IR1.Temp();
+        IR1.Temp t = new IR1.Temp();
         List<IR1.Inst> code = new ArrayList<IR1.Inst>();
 
-        CodePack expCP = gen(n.e);
-        code.addAll(expCP.code);
+        CodePack e = gen(n.e);
+        code.addAll(e.code);
         IR1.UOP op = gen(n.op);
-        code.add(new IR1.Unop(op, temp, expCP.src));
+        code.add(new IR1.Unop(op, t, e.src));
 
-        return new CodePack(temp, code);
-
+        return new CodePack(t, code);
     }
 
     // Ast1.NewArray
@@ -290,16 +320,16 @@ public class IR1Gen {
     //
     static CodePack gen(Ast1.NewArray n) throws Exception {
 
-        IR1.Temp temp1 = new IR1.Temp();
-        IR1.Temp temp2 = new IR1.Temp();
+        IR1.Temp t1 = new IR1.Temp();
+        IR1.Temp t2 = new IR1.Temp();
         List<IR1.Inst> code = new ArrayList<IR1.Inst>();
-        List<IR1.Src> t1 = new ArrayList<IR1.Src>();
+        List<IR1.Src> temp = new ArrayList<IR1.Src>();
 
-        code.add(new IR1.Binop(IR1.AOP.MUL, temp1, new IR1.IntLit(n.len), new IR1.IntLit(4)));
-        t1.add(temp1);
-        code.add(new IR1.Call(new IR1.Global(n.et.toString()), t1, temp2));
-        return new CodePack(temp2, code);
+        code.add(new IR1.Binop(IR1.AOP.MUL, t1, new IR1.IntLit(n.len), new IR1.IntLit(4)));
+        temp.add(t1);
+        code.add(new IR1.Call(new IR1.Global(n.et.toString()), temp, t2));
 
+        return new CodePack(t2, code);
     }
 
     // Ast1.ArrayElm
@@ -316,20 +346,20 @@ public class IR1Gen {
     //
     static CodePack gen(Ast1.ArrayElm n) throws Exception {
 
-        IR1.Temp temp1 = new IR1.Temp();
-        IR1.Temp temp2 = new IR1.Temp();
-        IR1.Temp temp3 = new IR1.Temp();
+        IR1.Temp t1 = new IR1.Temp();
+        IR1.Temp t2 = new IR1.Temp();
+        IR1.Temp t3 = new IR1.Temp();
         List<IR1.Inst> code = new ArrayList<IR1.Inst>();
-        CodePack arCP = gen(n.ar);
-        CodePack idxCP = gen(n.idx);
+        CodePack ar = gen(n.ar);
+        CodePack idx = gen(n.idx);
 
-        code.addAll(arCP.code);
-        code.addAll(idxCP.code);
-        code.add(new IR1.Binop(IR1.AOP.MUL, temp1, idxCP.src, new IR1.IntLit(4)));
-        code.add(new IR1.Binop(IR1.AOP.ADD, temp2, arCP.src, temp1));
-        code.add(new IR1.Load(temp3, new IR1.Addr(temp2)));
-        return new CodePack(temp3, code);
+        code.addAll(ar.code);
+        code.addAll(idx.code);
+        code.add(new IR1.Binop(IR1.AOP.MUL, t1, idx.src, new IR1.IntLit(4)));
+        code.add(new IR1.Binop(IR1.AOP.ADD, t2, ar.src, t1));
+        code.add(new IR1.Load(t3, new IR1.Addr(t2)));
 
+        return new CodePack(t3, code);
     }
 
     // Ast1.Id ---
