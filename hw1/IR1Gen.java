@@ -128,15 +128,44 @@ public class IR1Gen {
 
         CodePack rhs = gen(n.rhs);
         code.addAll(rhs.code);
-        if (n.lhs instanceof Ast1.Id) {
-            code.add(new IR1.Move(new IR1.Id(((Ast1.Id) n.lhs).nm), rhs.src));
-        } else if (n.lhs instanceof Ast1.ArrayElm) {
-            IR1.Src src = new IR1.Id(((Ast1.ArrayElm)n.lhs).ar.toString());
-            IR1.Addr ar = new IR1.Addr(src);
-            code.add(new IR1.Store(ar, rhs.src));
-        }
+        CodePack lhs = null;
+        if (n.lhs instanceof Ast1.Id)
+            lhs = gen((Ast1.Id)n.lhs);
+        else if (n.lhs instanceof Ast1.ArrayElm)
+            lhs = genAddr((Ast1.ArrayElm)n.lhs);
+        if (lhs != null) {
+            code.addAll(lhs.code);
+            code.add(new IR1.Store(new IR1.Addr(lhs.src), rhs.src));
+        } else
+            throw new GenException("Unknown lhs: " + n.lhs);
 
         return code;
+    }
+
+    // Helper method ---
+    // Generates address of some Ast1.ArrayElm n
+    //
+    // AG:
+    //   newTemp t1, t2
+    //   code: exp1.c
+    //         + exp2.c
+    //         + "t1 = exp2.v * 4"
+    //         + "t2 = exp1.v + t1"
+    //
+    static CodePack genAddr(Ast1.ArrayElm n) throws Exception {
+
+        IR1.Temp t1 = new IR1.Temp();
+        IR1.Temp t2 = new IR1.Temp();
+        List<IR1.Inst> code = new ArrayList<IR1.Inst>();
+        CodePack ar = gen(n.ar);
+        CodePack idx = gen(n.idx);
+
+        code.addAll(ar.code);
+        code.addAll(idx.code);
+        code.add(new IR1.Binop(IR1.AOP.MUL, t1, idx.src, new IR1.IntLit(4)));
+        code.add(new IR1.Binop(IR1.AOP.ADD, t2, ar.src, t1));
+
+        return new CodePack(t2, code);
     }
 
     // Ast1.CallStmt ---
