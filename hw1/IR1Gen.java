@@ -301,10 +301,10 @@ public class IR1Gen {
         if (n.arg != null) {
             CodePack arg = gen(n.arg);
             code.addAll(arg.code);
-            if (arg.code instanceof IR1.StrLit) {
+            if (arg.src instanceof IR1.StrLit) {
                 src.add(arg.src);
                 code.add(new IR1.Call(new IR1.Global("_printStr"), src));
-            } else if (arg.code instanceof IR1.IntLit || arg.code instanceof IR1.BoolLit) {
+            } else if (arg.src instanceof IR1.IntLit || arg.src instanceof IR1.BoolLit) {
                 src.add(arg.src);
                 code.add(new IR1.Call(new IR1.Global("_printInt"), src));
             } else {
