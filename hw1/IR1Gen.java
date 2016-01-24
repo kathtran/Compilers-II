@@ -55,13 +55,13 @@ public class IR1Gen {
 
     // Ast1.Func ---
     // Ast1.Type t;
-    // Ast1.String nm;
+    // String nm;
     // Ast1.Param[] params;
     // Ast1.VarDecl[] vars;
     // Ast1.Stmt[] stmts;
     //
     // AG:
-    //   code:
+    //   "Func" ("void"|Type) <Id> "(" {Param} ")" {VarDecl} {Stmt}
     //
     public static IR1.Func gen(Ast1.Func n) throws Exception {
         List<IR1.Id> params = new ArrayList<IR1.Id>();
@@ -85,7 +85,37 @@ public class IR1Gen {
         if (n.t == null)
             code.add(new IR1.Return());
 
-        return new IR1.Func(new IR1.Global(n.t.toString()), params, locals, code);
+        return new IR1.Func(new IR1.Global(n.nm), params, locals, code);
+    }
+
+    // Ast1.VarDecl ---
+    // Ast1.Type t;
+    // String nm;
+    // Ast1.Exp init;
+    //
+    // AG:
+    //  "VarDecl" Type <Id> [Exp]
+    //
+    static List<IR1.Inst> gen(Ast1.VarDecl n) throws Exception {
+        List<IR1.Inst> code = new ArrayList<IR1.Inst>();
+
+        
+
+        return code;
+    }
+
+    // Ast1.Param ---
+    // Ast1.Type;
+    // String nm;
+    //
+    // AG:
+    //   "(" "Param" Type <Id> ")"
+    //
+    static List<IR1.Inst> gen(Ast1.Param n) throws Exception {
+        List<IR1.Inst> code = new ArrayList<IR1.Inst>();
+
+
+        return code;
     }
 
     // STATEMENTS
@@ -172,8 +202,18 @@ public class IR1Gen {
     // Ast1.String nm;
     // Ast1.Exp[] args;
     //
+    // AG:
+    //  "CallStmt" <Id> "(" {Exp} ")"
+    //
     static List<IR1.Inst> gen(Ast1.CallStmt n) throws Exception {
         List<IR1.Inst> code = new ArrayList<IR1.Inst>();
+
+        List<IR1.Src> src = new ArrayList<IR1.Src>();
+        for (Ast1.Exp arg : n.args) {
+            CodePack a = gen(arg);
+            src.add(a.src);
+        }
+        code.add(new IR1.Call(new IR1.Global(n.nm), src));
 
         return code;
     }
@@ -262,7 +302,7 @@ public class IR1Gen {
 
         code.addAll(arg.code);
         src.add(arg.src);
-        code.add(new IR1.Call(new IR1.Global("void"), src));
+        code.add(new IR1.Call(new IR1.Global("print"), src));
 
         return code;
     }
@@ -356,7 +396,7 @@ public class IR1Gen {
 
         code.add(new IR1.Binop(IR1.AOP.MUL, t1, new IR1.IntLit(n.len), new IR1.IntLit(4)));
         temp.add(t1);
-        code.add(new IR1.Call(new IR1.Global(n.et.toString()), temp, t2));
+        code.add(new IR1.Call(new IR1.Global("malloc"), temp, t2));
 
         return new CodePack(t2, code);
     }
