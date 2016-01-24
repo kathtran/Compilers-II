@@ -300,7 +300,14 @@ public class IR1Gen {
 
         CodePack arg = gen(n.arg);
         code.addAll(arg.code);
-        code.add(new IR1.Call(new IR1.Global(arg.src.toString()), src));
+        if (arg.src instanceof IR1.IntLit || arg.src instanceof IR1.BoolLit) {
+            src.add(arg.src);
+            code.add(new IR1.Call(new IR1.Global("_printInt"), src));
+        } else if (arg.src instanceof IR1.StrLit) {
+            src.add(arg.src);
+            code.add(new IR1.Call(new IR1.Global("_printStr"), src));
+        } else
+            throw new GenException("Unknown print arg: " + n.arg);
 
         return code;
     }
@@ -415,7 +422,7 @@ public class IR1Gen {
 
         code.add(new IR1.Binop(IR1.AOP.MUL, t1, new IR1.IntLit(n.len), new IR1.IntLit(4)));
         temp.add(t1);
-        code.add(new IR1.Call(new IR1.Global(""), temp, t2));
+        code.add(new IR1.Call(new IR1.Global("_malloc"), temp, t2));
 
         return new CodePack(t2, code);
     }
