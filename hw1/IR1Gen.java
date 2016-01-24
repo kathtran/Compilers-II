@@ -211,6 +211,7 @@ public class IR1Gen {
         for (Ast1.Exp arg : n.args) {
             CodePack a = gen(arg);
             src.add(a.src);
+            code.addAll(a.code);
         }
         code.add(new IR1.Call(new IR1.Global(n.nm), src));
 
