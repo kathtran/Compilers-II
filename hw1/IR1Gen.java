@@ -155,7 +155,7 @@ public class IR1Gen {
         code.addAll(rhs.code);
         CodePack lhs;
         if (n.lhs instanceof Ast1.Id) {
-            lhs = gen((Ast1.Id) n.lhs);
+            lhs = gen(n.lhs);
             code.addAll(lhs.code);
             code.add(new IR1.Move((IR1.Id)lhs.src, rhs.src));
         }
@@ -306,7 +306,7 @@ public class IR1Gen {
             code.addAll(arg.code);
             if (arg.src instanceof IR1.StrLit)
                 code.add(new IR1.Call(new IR1.Global("_printStr"), src));
-            else if (arg.src instanceof IR1.IntLit || arg.src instanceof IR1.BoolLit)
+            else if (arg.src instanceof IR1.IntLit || arg.src instanceof IR1.BoolLit || arg.src instanceof IR1.Id);
                 code.add(new IR1.Call(new IR1.Global("_printInt"), src));
             src.add(arg.src);
         } else
