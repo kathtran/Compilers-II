@@ -153,14 +153,12 @@ public class IR1Gen {
 
         CodePack rhs = gen(n.rhs);
         code.addAll(rhs.code);
-        CodePack lhs;
-        if (n.lhs instanceof Ast1.Id) {
-            lhs = gen(n.lhs);
-            code.addAll(lhs.code);
-            code.add(new IR1.Move((IR1.Id)lhs.src, rhs.src));
-        }
-        else if (n.lhs instanceof Ast1.ArrayElm) {
+        CodePack lhs = null;
+        if (n.lhs instanceof Ast1.Id)
+            lhs = gen((Ast1.Id)n.lhs);
+        else if (n.lhs instanceof Ast1.ArrayElm)
             lhs = genAddr((Ast1.ArrayElm)n.lhs);
+        if (lhs != null) {
             code.addAll(lhs.code);
             code.add(new IR1.Store(new IR1.Addr(lhs.src), rhs.src));
         } else
@@ -226,11 +224,11 @@ public class IR1Gen {
     //
     // AG:
     //   newLabel: L1[,L2]
-    //   code: cond.c 
-    //         + "if cond.v == false goto L1" 
-    //         + s1.c 
-    //         [+ "goto L2"] 
-    //         + "L1:" 
+    //   code: cond.c
+    //         + "if cond.v == false goto L1"
+    //         + s1.c
+    //         [+ "goto L2"]
+    //         + "L1:"
     //         [+ s2.c]
     //         [+ "L2:"]
     //
@@ -265,11 +263,11 @@ public class IR1Gen {
     //
     // AG:
     //   newLabel: L1,L2
-    //   code: "L1:" 
-    //         + cond.c 
-    //         + "if cond.v == false goto L2" 
-    //         + s.c 
-    //         + "goto L1" 
+    //   code: "L1:"
+    //         + cond.c
+    //         + "if cond.v == false goto L2"
+    //         + s.c
+    //         + "goto L1"
     //         + "L2:"
     //
     static List<IR1.Inst> gen(Ast1.While n) throws Exception {
@@ -306,7 +304,7 @@ public class IR1Gen {
             code.addAll(arg.code);
             if (arg.src instanceof IR1.StrLit)
                 code.add(new IR1.Call(new IR1.Global("_printStr"), src));
-            else if (arg.src instanceof IR1.IntLit || arg.src instanceof IR1.BoolLit || arg.src instanceof IR1.Id);
+            else if (arg.src instanceof IR1.IntLit || arg.src instanceof IR1.BoolLit)
                 code.add(new IR1.Call(new IR1.Global("_printInt"), src));
             src.add(arg.src);
         } else
