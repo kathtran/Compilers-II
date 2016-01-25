@@ -3,10 +3,13 @@
 _go (i, j, k)
 {
  return t1
+ t2 = i + j
+ t1 = t2 + k
 }
 
 _main ()
 {
- call _printInt(go)
+ t3 = call _go(1, 2, 3)
+ call _printInt(t3)
  return 
 }

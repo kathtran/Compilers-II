@@ -7,8 +7,9 @@ _go (n)
  t1 = n > 0
  if t1 == false goto L0
  call _printInt(n)
- t2 = n - 1
- i = back
+ t3 = n - 1
+ t2 = call _back(t3)
+ i = t2
 L0:
  return i
 }
@@ -16,12 +17,13 @@ L0:
 _back (n)
 (i)
 {
- i = go
+ i = t4
  return 0
 }
 
 _main ()
 {
- call _printInt(go)
+ t5 = call _go(5)
+ call _printInt(t5)
  return 
 }

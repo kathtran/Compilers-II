@@ -304,13 +304,11 @@ public class IR1Gen {
         if (n.arg != null) {
             CodePack arg = gen(n.arg);
             code.addAll(arg.code);
-            if (arg.src instanceof IR1.StrLit) {
-                src.add(arg.src);
+            src.add(arg.src);
+            if (arg.src instanceof IR1.StrLit)
                 code.add(new IR1.Call(new IR1.Global("_printStr"), src));
-            } else {
-                src.add(arg.src);
+            else
                 code.add(new IR1.Call(new IR1.Global("_printInt"), src));
-            }
         } else
             code.add(new IR1.Call(new IR1.Global("_printStr"), src));
 

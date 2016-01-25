@@ -1,15 +1,10 @@
-11c11,12
-<  i = back
+10,12c10,12
+<  t3 = n - 1
+<  t2 = call _back(t3)
+<  i = t2
 ---
+>  t2 = n - 1
 >  t3 = call _back(t2)
 >  i = t3
-19c20,21
-<  i = go
----
+19a20
 >  t4 = call _go(n)
->  i = t4
-25c27,28
-<  call _printInt(go)
----
->  t5 = call _go(5)
->  call _printInt(t5)

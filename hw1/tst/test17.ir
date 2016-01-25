@@ -3,15 +3,21 @@
 _value (i, j, k)
 {
  return t1
+ t2 = i + j
+ t1 = t2 + k
 }
 
 _go ()
 {
  return t3
+ t4 = call _value(1, 1, 1)
+ t5 = call _value(2, 2, 2)
+ t3 = t4 + t5
 }
 
 _main ()
 {
- call _printInt(go)
+ t6 = call _go()
+ call _printInt(t6)
  return 
 }

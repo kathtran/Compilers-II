@@ -25,5 +25,6 @@ L0:
  t15 = 1 * 4
  t16 = a + t15
  t17 = [t16]
+ call _printInt(t17)
  return 
 }

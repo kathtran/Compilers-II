@@ -12,7 +12,7 @@ _go ()
 _main ()
 (r)
 {
- r = go
+ r = t2
  call _printInt(r)
  return 
 }

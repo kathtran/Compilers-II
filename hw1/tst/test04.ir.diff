@@ -1,4 +1,4 @@
-6,20c6,21
+6,22c6,21
 <  t1 = 2 * 4
 <  t2 = call _malloc(t1)
 <  a = t2
@@ -11,9 +11,11 @@
 <  t7 = 0 * 4
 <  t8 = a + t7
 <  t9 = [t8]
+<  call _printInt(t9)
 <  t10 = 1 * 4
 <  t11 = a + t10
 <  t12 = [t11]
+<  call _printInt(t12)
 ---
 >  t1 = call _malloc(8)
 >  a = t1

@@ -2,36 +2,42 @@
 
 _main ()
 {
- call _printInt(go)
+ t1 = call _go()
+ call _printInt(t1)
  return 
 }
 
 _go ()
 (a, b)
 {
- t1 = 2 * 4
- t2 = call _malloc(t1)
- a = t2
- t3 = 2 * 4
- t4 = call _malloc(t3)
- b = t4
- t5 = 0 * 4
- t6 = a + t5
- [t6] = 1
- t7 = 1 * 4
- t8 = a + t7
- [t8] = 2
- t9 = 0 * 4
- t10 = b + t9
- [t10] = 3
- t11 = 1 * 4
- t12 = b + t11
- [t12] = 4
- t13 = 1 * 4
- t14 = a + t13
- t15 = [t14]
- t16 = 1 * 4
- t17 = b + t16
- t18 = [t17]
- return t21
+ t2 = 2 * 4
+ t3 = call _malloc(t2)
+ a = t3
+ t4 = 2 * 4
+ t5 = call _malloc(t4)
+ b = t5
+ t6 = 0 * 4
+ t7 = a + t6
+ [t7] = 1
+ t8 = 1 * 4
+ t9 = a + t8
+ [t9] = 2
+ t10 = 0 * 4
+ t11 = b + t10
+ [t11] = 3
+ t12 = 1 * 4
+ t13 = b + t12
+ [t13] = 4
+ t14 = 1 * 4
+ t15 = a + t14
+ t16 = [t15]
+ call _printInt(t16)
+ t17 = 1 * 4
+ t18 = b + t17
+ t19 = [t18]
+ call _printInt(t19)
+ return t22
+ t20 = 0 * 4
+ t21 = a + t20
+ t22 = [t21]
 }

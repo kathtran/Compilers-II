@@ -20,6 +20,7 @@ L1:
 
 _main ()
 {
- call _printInt(go)
+ t4 = call _go()
+ call _printInt(t4)
  return 
 }

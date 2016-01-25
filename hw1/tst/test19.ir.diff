@@ -1,15 +1,10 @@
-7c7,8
-<  return bar
----
->  t2 = call _bar()
+7d6
+<  return t2
+8a8
 >  return t2
-16c17,18
-<  return foo
----
->  t3 = call _foo(1)
+17d16
+<  return t3
+18a18
 >  return t3
-22c24,25
-<  i = foo
----
+23a24
 >  t4 = call _foo(2)
->  i = t4

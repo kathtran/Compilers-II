@@ -2,7 +2,8 @@
 
 _go ()
 {
- return value
+ return t1
+ t1 = call _value(true)
 }
 
 _value (cond)
@@ -21,6 +22,7 @@ L1:
 
 _main ()
 {
- call _printInt(go)
+ t2 = call _go()
+ call _printInt(t2)
  return 
 }

@@ -23,8 +23,3 @@
 > L2:
 >  x = 0
 > L3:
-23c29,30
-<  call _printInt(go)
----
->  t4 = call _go()
->  call _printInt(t4)

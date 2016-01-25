@@ -12,5 +12,3 @@
 >  t3 = -5
 >  t4 = t3 + 2
 >  y = t4
-11a12
->  call _printInt(t5)

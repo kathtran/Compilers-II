@@ -6,8 +6,3 @@
 >  t2 = 3 * 4
 >  t3 = t2 == 10
 >  if t3 == false goto L2
-24c24,25
-<  call _printInt(go)
----
->  t4 = call _go()
->  call _printInt(t4)

@@ -33,5 +33,6 @@ L1:
  t20 = 1 * 4
  t21 = a + t20
  t22 = [t21]
+ call _printInt(t22)
  return 
 }

@@ -1,10 +1,4 @@
-5c5,6
-<  return value
----
->  t1 = call _value(true)
+5d4
+<  return t1
+6a6
 >  return t1
-24c25,26
-<  call _printInt(go)
----
->  t2 = call _go()
->  call _printInt(t2)

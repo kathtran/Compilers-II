@@ -4,7 +4,8 @@ _foo (i)
 {
  t1 = i > 1
  if t1 == false goto L0
- return bar
+ return t2
+ t2 = call _bar()
  goto L1
 L0:
  return 3
@@ -13,13 +14,14 @@ L1:
 
 _bar ()
 {
- return foo
+ return t3
+ t3 = call _foo(1)
 }
 
 _main ()
 (i)
 {
- i = foo
+ i = t4
  call _printInt(i)
  return 
 }

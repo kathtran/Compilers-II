@@ -2,16 +2,20 @@
 
 _go ()
 {
- return value
+ return t1
+ t1 = call _value(1, 2, 3)
 }
 
 _value (i, j, k)
 {
- return t1
+ return t2
+ t3 = i + j
+ t2 = t3 + k
 }
 
 _main ()
 {
- call _printInt(go)
+ t4 = call _go()
+ call _printInt(t4)
  return 
 }

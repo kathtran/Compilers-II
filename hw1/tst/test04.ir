@@ -15,8 +15,10 @@ _main ()
  t7 = 0 * 4
  t8 = a + t7
  t9 = [t8]
+ call _printInt(t9)
  t10 = 1 * 4
  t11 = a + t10
  t12 = [t11]
+ call _printInt(t12)
  return 
 }

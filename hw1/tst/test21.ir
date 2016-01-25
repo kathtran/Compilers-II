@@ -9,5 +9,6 @@ _main ()
  t3 = t4 + 2
  y = t3
  t5 = x - y
+ call _printInt(t5)
  return 
 }
