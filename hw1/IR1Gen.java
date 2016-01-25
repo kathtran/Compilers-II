@@ -307,7 +307,7 @@ public class IR1Gen {
             if (arg.src instanceof IR1.StrLit) {
                 src.add(arg.src);
                 code.add(new IR1.Call(new IR1.Global("_printStr"), src));
-            } else if (arg.src instanceof IR1.Id || arg.src instanceof IR1.IntLit || arg.src instanceof IR1.BoolLit) {
+            } else {
                 src.add(arg.src);
                 code.add(new IR1.Call(new IR1.Global("_printInt"), src));
             }
@@ -400,24 +400,16 @@ public class IR1Gen {
     //   "(" "Call" <Id> "(" {Exp} "}" ")"
     static CodePack gen(Ast1.Call n) throws Exception {
 
-//        IR1.Src src = new IR1.Id(n.nm);
-//        List<IR1.Inst> code = new ArrayList<IR1.Inst>();
-//        for (Ast1.Exp arg : n.args) {
-//            CodePack e = gen(arg);
-//            code.addAll(e.code);
-//        }
-//        return new CodePack(src, code);
-
-        IR1.Src src = new IR1.Id(n.nm);
+        IR1.Temp t = new IR1.Temp();
         List<IR1.Inst> code = new ArrayList<IR1.Inst>();
-        List<IR1.Src> srcs = new ArrayList<IR1.Src>();
+        List<IR1.Src> src = new ArrayList<IR1.Src>();
         for (Ast1.Exp arg : n.args) {
             CodePack e = gen(arg);
             code.addAll(e.code);
-            srcs.add(e.src);
+            src.add(e.src);
         }
-        code.add(new IR1.Call(new IR1.Global(n.nm ), srcs));
-        return new CodePack(src, code);
+        code.add(new IR1.Call(new IR1.Global("_" + n.nm), src, t));
+        return new CodePack(t, code);
     }
 
     // Ast1.NewArray

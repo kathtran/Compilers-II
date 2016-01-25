@@ -36,6 +36,7 @@ _go ()
 
 _main ()
 {
- call _printInt(go)
+ t25 = call _go()
+ call _printInt(t25)
  return 
 }

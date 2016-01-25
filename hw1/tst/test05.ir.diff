@@ -62,8 +62,9 @@
 >  t22 = i * 2
 >  t23 = t21 + t22
 >  i = t23
-39c49,50
-<  call _printInt(go)
+39,40c49,50
+<  t25 = call _go()
+<  call _printInt(t25)
 ---
 >  t24 = call _go()
 >  call _printInt(t24)
