@@ -326,6 +326,7 @@ public class IR1Gen {
         if (n.val != null) {
             CodePack val = gen(n.val);
             code.add(new IR1.Return(val.src));
+            code.addAll(val.code);
         } else
             code.add(new IR1.Return());
 
