@@ -12,6 +12,7 @@ _go ()
 _main ()
 (r)
 {
+ t2 = call _go()
  r = t2
  call _printInt(r)
  return 

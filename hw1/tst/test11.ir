@@ -17,6 +17,7 @@ L0:
 _back (n)
 (i)
 {
+ t4 = call _go(n)
  i = t4
  return 0
 }

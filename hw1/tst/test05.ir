@@ -4,6 +4,8 @@ _go ()
 (b, i, a)
 {
  i = 0
+ t1 = 4 * 4
+ t2 = call _malloc(t1)
  a = t2
  t3 = 1 * 4
  t4 = a + t3

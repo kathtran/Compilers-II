@@ -6,5 +6,3 @@
 <  return t3
 18a18
 >  return t3
-23a24
->  t4 = call _foo(2)

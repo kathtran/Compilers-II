@@ -76,6 +76,7 @@ public class IR1Gen {
 
             if (v.init != null) {
                 CodePack init = gen(v.init);
+                code.addAll(init.code);
                 code.add(new IR1.Move(gen(v), init.src));
             }
         }

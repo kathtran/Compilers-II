@@ -21,6 +21,7 @@ _bar ()
 _main ()
 (i)
 {
+ t4 = call _foo(2)
  i = t4
  call _printInt(i)
  return 
