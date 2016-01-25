@@ -153,12 +153,14 @@ public class IR1Gen {
 
         CodePack rhs = gen(n.rhs);
         code.addAll(rhs.code);
-        CodePack lhs = null;
-        if (n.lhs instanceof Ast1.Id)
-            lhs = gen((Ast1.Id)n.lhs);
-        else if (n.lhs instanceof Ast1.ArrayElm)
+        CodePack lhs;
+        if (n.lhs instanceof Ast1.Id) {
+            lhs = gen((Ast1.Id) n.lhs);
+            code.addAll(lhs.code);
+            code.add(new IR1.Move((IR1.Id)lhs.src, rhs.src));
+        }
+        else if (n.lhs instanceof Ast1.ArrayElm) {
             lhs = genAddr((Ast1.ArrayElm)n.lhs);
-        if (lhs != null) {
             code.addAll(lhs.code);
             code.add(new IR1.Store(new IR1.Addr(lhs.src), rhs.src));
         } else
