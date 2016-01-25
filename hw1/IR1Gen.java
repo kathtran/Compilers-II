@@ -400,12 +400,23 @@ public class IR1Gen {
     //   "(" "Call" <Id> "(" {Exp} "}" ")"
     static CodePack gen(Ast1.Call n) throws Exception {
 
+//        IR1.Src src = new IR1.Id(n.nm);
+//        List<IR1.Inst> code = new ArrayList<IR1.Inst>();
+//        for (Ast1.Exp arg : n.args) {
+//            CodePack e = gen(arg);
+//            code.addAll(e.code);
+//        }
+//        return new CodePack(src, code);
+
         IR1.Src src = new IR1.Id(n.nm);
         List<IR1.Inst> code = new ArrayList<IR1.Inst>();
+        List<IR1.Src> srcs = new ArrayList<IR1.Src>();
         for (Ast1.Exp arg : n.args) {
             CodePack e = gen(arg);
             code.addAll(e.code);
+            srcs.add(e.src);
         }
+        code.add(new IR1.Call(new IR1.Global(n.nm ), srcs));
         return new CodePack(src, code);
     }
 
