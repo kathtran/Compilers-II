@@ -3,7 +3,7 @@
 <  t2 = 2 + t3
 <  t4 = 9 / 3
 <  t1 = t2 - t4
-<  [i] = t1
+<  i = t1
 <  t6 = 1 > 2
 <  t8 = 3 < 4
 ---
@@ -18,17 +18,13 @@
 >  t8 = false
 >  t7 = 3 < 4
 >  if t7 == false goto L1
-14,18c18,24
+14,16c18,22
 <  t7 = t8 && t9
 <  t5 = t6 || t7
-<  [b] = t5
-<  call _print(i)
-<  call _print(b)
+<  b = t5
 ---
 >  t8 = t9
 > L1:
 >  t6 = t8
 > L0:
 >  b = t6
->  call _printInt(i)
->  call _printInt(b)

@@ -8,19 +8,19 @@ _go ()
 _value (cond)
 (i, j, k)
 {
- [i] = 5
- [j] = 6
+ i = 5
+ j = 6
  if cond == false goto L0
- [k] = i
+ k = i
  goto L1
 L0:
- [k] = j
+ k = j
 L1:
  return k
 }
 
 _main ()
 {
- call _print(go)
+ call _printInt(go)
  return 
 }

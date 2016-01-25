@@ -1,15 +1,5 @@
-6c6
-<  [i] = 4
----
->  i = 4
-8c8
-<  [j] = t1
----
->  j = t1
-15,16c15,17
+15c15,16
 <  r = go
-<  call _print(r)
 ---
 >  t2 = call _go()
 >  r = t2
->  call _printInt(r)

@@ -1,44 +1,37 @@
-5c5
-<  [flag] = false
----
->  flag = false
-7c7
-<  [x] = 1
----
->  x = 1
-9,11c9,13
+9c9
 <  if flag == false goto L2
-<  [y] = 1
-<  goto L3
 ---
 >  if flag == false goto L1
->  y = 1
+11,12c11,12
+<  goto L3
+< L2:
+---
 >  goto L2
 > L1:
->  y = 2
-13d14
-<  [y] = 2
-14a16,18
->  if flag == false goto L4
->  z = 1
->  goto L3
-16,18d19
+13a14
+> L2:
+15,16c16
+< L4:
 <  if flag == false goto L5
-<  [z] = 1
+---
+>  if flag == false goto L4
+18c18,19
 <  goto L4
-19a21,25
->  t1 = !flag
->  t2 = !t1
->  if t2 == false goto L6
->  z = 1
->  goto L5
-21,27c27
+---
+>  goto L3
+> L4:
+20,23c21,23
+< L6:
 <  t2 = !flag
 <  t1 = !t2
 <  if t1 == false goto L7
-<  [z] = 1
+---
+>  t1 = !flag
+>  t2 = !t1
+>  if t2 == false goto L6
+25,26c25,26
 <  goto L6
 < L7:
-<  call _print(y)
 ---
->  call _printInt(y)
+>  goto L5
+> L6:

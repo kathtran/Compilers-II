@@ -12,7 +12,7 @@
 >  t5 = t3 + t4
 >  return t5
 15c20,21
-<  call _print(go)
+<  call _printInt(go)
 ---
 >  t6 = call _go()
 >  call _printInt(t6)

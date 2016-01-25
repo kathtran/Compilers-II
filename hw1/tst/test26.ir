@@ -6,8 +6,8 @@ _main ()
  t3 = 1 - 1
  t1 = t2 > t3
  if t1 == false goto L0
- [x] = 1
+ x = 1
 L0:
- call _print(x)
+ call _printInt(x)
  return 
 }

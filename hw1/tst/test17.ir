@@ -12,6 +12,6 @@ _go ()
 
 _main ()
 {
- call _print(go)
+ call _printInt(go)
  return 
 }

@@ -153,12 +153,14 @@ public class IR1Gen {
 
         CodePack rhs = gen(n.rhs);
         code.addAll(rhs.code);
-        CodePack lhs = null;
-        if (n.lhs instanceof Ast1.Id)
-            lhs = gen((Ast1.Id)n.lhs);
-        else if (n.lhs instanceof Ast1.ArrayElm)
+        CodePack lhs;
+        if (n.lhs instanceof Ast1.Id) {
+            lhs = gen(n.lhs);
+            code.addAll(lhs.code);
+            code.add(new IR1.Move((IR1.Id)lhs.src, rhs.src));
+        }
+        else if (n.lhs instanceof Ast1.ArrayElm) {
             lhs = genAddr((Ast1.ArrayElm)n.lhs);
-        if (lhs != null) {
             code.addAll(lhs.code);
             code.add(new IR1.Store(new IR1.Addr(lhs.src), rhs.src));
         } else
@@ -211,8 +213,9 @@ public class IR1Gen {
         for (Ast1.Exp arg : n.args) {
             CodePack a = gen(arg);
             src.add(a.src);
+            code.addAll(a.code);
         }
-        code.add(new IR1.Call(new IR1.Global(n.nm), src));
+        code.add(new IR1.Call(new IR1.Global("_" + n.nm), src));
 
         return code;
     }
@@ -304,12 +307,9 @@ public class IR1Gen {
             if (arg.src instanceof IR1.StrLit) {
                 src.add(arg.src);
                 code.add(new IR1.Call(new IR1.Global("_printStr"), src));
-            } else if (arg.src instanceof IR1.IntLit || arg.src instanceof IR1.BoolLit) {
+            } else if (arg.src instanceof IR1.Id || arg.src instanceof IR1.IntLit || arg.src instanceof IR1.BoolLit) {
                 src.add(arg.src);
                 code.add(new IR1.Call(new IR1.Global("_printInt"), src));
-            } else {
-                src.add(arg.src);
-                code.add(new IR1.Call(new IR1.Global("_print"), src));
             }
         } else
             code.add(new IR1.Call(new IR1.Global("_printStr"), src));

@@ -3,12 +3,12 @@
 _go (n)
 (i)
 {
- [i] = 0
+ i = 0
  t1 = n > 0
  if t1 == false goto L0
- call _print(n)
+ call _printInt(n)
  t2 = n - 1
- [i] = back
+ i = back
 L0:
  return i
 }
@@ -22,6 +22,6 @@ _back (n)
 
 _main ()
 {
- call _print(go)
+ call _printInt(go)
  return 
 }

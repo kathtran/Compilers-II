@@ -4,7 +4,7 @@ _main ()
 {
  t1 = 2 * 4
  t2 = call _malloc(t1)
- [a] = t2
+ a = t2
  t5 = -2
  t4 = t5 * 3
  t3 = 1 + t4
@@ -16,7 +16,7 @@ _main ()
  t12 = [t11]
  t9 = t12 < 0
  t8 = true && t9
- [flag] = t8
+ flag = t8
  if flag == false goto L0
  t13 = 0 * 4
  t14 = a + t13
@@ -33,6 +33,5 @@ L1:
  t20 = 1 * 4
  t21 = a + t20
  t22 = [t21]
- call _print(t22)
  return 
 }

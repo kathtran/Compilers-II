@@ -21,6 +21,6 @@ L1:
 
 _main ()
 {
- call _print(go)
+ call _printInt(go)
  return 
 }

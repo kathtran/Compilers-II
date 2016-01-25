@@ -7,7 +7,7 @@ _foo (i)
  t1 = i > 0
  if t1 == false goto L0
  t2 = k + foo
- [k] = t2
+ k = t2
 L0:
  return k
 }
@@ -19,6 +19,6 @@ _bar (i)
 
 _main ()
 {
- call _print(foo)
+ call _printInt(foo)
  return 
 }

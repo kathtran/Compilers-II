@@ -4,14 +4,12 @@
 >  t2 = false
 >  t1 = 1 == 1
 >  if t1 == false goto L0
-7,13c9,19
+7,11c9,17
 <  t1 = t2 && t3
-<  [x] = t1
+<  x = t1
 <  t5 = 2 != 2
 <  t4 = t5 && x
-<  [y] = t4
-<  call _print(x)
-<  call _print(y)
+<  y = t4
 ---
 >  t2 = t3
 > L0:
@@ -22,5 +20,3 @@
 >  t5 = x
 > L1:
 >  y = t5
->  call _printInt(x)
->  call _printInt(y)

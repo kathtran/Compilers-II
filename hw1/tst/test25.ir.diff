@@ -1,23 +1,15 @@
-5,6c5,9
-<  [b] = false
+6c6,9
 <  t1 = true || b
 ---
->  b = false
 >  t1 = true
 >  if true == true goto L1
 >  t1 = b
 > L1:
-8,9c11,12
-<  [x] = 1
+9c12
 <  goto L1
 ---
->  x = 1
 >  goto L2
-11,13c14,16
-<  [x] = 2
+12c15
 < L1:
-<  call _print(x)
 ---
->  x = 2
 > L2:
->  call _printInt(x)

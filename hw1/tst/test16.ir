@@ -7,6 +7,6 @@ _go (i, j, k)
 
 _main ()
 {
- call _print(go)
+ call _printInt(go)
  return 
 }

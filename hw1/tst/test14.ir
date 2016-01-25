@@ -8,12 +8,12 @@ _foo (i, j)
 _main ()
 (b, i, j)
 {
- [b] = true
- [i] = foo
+ b = true
+ i = foo
  t2 = 2 * 3
- [j] = t2
- call _print(b)
- call _print(i)
- call _print(j)
+ j = t2
+ call _printInt(b)
+ call _printInt(i)
+ call _printInt(j)
  return 
 }

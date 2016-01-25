@@ -16,9 +16,9 @@ _bar (i)
 _main ()
 (i, j)
 {
- [i] = foo
- [j] = bar
- call _print(i)
- call _print(j)
+ i = foo
+ j = bar
+ call _printInt(i)
+ call _printInt(j)
  return 
 }

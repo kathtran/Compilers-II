@@ -10,7 +10,7 @@
 >  t3 = t2 + k
 >  return t3
 15c18,19
-<  call _print(go)
+<  call _printInt(go)
 ---
 >  t4 = call _go()
 >  call _printInt(t4)

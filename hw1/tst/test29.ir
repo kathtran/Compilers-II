@@ -2,28 +2,28 @@
 
 _main ()
 {
- [flag] = false
+ flag = false
  if flag == false goto L0
- [x] = 1
+ x = 1
 L0:
  if flag == false goto L2
- [y] = 1
+ y = 1
  goto L3
 L2:
- [y] = 2
+ y = 2
 L3:
 L4:
  if flag == false goto L5
- [z] = 1
+ z = 1
  goto L4
 L5:
 L6:
  t2 = !flag
  t1 = !t2
  if t1 == false goto L7
- [z] = 1
+ z = 1
  goto L6
 L7:
- call _print(y)
+ call _printInt(y)
  return 
 }

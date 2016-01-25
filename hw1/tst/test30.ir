@@ -2,17 +2,17 @@
 
 _main ()
 {
- [a] = 0
- [b] = 0
+ a = 0
+ b = 0
  t2 = a > 0
  t3 = b > 0
  t1 = t2 || t3
  if t1 == false goto L0
- [x] = 1
+ x = 1
  goto L1
 L0:
- [x] = 2
+ x = 2
 L1:
- call _print(x)
+ call _printInt(x)
  return 
 }

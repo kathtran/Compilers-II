@@ -20,6 +20,6 @@ _main ()
 (i)
 {
  i = foo
- call _print(i)
+ call _printInt(i)
  return 
 }

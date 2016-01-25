@@ -1,7 +1,7 @@
-6,19c6,21
+6,18c6,21
 <  t1 = 2 * 4
 <  t2 = call _malloc(t1)
-<  [b] = t2
+<  b = t2
 <  t3 = 0 * 4
 <  t4 = b + t3
 <  [t4] = 3
@@ -11,7 +11,6 @@
 <  t7 = 1 * 4
 <  t8 = b + t7
 <  t9 = [t8]
-<  call _print(t9)
 <  return t12
 ---
 >  t1 = call _malloc(8)
@@ -30,8 +29,8 @@
 >  t10 = b + t9
 >  t11 = [t10]
 >  return t11
-24c26,27
-<  call _print(go)
+23c26,27
+<  call _printInt(go)
 ---
 >  t12 = call _go()
 >  call _printInt(t12)

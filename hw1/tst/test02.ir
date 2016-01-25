@@ -6,8 +6,8 @@ _main ()
  b = true
  i = 2
  j = 6
- call _print(b)
- call _print(i)
- call _print(j)
+ call _printInt(b)
+ call _printInt(i)
+ call _printInt(j)
  return 
 }

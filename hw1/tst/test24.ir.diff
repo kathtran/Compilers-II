@@ -1,8 +1,0 @@
-7c7
-<  [x] = 1
----
->  x = 1
-9c9
-<  call _print(x)
----
->  call _printInt(x)

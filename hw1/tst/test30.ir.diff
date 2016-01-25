@@ -1,29 +1,21 @@
-5,7c5,9
-<  [a] = 0
-<  [b] = 0
+7c7,9
 <  t2 = a > 0
 ---
->  a = 0
->  b = 0
 >  t2 = true
 >  t1 = a > 0
 >  if t1 == true goto L1
-9,14c11
+9,10c11,13
 <  t1 = t2 || t3
 <  if t1 == false goto L0
-<  [x] = 1
-<  goto L1
-< L0:
-<  [x] = 2
 ---
 >  t2 = t3
-16c13,19
-<  call _print(x)
----
+> L1:
 >  if t2 == false goto L0
->  x = 1
+12c15
+<  goto L1
+---
 >  goto L2
-> L0:
->  x = 2
+15c18
+< L1:
+---
 > L2:
->  call _printInt(x)

@@ -5,7 +5,7 @@ _main ()
 {
  t1 = 2 * 4
  t2 = call _malloc(t1)
- [a] = t2
+ a = t2
  t3 = 0 * 4
  t4 = a + t3
  [t4] = 1
@@ -15,10 +15,8 @@ _main ()
  t7 = 0 * 4
  t8 = a + t7
  t9 = [t8]
- call _print(t9)
  t10 = 1 * 4
  t11 = a + t10
  t12 = [t11]
- call _print(t12)
  return 
 }

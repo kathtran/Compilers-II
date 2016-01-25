@@ -1,16 +1,10 @@
-5,9c5,9
+5,8c5,8
 <  t2 = 1 + 2
 <  t3 = 1 - 1
 <  t1 = t2 > t3
 <  if t1 == false goto L0
-<  [x] = 1
 ---
 >  t1 = 1 + 2
 >  t2 = 1 - 1
 >  t3 = t1 > t2
 >  if t3 == false goto L0
->  x = 1
-11c11
-<  call _print(x)
----
->  call _printInt(x)
