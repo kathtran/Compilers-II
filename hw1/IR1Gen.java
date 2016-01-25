@@ -426,11 +426,11 @@ public class IR1Gen {
         IR1.Temp t1 = new IR1.Temp();
         IR1.Temp t2 = new IR1.Temp();
         List<IR1.Inst> code = new ArrayList<IR1.Inst>();
-        List<IR1.Src> temp = new ArrayList<IR1.Src>();
+        List<IR1.Src> src = new ArrayList<IR1.Src>();
 
         code.add(new IR1.Binop(IR1.AOP.MUL, t1, new IR1.IntLit(n.len), new IR1.IntLit(4)));
-        temp.add(t1);
-        code.add(new IR1.Call(new IR1.Global("_malloc"), temp, t2));
+        src.add(t1);
+        code.add(new IR1.Call(new IR1.Global("_malloc"), src, t2));
 
         return new CodePack(t2, code);
     }
