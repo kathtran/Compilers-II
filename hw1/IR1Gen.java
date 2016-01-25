@@ -55,47 +55,74 @@ public class IR1Gen {
 
     // Ast1.Func ---
     // Ast1.Type t;
-    // Ast1.String nm;
+    // String nm;
     // Ast1.Param[] params;
     // Ast1.VarDecl[] vars;
     // Ast1.Stmt[] stmts;
     //
     // AG:
-    //   code:
+    //   "Func" ("void"|Type) <Id> "(" {Param} ")" {VarDecl} {Stmt}
     //
     public static IR1.Func gen(Ast1.Func n) throws Exception {
         List<IR1.Id> params = new ArrayList<IR1.Id>();
         List<IR1.Id> locals = new ArrayList<IR1.Id>();
         List<IR1.Inst> code = new ArrayList<IR1.Inst>();
 
-        for (Ast1.Param p : n.params) {
-            IR1.Id temp = new IR1.Id(p.nm);
-            params.add(temp);
-        }
+        for (Ast1.Param p : n.params)
+            params.add(gen(p));
 
         for (Ast1.VarDecl v : n.vars) {
-            IR1.Id temp = new IR1.Id(v.nm);
-            locals.add(temp);
+            locals.add(gen(v));
+
+            if (v.init != null) {
+                CodePack init = gen(v.init);
+                code.addAll(init.code);
+                code.add(new IR1.Move(gen(v), init.src));
+            }
         }
 
-        for (Ast1.Stmt s : n.stmts) {
+        for (Ast1.Stmt s : n.stmts)
             code.addAll(gen(s));
-        }
 
         if (n.t == null)
             code.add(new IR1.Return());
 
-        return new IR1.Func(new IR1.Global(n.t.toString()), params, locals, code);
+        return new IR1.Func(new IR1.Global("_" + n.nm), params, locals, code);
+    }
+
+    // Ast1.VarDecl ---
+    // Ast1.Type t;
+    // String nm;
+    // Ast1.Exp init;
+    //
+    // AG:
+    //  "VarDecl" Type <Id> [Exp]
+    //
+    static IR1.Id gen(Ast1.VarDecl n) throws Exception {
+        return new IR1.Id(n.nm);
+    }
+
+    // Ast1.Param ---
+    // Ast1.Type;
+    // String nm;
+    //
+    // AG:
+    //   "(" "Param" Type <Id> ")"
+    //
+    static IR1.Id gen(Ast1.Param n) throws Exception {
+        return new IR1.Id(n.nm);
     }
 
     // STATEMENTS
 
     static List<IR1.Inst> gen(Ast1.Stmt n) throws Exception {
-        if (n instanceof Ast1.Block)  return gen((Ast1.Block) n);
-        if (n instanceof Ast1.Assign) return gen((Ast1.Assign) n);
-        if (n instanceof Ast1.If)     return gen((Ast1.If) n);
-        if (n instanceof Ast1.While)  return gen((Ast1.While) n);
-        if (n instanceof Ast1.Print)  return gen((Ast1.Print) n);
+        if (n instanceof Ast1.Block)    return gen((Ast1.Block) n);
+        if (n instanceof Ast1.Assign)   return gen((Ast1.Assign) n);
+        if (n instanceof Ast1.CallStmt) return gen((Ast1.CallStmt) n);
+        if (n instanceof Ast1.If)       return gen((Ast1.If) n);
+        if (n instanceof Ast1.While)    return gen((Ast1.While) n);
+        if (n instanceof Ast1.Print)    return gen((Ast1.Print) n);
+        if (n instanceof Ast1.Return)   return gen((Ast1.Return) n);
         throw new GenException("Unknown Stmt: " + n);
     }
 
@@ -108,9 +135,8 @@ public class IR1Gen {
     static List<IR1.Inst> gen(Ast1.Block n) throws Exception {
         List<IR1.Inst> code = new ArrayList<IR1.Inst>();
 
-        for (Ast1.Stmt s : n.stmts) {
+        for (Ast1.Stmt s : n.stmts)
             code.addAll(gen(s));
-        }
 
         return code;
     }
@@ -118,18 +144,79 @@ public class IR1Gen {
     // Ast1.Assign ---
     // Ast1.Exp lhs;
     // Ast1.Exp rhs;
+    //
+    // AG:
+    //   rhs.c + lhs.lc
+    //   +  ("lhs.l = rhs.v"     # if lhs is an Id
+    //   |   "[lhs.l] = rhs.v")  # if lhs is an ArrayElm
     static List<IR1.Inst> gen(Ast1.Assign n) throws Exception {
         List<IR1.Inst> code = new ArrayList<IR1.Inst>();
 
+        CodePack rhs = gen(n.rhs);
+        code.addAll(rhs.code);
+        CodePack lhs;
+        if (n.lhs instanceof Ast1.Id) {
+            lhs = gen(n.lhs);
+            code.addAll(lhs.code);
+            code.add(new IR1.Move((IR1.Id)lhs.src, rhs.src));
+        }
+        else if (n.lhs instanceof Ast1.ArrayElm) {
+            lhs = genAddr((Ast1.ArrayElm)n.lhs);
+            code.addAll(lhs.code);
+            code.add(new IR1.Store(new IR1.Addr(lhs.src), rhs.src));
+        } else
+            throw new GenException("Unknown lhs: " + n.lhs);
+
         return code;
     }
+
+    /////////////////////////////////////////////////////////////////////////
+    // Helper method ---
+    // Generates address of some Ast1.ArrayElm n
+    //
+    // AG:
+    //   newTemp t1, t2
+    //   code: exp1.c
+    //         + exp2.c
+    //         + "t1 = exp2.v * 4"
+    //         + "t2 = exp1.v + t1"
+    //
+    static CodePack genAddr(Ast1.ArrayElm n) throws Exception {
+
+        IR1.Temp t1 = new IR1.Temp();
+        IR1.Temp t2 = new IR1.Temp();
+        List<IR1.Inst> code = new ArrayList<IR1.Inst>();
+        CodePack ar = gen(n.ar);
+        CodePack idx = gen(n.idx);
+
+        code.addAll(ar.code);
+        code.addAll(idx.code);
+        code.add(new IR1.Binop(IR1.AOP.MUL, t1, idx.src, new IR1.IntLit(4)));
+        code.add(new IR1.Binop(IR1.AOP.ADD, t2, ar.src, t1));
+
+        return new CodePack(t2, code);
+    }
+    //
+    // Helper method ---
+    /////////////////////////////////////////////////////////////////////////
 
     // Ast1.CallStmt ---
     // Ast1.String nm;
     // Ast1.Exp[] args;
     //
+    // AG:
+    //  "CallStmt" <Id> "(" {Exp} ")"
+    //
     static List<IR1.Inst> gen(Ast1.CallStmt n) throws Exception {
         List<IR1.Inst> code = new ArrayList<IR1.Inst>();
+
+        List<IR1.Src> src = new ArrayList<IR1.Src>();
+        for (Ast1.Exp arg : n.args) {
+            CodePack a = gen(arg);
+            src.add(a.src);
+            code.addAll(a.code);
+        }
+        code.add(new IR1.Call(new IR1.Global("_" + n.nm), src));
 
         return code;
     }
@@ -140,11 +227,11 @@ public class IR1Gen {
     //
     // AG:
     //   newLabel: L1[,L2]
-    //   code: cond.c 
-    //         + "if cond.v == false goto L1" 
-    //         + s1.c 
-    //         [+ "goto L2"] 
-    //         + "L1:" 
+    //   code: cond.c
+    //         + "if cond.v == false goto L1"
+    //         + s1.c
+    //         [+ "goto L2"]
+    //         + "L1:"
     //         [+ s2.c]
     //         [+ "L2:"]
     //
@@ -158,9 +245,9 @@ public class IR1Gen {
         IR1.Label L1 = new IR1.Label();
         IR1.Label L2 = new IR1.Label();
 
-        CodePack condCP = gen(n.cond);
-        code.addAll(condCP.code);
-        code.add(new IR1.CJump(IR1.ROP.EQ, condCP.src, IR1.FALSE, L1));
+        CodePack cond = gen(n.cond);
+        code.addAll(cond.code);
+        code.add(new IR1.CJump(IR1.ROP.EQ, cond.src, IR1.FALSE, L1));
         code.addAll(gen(n.s1));
         if (opt)
             code.add(new IR1.Jump(L2));
@@ -179,17 +266,27 @@ public class IR1Gen {
     //
     // AG:
     //   newLabel: L1,L2
-    //   code: "L1:" 
-    //         + cond.c 
-    //         + "if cond.v == false goto L2" 
-    //         + s.c 
-    //         + "goto L1" 
+    //   code: "L1:"
+    //         + cond.c
+    //         + "if cond.v == false goto L2"
+    //         + s.c
+    //         + "goto L1"
     //         + "L2:"
     //
     static List<IR1.Inst> gen(Ast1.While n) throws Exception {
         List<IR1.Inst> code = new ArrayList<IR1.Inst>();
 
-        // ... need code ...
+        IR1.Label L1 = new IR1.Label();
+        IR1.Label L2 = new IR1.Label();
+
+        code.add(new IR1.LabelDec(L1));
+        CodePack cond = gen(n.cond);
+        code.addAll(cond.code);
+        code.add(new IR1.CJump(IR1.ROP.EQ, cond.src, IR1.FALSE, L2));
+        for (IR1.Inst s : gen(n.s))
+            code.add(s);
+        code.add(new IR1.Jump(L1));
+        code.add(new IR1.LabelDec(L2));
 
         return code;
     }
@@ -204,11 +301,18 @@ public class IR1Gen {
 
         List<IR1.Inst> code = new ArrayList<IR1.Inst>();
         List<IR1.Src> src = new ArrayList<IR1.Src>();
-        CodePack argCP = gen(n.arg);
 
-        code.addAll(argCP.code);
-        src.add(argCP.src);
-        code.add(new IR1.Call(new IR1.Global("void"), src));
+        if (n.arg != null) {
+            CodePack arg = gen(n.arg);
+            code.addAll(arg.code);
+            src.add(arg.src);
+            if (arg.src instanceof IR1.StrLit)
+                code.add(new IR1.Call(new IR1.Global("_printStr"), src));
+            else
+                code.add(new IR1.Call(new IR1.Global("_printInt"), src));
+        } else
+            code.add(new IR1.Call(new IR1.Global("_printStr"), src));
+
         return code;
     }
 
@@ -218,6 +322,13 @@ public class IR1Gen {
     static List<IR1.Inst> gen(Ast1.Return n) throws Exception {
         List<IR1.Inst> code = new ArrayList<IR1.Inst>();
 
+        if (n.val != null) {
+            CodePack val = gen(n.val);
+            code.addAll(val.code);
+            code.add(new IR1.Return(val.src));
+        } else
+            code.add(new IR1.Return());
+
         return code;
     }
 
@@ -226,9 +337,13 @@ public class IR1Gen {
     static CodePack gen(Ast1.Exp n) throws Exception {
         if (n instanceof Ast1.Binop)    return gen((Ast1.Binop) n);
         if (n instanceof Ast1.Unop)     return gen((Ast1.Unop) n);
+        if (n instanceof Ast1.Call)     return gen((Ast1.Call) n);
+        if (n instanceof Ast1.NewArray) return gen((Ast1.NewArray) n);
+        if (n instanceof Ast1.ArrayElm) return gen((Ast1.ArrayElm) n);
         if (n instanceof Ast1.Id)       return gen((Ast1.Id) n);
         if (n instanceof Ast1.IntLit)   return gen((Ast1.IntLit) n);
         if (n instanceof Ast1.BoolLit)  return gen((Ast1.BoolLit) n);
+        if (n instanceof Ast1.StrLit)   return gen((Ast1.StrLit) n);
         throw new GenException("Unknown Exp node: " + n);
     }
 
@@ -243,18 +358,17 @@ public class IR1Gen {
     //
     static CodePack gen(Ast1.Binop n) throws Exception {
 
-        IR1.Temp temp = new IR1.Temp();
+        IR1.Temp t = new IR1.Temp();
         List<IR1.Inst> code = new ArrayList<IR1.Inst>();
 
-        CodePack e1CP = gen(n.e1);
-        CodePack e2CP = gen(n.e2);
-        code.addAll(e1CP.code);
-        code.addAll(e2CP.code);
+        CodePack e1 = gen(n.e1);
+        CodePack e2 = gen(n.e2);
+        code.addAll(e1.code);
+        code.addAll(e2.code);
         IR1.BOP op = gen(n.op);
-        code.add(new IR1.Binop(op, temp, e1CP.src, e2CP.src));
+        code.add(new IR1.Binop(op, t, e1.src, e2.src));
 
-        return new CodePack(temp, code);
-
+        return new CodePack(t, code);
     }
 
     // Ast1.Unop ---
@@ -267,16 +381,35 @@ public class IR1Gen {
     //
     static CodePack gen(Ast1.Unop n) throws Exception {
 
-        IR1.Temp temp = new IR1.Temp();
+        IR1.Temp t = new IR1.Temp();
         List<IR1.Inst> code = new ArrayList<IR1.Inst>();
 
-        CodePack expCP = gen(n.e);
-        code.addAll(expCP.code);
+        CodePack e = gen(n.e);
+        code.addAll(e.code);
         IR1.UOP op = gen(n.op);
-        code.add(new IR1.Unop(op, temp, expCP.src));
+        code.add(new IR1.Unop(op, t, e.src));
 
-        return new CodePack(temp, code);
+        return new CodePack(t, code);
+    }
 
+    // Ast1.Call
+    // String nm;
+    // Ast1.Exp[] args;
+    //
+    // AG:
+    //   "(" "Call" <Id> "(" {Exp} "}" ")"
+    static CodePack gen(Ast1.Call n) throws Exception {
+
+        IR1.Temp t = new IR1.Temp();
+        List<IR1.Inst> code = new ArrayList<IR1.Inst>();
+        List<IR1.Src> src = new ArrayList<IR1.Src>();
+        for (Ast1.Exp arg : n.args) {
+            CodePack e = gen(arg);
+            code.addAll(e.code);
+            src.add(e.src);
+        }
+        code.add(new IR1.Call(new IR1.Global("_" + n.nm), src, t));
+        return new CodePack(t, code);
     }
 
     // Ast1.NewArray
@@ -290,16 +423,16 @@ public class IR1Gen {
     //
     static CodePack gen(Ast1.NewArray n) throws Exception {
 
-        IR1.Temp temp1 = new IR1.Temp();
-        IR1.Temp temp2 = new IR1.Temp();
+        IR1.Temp t1 = new IR1.Temp();
+        IR1.Temp t2 = new IR1.Temp();
         List<IR1.Inst> code = new ArrayList<IR1.Inst>();
-        List<IR1.Src> t1 = new ArrayList<IR1.Src>();
+        List<IR1.Src> src = new ArrayList<IR1.Src>();
 
-        code.add(new IR1.Binop(IR1.AOP.MUL, temp1, new IR1.IntLit(n.len), new IR1.IntLit(4)));
-        t1.add(temp1);
-        code.add(new IR1.Call(new IR1.Global(n.et.toString()), t1, temp2));
-        return new CodePack(temp2, code);
+        code.add(new IR1.Binop(IR1.AOP.MUL, t1, new IR1.IntLit(n.len), new IR1.IntLit(4)));
+        src.add(t1);
+        code.add(new IR1.Call(new IR1.Global("_malloc"), src, t2));
 
+        return new CodePack(t2, code);
     }
 
     // Ast1.ArrayElm
@@ -316,20 +449,20 @@ public class IR1Gen {
     //
     static CodePack gen(Ast1.ArrayElm n) throws Exception {
 
-        IR1.Temp temp1 = new IR1.Temp();
-        IR1.Temp temp2 = new IR1.Temp();
-        IR1.Temp temp3 = new IR1.Temp();
+        IR1.Temp t1 = new IR1.Temp();
+        IR1.Temp t2 = new IR1.Temp();
+        IR1.Temp t3 = new IR1.Temp();
         List<IR1.Inst> code = new ArrayList<IR1.Inst>();
-        CodePack arCP = gen(n.ar);
-        CodePack idxCP = gen(n.idx);
+        CodePack ar = gen(n.ar);
+        CodePack idx = gen(n.idx);
 
-        code.addAll(arCP.code);
-        code.addAll(idxCP.code);
-        code.add(new IR1.Binop(IR1.AOP.MUL, temp1, idxCP.src, new IR1.IntLit(4)));
-        code.add(new IR1.Binop(IR1.AOP.ADD, temp2, arCP.src, temp1));
-        code.add(new IR1.Load(temp3, new IR1.Addr(temp2)));
-        return new CodePack(temp3, code);
+        code.addAll(ar.code);
+        code.addAll(idx.code);
+        code.add(new IR1.Binop(IR1.AOP.MUL, t1, idx.src, new IR1.IntLit(4)));
+        code.add(new IR1.Binop(IR1.AOP.ADD, t2, ar.src, t1));
+        code.add(new IR1.Load(t3, new IR1.Addr(t2)));
 
+        return new CodePack(t3, code);
     }
 
     // Ast1.Id ---

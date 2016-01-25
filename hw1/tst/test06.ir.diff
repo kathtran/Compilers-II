@@ -1,0 +1,41 @@
+6,22c6,21
+<  t1 = 2 * 4
+<  t2 = call _malloc(t1)
+<  b = t2
+<  t3 = 0 * 4
+<  t4 = b + t3
+<  [t4] = 3
+<  t5 = 1 * 4
+<  t6 = b + t5
+<  [t6] = 4
+<  t7 = 1 * 4
+<  t8 = b + t7
+<  t9 = [t8]
+<  call _printInt(t9)
+<  t10 = 0 * 4
+<  t11 = b + t10
+<  t12 = [t11]
+<  return t12
+---
+>  t1 = call _malloc(8)
+>  b = t1
+>  t2 = 0 * 4
+>  t3 = b + t2
+>  [t3] = 3
+>  t4 = 1 * 4
+>  t5 = b + t4
+>  [t5] = 4
+>  t6 = 1 * 4
+>  t7 = b + t6
+>  t8 = [t7]
+>  call _printInt(t8)
+>  t9 = 0 * 4
+>  t10 = b + t9
+>  t11 = [t10]
+>  return t11
+27,28c26,27
+<  t13 = call _go()
+<  call _printInt(t13)
+---
+>  t12 = call _go()
+>  call _printInt(t12)
