@@ -8,7 +8,3 @@
 >  t3 = call _foo(t2)
 >  t4 = k + t3
 >  k = t4
-19d18
-<  return t5
-20a20
->  return t5

@@ -42,10 +42,10 @@
 <  t18 = b + t17
 <  t19 = [t18]
 <  call _printInt(t19)
-<  return t22
 <  t20 = 0 * 4
 <  t21 = a + t20
 <  t22 = [t21]
+<  return t22
 ---
 >  t13 = a + t12
 >  t14 = [t13]

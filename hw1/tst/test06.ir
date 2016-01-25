@@ -16,10 +16,10 @@ _go ()
  t8 = b + t7
  t9 = [t8]
  call _printInt(t9)
- return t12
  t10 = 0 * 4
  t11 = b + t10
  t12 = [t11]
+ return t12
 }
 
 _main ()

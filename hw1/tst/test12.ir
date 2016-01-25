@@ -2,8 +2,8 @@
 
 _go ()
 {
- return t1
  t1 = call _value(true)
+ return t1
 }
 
 _value (cond)

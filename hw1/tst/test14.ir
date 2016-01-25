@@ -2,8 +2,8 @@
 
 _foo (i, j)
 {
- return t1
  t1 = i + j
+ return t1
 }
 
 _main ()

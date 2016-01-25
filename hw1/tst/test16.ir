@@ -2,9 +2,9 @@
 
 _go (i, j, k)
 {
- return t1
  t2 = i + j
  t1 = t2 + k
+ return t1
 }
 
 _main ()
