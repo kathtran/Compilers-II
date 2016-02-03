@@ -496,7 +496,16 @@ public class IRGen {
     static CodePack gen(Ast.Field n, ClassInfo cinfo, Env env) throws Exception {
 
         //  ... NEED CODE ...
+        List<IR.Inst> code = new ArrayList<IR.Inst>();
+        IR.Temp t = new IR.Temp();
 
+        CodePack exp = gen(n.obj, cinfo, env);
+        code.addAll(exp.code);
+        ClassInfo base = getClassInfo(n.obj, cinfo, env);
+        IR.Addr addr = new IR.Addr(exp.src, base.fieldOffset(n.nm));
+        code.add(new IR.Load(gen(base.fieldType(n.nm)), t, addr));
+
+        return new CodePack(gen(base.fieldType(n.nm)), exp.src, code);
     }
 
     // Id ---
@@ -512,8 +521,12 @@ public class IRGen {
     static CodePack gen(Ast.Id n, ClassInfo cinfo, Env env) throws Exception {
 
         //  ... NEED CODE ...
-        if (env.contains(n.nm))
-
+        if (env.containsKey(n.nm)) {
+            return new CodePack(gen(cinfo.fieldType(n.nm)), new IR.Id(n.nm));
+        } else {
+            Ast.Field field = new Ast.Field(new Ast.This(), n.nm);
+            return gen(field, cinfo, env);
+        }
     }
 
     // This ---
