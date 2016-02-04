@@ -415,7 +415,27 @@ public class IRGen {
     //
     static List<IR.Inst> gen(Ast.If n, ClassInfo cinfo, Env env) throws Exception {
 
-        //  ... NEED CODE ...
+        List<IR.Inst> code = new ArrayList<IR.Inst>();
+        IR.Label L1 = new IR.Label();
+        IR.Label L2 = new IR.Label();
+
+        boolean opt = false;
+        if (n.s2 != null)
+            opt = true;
+
+        CodePack cond = gen(n.cond, cinfo, env);
+        code.addAll(cond.code);
+        code.add(new IR.CJump(IR.ROP.EQ, cond.src, new IR.IntLit(0), L1));
+        code.addAll(gen(n.s1, cinfo, env));
+        if (opt)
+            code.add(new IR.Jump(L2));
+        code.add(new IR.LabelDec(L1));
+        if (opt) {
+            code.addAll(gen(n.s2, cinfo, env));
+            code.add(new IR.LabelDec(L2));
+        }
+
+        return code;
 
     }
 
@@ -435,7 +455,19 @@ public class IRGen {
     //
     static List<IR.Inst> gen(Ast.While n, ClassInfo cinfo, Env env) throws Exception {
 
-        //  ... NEED CODE ...
+        List<IR.Inst> code = new ArrayList<IR.Inst>();
+        IR.Label L1 = new IR.Label();
+        IR.Label L2 = new IR.Label();
+
+        code.add(new IR.LabelDec(L1));
+        CodePack cond = gen(n.cond, cinfo, env);
+        code.addAll(cond.code);
+        code.add(new IR.CJump(IR.ROP.EQ, cond.src, new IR.IntLit(0), L2));
+        code.addAll(gen(n.s, cinfo, env));
+        code.add(new IR.Jump(L1));
+        code.add(new IR.LabelDec(L2));
+
+        return code;
 
     }
 
@@ -553,7 +585,7 @@ public class IRGen {
     //   (b) Call gen on this new node
     //
     static CodePack gen(Ast.Id n, ClassInfo cinfo, Env env) throws Exception {
-        
+
         if (env.containsKey(n.nm)) {
             return new CodePack(gen(env.get(n.nm)), new IR.Id(n.nm));
         } else {
