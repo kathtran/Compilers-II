@@ -220,6 +220,9 @@ public class IRGen {
         // pass 2: generate IR code
 
         //  ... NEED CODE ...
+        for (Ast.ClassDecl c : n.classes) {
+            allFuncs.addAll(gen(c));
+        }
 
         return new IR.Program(allData, allFuncs);
     }
@@ -368,8 +371,31 @@ public class IRGen {
     static CodePack genCall(Ast.Exp obj, String name, Ast.Exp[] args,
                             ClassInfo cinfo, Env env, boolean retFlag) throws Exception {
 
-        //  ... NEED CODE ...
+        List<IR.Inst> code = new ArrayList<IR.Inst>();
+        List<IR.Src> al = new ArrayList<IR.Src>();
+        IR.Type type = null;
 
+        ClassInfo base = getClassInfo(obj, cinfo, env);
+        IR.Global global = new IR.Global(base.methodBaseClass(base.name).name + " " + base.name);
+        CodePack exp = gen(obj, cinfo, env);
+        code.addAll(exp.code);
+        IR.Addr addr = new IR.Addr(exp.src);
+
+        // Adding to argument list (al)
+        al.add(addr.base);
+        for (Ast.Exp arg : args) {
+            CodePack a = gen(arg, cinfo, env);
+            code.addAll(a.code);
+            al.add(a.src);
+        }
+
+        if (retFlag) {
+            type = gen(base.methodType(name));
+            IR.Temp t = new IR.Temp();
+            code.add(new IR.Call(global, false, al, t));
+        } else
+            code.add(new IR.Call(global, false, al));
+        return new CodePack(type, exp.src, code);
     }
 
     // If ---
@@ -477,8 +503,17 @@ public class IRGen {
     //
     static CodePack gen(Ast.NewObj n, ClassInfo cinfo, Env env) throws Exception {
 
-        //  ... NEED CODE ...
+        List<IR.Inst> code = new ArrayList<IR.Inst>();
+        List<IR.Src> srcs = new ArrayList<IR.Src>();
+        IR.Temp t = new IR.Temp();
 
+        ClassInfo base = createClassInfo(cinfo.classDecl);
+        if (base.objSize != 0) {
+            code.add(new IR.Call(new IR.Global("_malloc"), false, srcs, t));
+//            Ast.Call call = new Ast.Call();
+//            return new CodePack(base.fieldType(n.nm), );
+        } else
+            return gen(new Ast.IntLit(0));
     }
 
     // Field ---
@@ -495,7 +530,6 @@ public class IRGen {
     //
     static CodePack gen(Ast.Field n, ClassInfo cinfo, Env env) throws Exception {
 
-        //  ... NEED CODE ...
         List<IR.Inst> code = new ArrayList<IR.Inst>();
         IR.Temp t = new IR.Temp();
 
@@ -519,10 +553,9 @@ public class IRGen {
     //   (b) Call gen on this new node
     //
     static CodePack gen(Ast.Id n, ClassInfo cinfo, Env env) throws Exception {
-
-        //  ... NEED CODE ...
+        
         if (env.containsKey(n.nm)) {
-            return new CodePack(gen(cinfo.fieldType(n.nm)), new IR.Id(n.nm));
+            return new CodePack(gen(env.get(n.nm)), new IR.Id(n.nm));
         } else {
             Ast.Field field = new Ast.Field(new Ast.This(), n.nm);
             return gen(field, cinfo, env);
