@@ -316,7 +316,12 @@ public class IRGen {
     //
     static List<IR.Inst> gen(Ast.Block n, ClassInfo cinfo, Env env) throws Exception {
 
-        //  ... NEED CODE ...
+        List<IR.Inst> code = new ArrayList<IR.Inst>();
+
+        for (Ast.Stmt s : n.stmts)
+            code.addAll(gen(s, cinfo, env));
+
+        return code;
 
     }
 
@@ -337,7 +342,25 @@ public class IRGen {
     //
     static List<IR.Inst> gen(Ast.Assign n, ClassInfo cinfo, Env env) throws Exception {
 
-        //  ... NEED CODE ...
+        List<IR.Inst> code = new ArrayList<IR.Inst>();
+
+        CodePack rhs = gen(n.rhs, cinfo, env);
+        code.addAll(rhs.code);
+        CodePack lhs;
+        if (n.lhs instanceof Ast.Id) {
+            lhs = gen(n.lhs, cinfo, env);
+            code.addAll(lhs.code);
+            if (env.containsKey(((Ast.Id) n.lhs).nm))
+                code.add(new IR.Move((IR.Id) lhs.src, rhs.src));
+        } else if (n.lhs instanceof Ast.Field) {
+            lhs = gen(n.lhs, cinfo, env);
+            code.addAll(lhs.code);
+            ClassInfo base = getClassInfo(n.lhs, cinfo, env);
+            IR.Addr addr = new IR.Addr(lhs.src, base.fieldOffset(((Ast.Field) n.lhs).nm));
+            code.add(new IR.Store(lhs.type, addr, rhs.src));
+        }
+
+        return code;
 
     }
 
@@ -495,7 +518,7 @@ public class IRGen {
                 code.add(new IR.Call(new IR.Global("_printBool"), false, srcs));
         } else
             code.add(new IR.Call(new IR.Global("_printStr"), false, srcs));
-        
+
         return code;
 
     }
