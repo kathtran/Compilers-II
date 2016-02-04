@@ -481,7 +481,23 @@ public class IRGen {
     //
     static List<IR.Inst> gen(Ast.Print n, ClassInfo cinfo, Env env) throws Exception {
 
-        //  ... NEED CODE ...
+        List<IR.Inst> code = new ArrayList<IR.Inst>();
+        List<IR.Src> srcs = new ArrayList<IR.Src>();
+        CodePack arg = gen(n.arg, cinfo, env);
+
+        code.addAll(arg.code);
+        if (arg.src != null)
+            srcs.add(arg.src);
+        if (arg.src == null || arg.src instanceof IR.StrLit) {
+            code.add(new IR.Call(new IR.Global("_printStr"), false, srcs));
+        } else {
+            if (arg.src instanceof IR.IntLit)
+                code.add(new IR.Call(new IR.Global("_printInt"), false, srcs));
+            else
+                code.add(new IR.Call(new IR.Global("_printBool"), false, srcs));
+        }
+
+        return code;
 
     }
 
