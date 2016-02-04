@@ -483,20 +483,19 @@ public class IRGen {
 
         List<IR.Inst> code = new ArrayList<IR.Inst>();
         List<IR.Src> srcs = new ArrayList<IR.Src>();
-        CodePack arg = gen(n.arg, cinfo, env);
 
-        code.addAll(arg.code);
-        if (arg.src != null)
-            srcs.add(arg.src);
-        if (arg.src == null || arg.src instanceof IR.StrLit) {
-            code.add(new IR.Call(new IR.Global("_printStr"), false, srcs));
-        } else {
-            if (arg.src instanceof IR.IntLit)
+        if (n.arg != null) {
+            CodePack arg = gen(n.arg, cinfo, env);
+            code.addAll(arg.code);
+            if (arg.src instanceof IR.StrLit)
+                code.add(new IR.Call(new IR.Global("_printStr"), false, srcs));
+            else if (arg.src instanceof IR.IntLit)
                 code.add(new IR.Call(new IR.Global("_printInt"), false, srcs));
             else
                 code.add(new IR.Call(new IR.Global("_printBool"), false, srcs));
-        }
-
+        } else
+            code.add(new IR.Call(new IR.Global("_printStr"), false, srcs));
+        
         return code;
 
     }
@@ -511,7 +510,16 @@ public class IRGen {
     //
     static List<IR.Inst> gen(Ast.Return n, ClassInfo cinfo, Env env) throws Exception {
 
-        //  ... NEED CODE ...
+        List<IR.Inst> code = new ArrayList<IR.Inst>();
+
+        if (n.val != null) {
+            CodePack val = gen(n.val, cinfo, env);
+            code.addAll(val.code);
+            code.add(new IR.Return(val.src));
+        } else
+            code.add(new IR.Return());
+
+        return code;
 
     }
 
