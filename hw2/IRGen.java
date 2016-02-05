@@ -456,7 +456,7 @@ public class IRGen {
         IR.Type type = null;
 
         ClassInfo base = getClassInfo(obj, cinfo, env);
-        IR.Global global = new IR.Global("_" + base.methodBaseClass(base.name).name + "_" + base.name);
+        IR.Global global = new IR.Global("_" + cinfo.methodBaseClass(base.name) + "_" + base.name);
         CodePack exp = gen(obj, cinfo, env);
         code.addAll(exp.code);
         IR.Addr addr = new IR.Addr(exp.src);
