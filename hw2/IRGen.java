@@ -403,15 +403,17 @@ public class IRGen {
         code.addAll(rhs.code);
         CodePack lhs;
         if (n.lhs instanceof Ast.Id) {
+            Ast.Id id = (Ast.Id) n.lhs;
             lhs = gen(n.lhs, cinfo, env);
             code.addAll(lhs.code);
-            if (env.containsKey(((Ast.Id) n.lhs).nm))
+            if (env.containsKey(id.nm))
                 code.add(new IR.Move((IR.Id) lhs.src, rhs.src));
         } else if (n.lhs instanceof Ast.Field) {
+            Ast.Field field = (Ast.Field) n.lhs;
             lhs = gen(n.lhs, cinfo, env);
             code.addAll(lhs.code);
             ClassInfo base = getClassInfo(n.lhs, cinfo, env);
-            IR.Addr addr = new IR.Addr(lhs.src, base.fieldOffset(((Ast.Field) n.lhs).nm));
+            IR.Addr addr = new IR.Addr(lhs.src, base.fieldOffset(field.nm));
             code.add(new IR.Store(lhs.type, addr, rhs.src));
         }
 
