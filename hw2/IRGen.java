@@ -566,11 +566,11 @@ public class IRGen {
             CodePack arg = gen(n.arg, cinfo, env);
             code.addAll(arg.code);
             srcs.add(arg.src);
-            if (arg.src instanceof IR.StrLit)
+            if (arg.type == IR.Type.PTR)
                 code.add(new IR.Call(new IR.Global("_printStr"), false, srcs));
-            else if (arg.src instanceof IR.BoolLit)
+            else if (arg.type == IR.Type.BOOL)
                 code.add(new IR.Call(new IR.Global("_printBool"), false, srcs));
-            else
+            else if (arg.type == IR.Type.INT)
                 code.add(new IR.Call(new IR.Global("_printInt"), false, srcs));
         } else
             code.add(new IR.Call(new IR.Global("_printStr"), false, srcs));
