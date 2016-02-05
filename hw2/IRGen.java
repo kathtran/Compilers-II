@@ -299,7 +299,7 @@ public class IRGen {
 
         IR.Global global = null;
 
-        if (!n.nm.equals("_main")) {
+        if (!n.nm.equals("main")) {
             global = new IR.Global("_" + cinfo.methodBaseClass(n.nm) + "_" + n.nm);
             params.add(thisObj);
         }
@@ -558,6 +558,7 @@ public class IRGen {
 
         CodePack arg = gen(n.arg, cinfo, env);
         code.addAll(arg.code);
+        srcs.add(arg.src);
         if (arg.src == null || arg.src instanceof IR.StrLit)
             code.add(new IR.Call(new IR.Global("_printStr"), false, srcs));
         else if (arg.src instanceof IR.IntLit)
