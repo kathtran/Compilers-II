@@ -218,10 +218,10 @@ public class IRGen {
             classEnv.put(c.nm, cinfo);
         }
         // pass 2: generate IR code
-
-        //  ... NEED CODE ...
+        
         for (Ast.ClassDecl c : n.classes) {
-            allFuncs.addAll(gen(c));
+            ClassInfo cinfo = createClassInfo(c);
+            allFuncs.addAll(gen(c, cinfo));
         }
 
         return new IR.Program(allData, allFuncs);
@@ -303,9 +303,12 @@ public class IRGen {
             global = new IR.Global("_" + cinfo.methodBaseClass(n.nm) + "_" + n.nm);
             params.add(thisObj);
         }
-        Env env = new Env();
 
-        
+        Env env = new Env();
+        for (Ast.Param p : n.params)
+            env.put(p.nm, p.t);
+        for (Ast.VarDecl v : n.vars)
+            env.put(v.nm, v.t);
 
         IR.Temp.reset();
         for (Ast.VarDecl v : n.vars)
