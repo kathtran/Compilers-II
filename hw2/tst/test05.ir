@@ -1,0 +1,17 @@
+# IR Program
+
+_ClassInfo:  Test null {} 0 ClassDecl Test 
+  MethodDecl void main ()
+   If true
+    Print 1
+   Else
+    Print 2
+_main (obj)
+{
+ if true == 0 goto L0
+ call _printInt()
+ goto L1
+L0:
+ call _printInt()
+L1:
+}

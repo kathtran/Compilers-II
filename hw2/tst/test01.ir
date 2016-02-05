@@ -1,0 +1,9 @@
+# IR Program
+
+_ClassInfo:  Test null {} 0 ClassDecl Test 
+  MethodDecl void main ()
+   Print "Hello World!"
+_main (obj)
+{
+ call _printStr()
+}

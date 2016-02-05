@@ -1,0 +1,15 @@
+# IR Program
+
+_ClassInfo:  Test null {} 0 ClassDecl Test 
+  MethodDecl void main ()
+   VarDecl BoolType b true
+   VarDecl IntType i 2
+   Print b
+   Print i
+_main (obj)
+{
+ b = true
+ i = 2
+ call _printBool()
+ call _printBool()
+}
