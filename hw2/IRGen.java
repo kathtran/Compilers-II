@@ -222,6 +222,7 @@ public class IRGen {
         for (Ast.ClassDecl c : n.classes) {
             ClassInfo cinfo = createClassInfo(c);
             allFuncs.addAll(gen(c, cinfo));
+            System.out.println(cinfo.name);
         }
 
         return new IR.Program(allData, allFuncs);
@@ -404,15 +405,15 @@ public class IRGen {
         CodePack lhs;
         if (n.lhs instanceof Ast.Id) {
             Ast.Id id = (Ast.Id) n.lhs;
-            lhs = gen(n.lhs, cinfo, env);
+            lhs = gen(id, cinfo, env);
             code.addAll(lhs.code);
             if (env.containsKey(id.nm))
                 code.add(new IR.Move((IR.Id) lhs.src, rhs.src));
         } else if (n.lhs instanceof Ast.Field) {
             Ast.Field field = (Ast.Field) n.lhs;
-            lhs = gen(n.lhs, cinfo, env);
+            lhs = gen(field, cinfo, env);
             code.addAll(lhs.code);
-            ClassInfo base = getClassInfo(n.lhs, cinfo, env);
+            ClassInfo base = getClassInfo(field, cinfo, env);
             IR.Addr addr = new IR.Addr(lhs.src, base.fieldOffset(field.nm));
             code.add(new IR.Store(lhs.type, addr, rhs.src));
         } else
