@@ -238,7 +238,20 @@ public class IRGen {
     //
     private static ClassInfo createClassInfo(Ast.ClassDecl n) throws Exception {
 
-        //  ... NEED CODE ...
+        ClassInfo classInfo = null;
+        int offset;
+
+        if (n.pnm != null)
+            classInfo = new ClassInfo(n, classEnv.get(n.pnm));
+        else
+            classInfo = new ClassInfo(n);
+        for (Ast.VarDecl v : n.flds) {
+            offset = gen(v.t).size;
+            classInfo.objSize += offset;
+            classInfo.offsets.put(v.nm, offset);
+        }
+
+        return classInfo;
 
     }
 
@@ -252,7 +265,13 @@ public class IRGen {
     //
     static List<IR.Func> gen(Ast.ClassDecl n, ClassInfo cinfo) throws Exception {
 
-        //  ... NEED CODE ...
+        List<IR.Func> func = new ArrayList<IR.Func>();
+
+        for (Ast.MethodDecl m : n.mthds) {
+            func.add(gen(m, cinfo));
+        }
+
+        return func;
 
     }
 
@@ -274,8 +293,27 @@ public class IRGen {
     //  6. Return an IR.Func with the above
     //
     static IR.Func gen(Ast.MethodDecl n, ClassInfo cinfo) throws Exception {
+        List<IR.Id> params = new ArrayList<IR.Id>();
+        List<IR.Id> locals = new ArrayList<IR.Id>();
+        List<IR.Inst> code = new ArrayList<IR.Inst>();
 
-        //  ... NEED CODE ...
+        IR.Global global = null;
+
+        if (!n.nm.equals("_main")) {
+            global = new IR.Global("_" + cinfo.methodBaseClass(n.nm) + "_" + n.nm);
+            params.add(thisObj);
+        }
+        Env env = new Env();
+
+        
+
+        IR.Temp.reset();
+        for (Ast.VarDecl v : n.vars)
+            code.addAll(gen(v, cinfo, env));
+        for (Ast.Stmt s : n.stmts)
+            code.addAll(gen(s, cinfo, env));
+
+        return new IR.Func(global, params, locals, code);
 
     }
 
@@ -292,7 +330,15 @@ public class IRGen {
     static List<IR.Inst> gen(Ast.VarDecl n, ClassInfo cinfo,
                              Env env) throws Exception {
 
-        //  ... NEED CODE ...
+        List<IR.Inst> code = new ArrayList<IR.Inst>();
+
+        if (n.init != null) {
+            CodePack init = gen(n.init, cinfo, env);
+            code.addAll(init.code);
+            code.add(new IR.Move(new IR.Id(n.nm), init.src));
+        }
+
+        return code;
 
     }
 
@@ -399,7 +445,7 @@ public class IRGen {
         IR.Type type = null;
 
         ClassInfo base = getClassInfo(obj, cinfo, env);
-        IR.Global global = new IR.Global(base.methodBaseClass(base.name).name + " " + base.name);
+        IR.Global global = new IR.Global("_" + base.methodBaseClass(base.name).name + "_" + base.name);
         CodePack exp = gen(obj, cinfo, env);
         code.addAll(exp.code);
         IR.Addr addr = new IR.Addr(exp.src);
@@ -507,17 +553,14 @@ public class IRGen {
         List<IR.Inst> code = new ArrayList<IR.Inst>();
         List<IR.Src> srcs = new ArrayList<IR.Src>();
 
-        if (n.arg != null) {
-            CodePack arg = gen(n.arg, cinfo, env);
-            code.addAll(arg.code);
-            if (arg.src instanceof IR.StrLit)
-                code.add(new IR.Call(new IR.Global("_printStr"), false, srcs));
-            else if (arg.src instanceof IR.IntLit)
-                code.add(new IR.Call(new IR.Global("_printInt"), false, srcs));
-            else
-                code.add(new IR.Call(new IR.Global("_printBool"), false, srcs));
-        } else
+        CodePack arg = gen(n.arg, cinfo, env);
+        code.addAll(arg.code);
+        if (arg.src == null || arg.src instanceof IR.StrLit)
             code.add(new IR.Call(new IR.Global("_printStr"), false, srcs));
+        else if (arg.src instanceof IR.IntLit)
+            code.add(new IR.Call(new IR.Global("_printInt"), false, srcs));
+        else
+            code.add(new IR.Call(new IR.Global("_printBool"), false, srcs));
 
         return code;
 
@@ -586,13 +629,13 @@ public class IRGen {
         List<IR.Src> srcs = new ArrayList<IR.Src>();
         IR.Temp t = new IR.Temp();
 
-        ClassInfo base = createClassInfo(cinfo.classDecl);
+        ClassInfo base = classEnv.get(n.nm);
         if (base.objSize != 0) {
+            srcs.add(new IR.IntLit(base.objSize));
             code.add(new IR.Call(new IR.Global("_malloc"), false, srcs, t));
-//            Ast.Call call = new Ast.Call();
-//            return new CodePack(base.fieldType(n.nm), );
+            return new CodePack(IR.Type.PTR, t, code);
         } else
-            return gen(new Ast.IntLit(0));
+            return new CodePack(IR.Type.PTR, new IR.IntLit(0), code);
     }
 
     // Field ---
