@@ -415,7 +415,8 @@ public class IRGen {
             ClassInfo base = getClassInfo(n.lhs, cinfo, env);
             IR.Addr addr = new IR.Addr(lhs.src, base.fieldOffset(field.nm));
             code.add(new IR.Store(lhs.type, addr, rhs.src));
-        }
+        } else
+            throw new GenException("Unknown lhs: " + n.lhs);
 
         return code;
 
