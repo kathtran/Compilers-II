@@ -4,6 +4,6 @@ _main ()
 {
  i = 2
  j = i
- call _printBool(j)
+ call _printInt(j)
  return 
 }

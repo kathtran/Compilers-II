@@ -312,8 +312,10 @@ public class IRGen {
             env.put(v.nm, v.t);
 
         IR.Temp.reset();
-        for (Ast.VarDecl v : n.vars)
+        for (Ast.VarDecl v : n.vars) {
             code.addAll(gen(v, cinfo, env));
+            locals.add(new IR.Id(v.nm));
+        }
         for (Ast.Stmt s : n.stmts)
             code.addAll(gen(s, cinfo, env));
 

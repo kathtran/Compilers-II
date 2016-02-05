@@ -1,6 +1,2 @@
 3a4
 > (i, j)
-7c8
-<  call _printBool(j)
----
->  call _printInt(j)

@@ -1,6 +1,4 @@
-3a4
-> (b, i)
-8c9
-<  call _printBool(i)
+8c8
+<  call _printInt(b)
 ---
->  call _printInt(i)
+>  call _printBool(b)
