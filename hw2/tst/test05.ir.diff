@@ -1,22 +1,4 @@
-3,9c3
-< _ClassInfo:  Test null {} 0 ClassDecl Test 
-<   MethodDecl void main ()
-<    If true
-<     Print 1
-<    Else
-<     Print 2
-< _main (obj)
----
-> _main ()
-11,12c5,6
+5c5
 <  if true == 0 goto L0
-<  call _printInt()
 ---
 >  if true == false goto L0
->  call _printInt(1)
-15c9
-<  call _printInt()
----
->  call _printInt(2)
-16a11
->  return 

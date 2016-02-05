@@ -1,18 +1,6 @@
-3,9c3,4
-< _ClassInfo:  Test null {} 0 ClassDecl Test 
-<   MethodDecl void main ()
-<    VarDecl BoolType b true
-<    VarDecl IntType i 2
-<    Print b
-<    Print i
-< _main (obj)
----
-> _main ()
+3a4
 > (b, i)
-13,14c8,10
-<  call _printBool()
-<  call _printBool()
+8c9
+<  call _printBool(i)
 ---
->  call _printBool(b)
 >  call _printInt(i)
->  return 

@@ -302,7 +302,8 @@ public class IRGen {
         if (!n.nm.equals("main")) {
             global = new IR.Global("_" + cinfo.methodBaseClass(n.nm) + "_" + n.nm);
             params.add(thisObj);
-        }
+        } else
+            global = new IR.Global("_" + n.nm);
 
         Env env = new Env();
         for (Ast.Param p : n.params)
@@ -315,6 +316,9 @@ public class IRGen {
             code.addAll(gen(v, cinfo, env));
         for (Ast.Stmt s : n.stmts)
             code.addAll(gen(s, cinfo, env));
+
+        if (n.t == null)
+            code.add(new IR.Return());
 
         return new IR.Func(global, params, locals, code);
 

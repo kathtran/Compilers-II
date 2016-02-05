@@ -1,20 +1,6 @@
-3,9c3,4
-< _ClassInfo:  Test null {} 0 ClassDecl Test 
-<   MethodDecl void main ()
-<    VarDecl BoolType flag true
-<    While flag
-<     Assign flag false
-<    Print "done"
-< _main (obj)
----
-> _main ()
+3a4
 > (flag)
-13c8
+7c8
 <  if flag == 0 goto L1
 ---
 >  if flag == false goto L1
-17c12,13
-<  call _printStr()
----
->  call _printStr("done")
->  return 

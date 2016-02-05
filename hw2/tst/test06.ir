@@ -1,12 +1,6 @@
 # IR Program
 
-_ClassInfo:  Test null {} 0 ClassDecl Test 
-  MethodDecl void main ()
-   VarDecl BoolType flag true
-   While flag
-    Assign flag false
-   Print "done"
-_main (obj)
+_main ()
 {
  flag = true
 L0:
@@ -14,5 +8,6 @@ L0:
  flag = false
  goto L0
 L1:
- call _printStr()
+ call _printStr("done")
+ return 
 }

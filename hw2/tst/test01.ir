@@ -1,9 +1,7 @@
 # IR Program
 
-_ClassInfo:  Test null {} 0 ClassDecl Test 
-  MethodDecl void main ()
-   Print "Hello World!"
-_main (obj)
+_main ()
 {
- call _printStr()
+ call _printStr("Hello World!")
+ return 
 }

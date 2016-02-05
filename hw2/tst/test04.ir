@@ -1,15 +1,9 @@
 # IR Program
 
-_ClassInfo:  Test null {} 0 ClassDecl Test 
-  MethodDecl void main ()
-   VarDecl IntType i ()
-   VarDecl IntType j ()
-   Assign i 2
-   Assign j i
-   Print j
-_main (obj)
+_main ()
 {
  i = 2
  j = i
- call _printBool()
+ call _printBool(j)
+ return 
 }
