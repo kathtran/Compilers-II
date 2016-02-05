@@ -484,7 +484,7 @@ public class IRGen {
     //  (Note: Same as in IR1Gen.java)
     //  newLabel: L1[,L2]
     //  code: cond.c
-    //    + "if cond.v == 0 goto L1"
+    //    + "if cond.v == false goto L1"
     //    + s1.c
     //    [+ "goto L2"]
     //    + "L1:"
@@ -503,7 +503,7 @@ public class IRGen {
 
         CodePack cond = gen(n.cond, cinfo, env);
         code.addAll(cond.code);
-        code.add(new IR.CJump(IR.ROP.EQ, cond.src, new IR.IntLit(0), L1));
+        code.add(new IR.CJump(IR.ROP.EQ, cond.src, IR.FALSE, L1));
         code.addAll(gen(n.s1, cinfo, env));
         if (opt)
             code.add(new IR.Jump(L2));
@@ -526,7 +526,7 @@ public class IRGen {
     //  newLabel: L1,L2
     //  code: "L1:"
     //    + cond.c
-    //    + "if cond.v == 0 goto L2"
+    //    + "if cond.v == false goto L2"
     //    + s.c
     //    + "goto L1"
     //    + "L2:"
@@ -540,7 +540,7 @@ public class IRGen {
         code.add(new IR.LabelDec(L1));
         CodePack cond = gen(n.cond, cinfo, env);
         code.addAll(cond.code);
-        code.add(new IR.CJump(IR.ROP.EQ, cond.src, new IR.IntLit(0), L2));
+        code.add(new IR.CJump(IR.ROP.EQ, cond.src, IR.FALSE, L2));
         code.addAll(gen(n.s, cinfo, env));
         code.add(new IR.Jump(L1));
         code.add(new IR.LabelDec(L2));
@@ -566,11 +566,11 @@ public class IRGen {
             CodePack arg = gen(n.arg, cinfo, env);
             code.addAll(arg.code);
             srcs.add(arg.src);
-            if (arg.type == IR.Type.PTR)
+            if (arg.src instanceof IR.StrLit)
                 code.add(new IR.Call(new IR.Global("_printStr"), false, srcs));
             else if (arg.type == IR.Type.BOOL)
                 code.add(new IR.Call(new IR.Global("_printBool"), false, srcs));
-            else if (arg.type == IR.Type.INT)
+            else
                 code.add(new IR.Call(new IR.Global("_printInt"), false, srcs));
         } else
             code.add(new IR.Call(new IR.Global("_printStr"), false, srcs));

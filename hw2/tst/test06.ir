@@ -1,10 +1,11 @@
 # IR Program
 
 _main ()
+(flag)
 {
  flag = true
 L0:
- if flag == 0 goto L1
+ if flag == false goto L1
  flag = false
  goto L0
 L1:

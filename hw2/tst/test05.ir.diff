@@ -1,4 +1,0 @@
-5c5
-<  if true == 0 goto L0
----
->  if true == false goto L0

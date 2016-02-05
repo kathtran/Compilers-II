@@ -2,7 +2,7 @@
 
 _main ()
 {
- if true == 0 goto L0
+ if true == false goto L0
  call _printInt(1)
  goto L1
 L0:

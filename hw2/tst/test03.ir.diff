@@ -1,4 +1,0 @@
-8c8
-<  call _printInt(b)
----
->  call _printBool(b)

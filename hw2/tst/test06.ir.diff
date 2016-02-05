@@ -1,6 +1,0 @@
-3a4
-> (flag)
-7c8
-<  if flag == 0 goto L1
----
->  if flag == false goto L1
