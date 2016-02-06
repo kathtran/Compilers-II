@@ -1,0 +1,70 @@
+# IR Program
+
+_main ()
+(b, a)
+{
+ t1 = call _malloc(8)
+ b = t1
+ a = b
+ t2 = 4[b]:I
+ 4[b]:I = 11
+ t3 = 4[b]:I
+ 4[b]:I = 22
+ t4 = call _ClassInfo:  A null {x=4} 4 ClassDecl A 
+  VarDecl IntType x ()
+  MethodDecl IntType f ()
+   Return x
+  MethodDecl IntType g ()
+   Return x
+_A(a)
+ call _printInt(a)
+ t5 = call _ClassInfo:  A null {x=4} 4 ClassDecl A 
+  VarDecl IntType x ()
+  MethodDecl IntType f ()
+   Return x
+  MethodDecl IntType g ()
+   Return x
+_A(a)
+ call _printInt(a)
+ return 
+}
+
+_ClassInfo:  A null {x=4} 4 ClassDecl A 
+  VarDecl IntType x ()
+  MethodDecl IntType f ()
+   Return x
+  MethodDecl IntType g ()
+   Return x
+_f (obj)
+{
+ t1 = 4[obj]:I
+ return obj
+}
+
+_ClassInfo:  A null {x=4} 4 ClassDecl A 
+  VarDecl IntType x ()
+  MethodDecl IntType f ()
+   Return x
+  MethodDecl IntType g ()
+   Return x
+_g (obj)
+{
+ t1 = 4[obj]:I
+ return obj
+}
+
+_ClassInfo:  B ClassInfo:  A null {x=4} 4 ClassDecl A 
+  VarDecl IntType x ()
+  MethodDecl IntType f ()
+   Return x
+  MethodDecl IntType g ()
+   Return x
+ {x=4, y=4} 8 ClassDecl B A
+  VarDecl IntType y ()
+  MethodDecl IntType f ()
+   Return y
+_f (obj)
+{
+ t1 = 4[obj]:I
+ return obj
+}

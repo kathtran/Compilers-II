@@ -1,23 +1,36 @@
-0a1,22
-> # IR Program
-> 
-> _main ()
-> (b)
-> {
->  t1 = call _malloc(5)
->  b = t1
+8,20c8,12
+<  t2 = 4[b]:I
+<  4[b]:I = 10
+<  t3 = 1[b]:B
+<  1[b]:B = true
+<  t4 = 1[b]:B
+<  if b == false goto L0
+<  call _ClassInfo:  B ClassInfo:  A null {b=1, i=4} 5 ClassDecl A 
+<   VarDecl IntType i ()
+<   VarDecl BoolType b ()
+<  {i=4, b=1} 5 ClassDecl B A
+<   MethodDecl void go ()
+<    Print i
+< _B(b)
+---
 >  [b]:I = 10
 >  4[b]:B = true
 >  t2 = 4[b]:B
 >  if t2 == false goto L0
 >  call _B_go(b)
-> L0:
->  return 
-> }
-> 
+25,31c17
+< _ClassInfo:  B ClassInfo:  A null {b=1, i=4} 5 ClassDecl A 
+<   VarDecl IntType i ()
+<   VarDecl BoolType b ()
+<  {i=4, b=1} 5 ClassDecl B A
+<   MethodDecl void go ()
+<    Print i
+< _go (obj)
+---
 > _B_go (obj)
-> {
+33,34c19,20
+<  t1 = 4[obj]:I
+<  call _printInt(obj)
+---
 >  t1 = [obj]:I
 >  call _printInt(t1)
->  return 
-> }

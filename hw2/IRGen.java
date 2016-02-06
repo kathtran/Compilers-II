@@ -411,7 +411,7 @@ public class IRGen {
         } else if (n.lhs instanceof Ast.Field) {
             lhs = gen(n.lhs, cinfo, env);
             code.addAll(lhs.code);
-            ClassInfo base = getClassInfo(n.lhs, cinfo, env);
+            ClassInfo base = getClassInfo(((Ast.Field) n.lhs).obj, cinfo, env);
             IR.Addr addr = new IR.Addr(lhs.src, base.fieldOffset(((Ast.Field) n.lhs).nm));
             code.add(new IR.Store(lhs.type, addr, rhs.src));
         } else

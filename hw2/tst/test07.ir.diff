@@ -1,13 +1,9 @@
-0a1,12
-> # IR Program
-> 
-> _main ()
-> (a)
-> {
->  t1 = call _malloc(4)
->  a = t1
+8,11c8,10
+<  t2 = 4[a]:I
+<  4[a]:I = 10
+<  t3 = 4[a]:I
+<  call _printInt(a)
+---
 >  [a]:I = 10
 >  t2 = [a]:I
 >  call _printInt(t2)
->  return 
-> }

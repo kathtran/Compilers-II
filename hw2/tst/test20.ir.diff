@@ -1,35 +1,78 @@
-0a1,34
-> # IR Program
-> 
-> _main ()
-> (b, a)
-> {
->  t1 = call _malloc(8)
->  b = t1
->  a = b
+9,11c9
+<  t2 = 4[b]:I
+<  4[b]:I = 11
+<  t3 = 4[b]:I
+---
 >  [b]:I = 11
->  4[b]:I = 22
+13,28c11,14
+<  t4 = call _ClassInfo:  A null {x=4} 4 ClassDecl A 
+<   VarDecl IntType x ()
+<   MethodDecl IntType f ()
+<    Return x
+<   MethodDecl IntType g ()
+<    Return x
+< _A(a)
+<  call _printInt(a)
+<  t5 = call _ClassInfo:  A null {x=4} 4 ClassDecl A 
+<   VarDecl IntType x ()
+<   MethodDecl IntType f ()
+<    Return x
+<   MethodDecl IntType g ()
+<    Return x
+< _A(a)
+<  call _printInt(a)
+---
 >  t2 = call _A_f(a)
 >  call _printInt(t2)
 >  t3 = call _A_g(a)
 >  call _printInt(t3)
->  return 
-> }
-> 
+32,38c18
+< _ClassInfo:  A null {x=4} 4 ClassDecl A 
+<   VarDecl IntType x ()
+<   MethodDecl IntType f ()
+<    Return x
+<   MethodDecl IntType g ()
+<    Return x
+< _f (obj)
+---
 > _A_f (obj)
-> {
+40,41c20,21
+<  t1 = 4[obj]:I
+<  return obj
+---
 >  t1 = [obj]:I
 >  return t1
-> }
-> 
+44,50c24
+< _ClassInfo:  A null {x=4} 4 ClassDecl A 
+<   VarDecl IntType x ()
+<   MethodDecl IntType f ()
+<    Return x
+<   MethodDecl IntType g ()
+<    Return x
+< _g (obj)
+---
 > _A_g (obj)
-> {
+52,53c26,27
+<  t1 = 4[obj]:I
+<  return obj
+---
 >  t1 = [obj]:I
 >  return t1
-> }
-> 
+56,66c30
+< _ClassInfo:  B ClassInfo:  A null {x=4} 4 ClassDecl A 
+<   VarDecl IntType x ()
+<   MethodDecl IntType f ()
+<    Return x
+<   MethodDecl IntType g ()
+<    Return x
+<  {x=4, y=4} 8 ClassDecl B A
+<   VarDecl IntType y ()
+<   MethodDecl IntType f ()
+<    Return y
+< _f (obj)
+---
 > _B_f (obj)
-> {
->  t1 = 4[obj]:I
+69c33
+<  return obj
+---
 >  return t1
-> }
