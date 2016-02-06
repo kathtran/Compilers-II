@@ -1,22 +1,36 @@
-0a1,21
-> # IR Program
-> 
-> _main ()
-> (b)
-> {
->  t1 = call _malloc(8)
->  b = t1
+8,17c8,10
+<  call _ClassInfo:  B ClassInfo:  A null {i=4} 4 ClassDecl A 
+<   VarDecl IntType i ()
+<  {i=4, j=4} 8 ClassDecl B A
+<   VarDecl IntType j ()
+<   MethodDecl void setval ((Param IntType u) (Param IntType v) )
+<    Assign i u
+<    Assign j v
+< _B(b, 10, 20)
+<  t2 = 4[b]:I
+<  call _printInt(b)
+---
 >  call _B_setval(b, 10, 20)
 >  t2 = [b]:I
 >  call _printInt(t2)
->  t3 = 4[b]:I
+19c12
+<  call _printInt(b)
+---
 >  call _printInt(t3)
->  return 
-> }
-> 
+23,30c16
+< _ClassInfo:  B ClassInfo:  A null {i=4} 4 ClassDecl A 
+<   VarDecl IntType i ()
+<  {i=4, j=4} 8 ClassDecl B A
+<   VarDecl IntType j ()
+<   MethodDecl void setval ((Param IntType u) (Param IntType v) )
+<    Assign i u
+<    Assign j v
+< _setval (obj)
+---
 > _B_setval (obj, u, v)
-> {
+32,33c18,19
+<  t1 = 4[obj]:I
+<  t2 = 4[obj]:I
+---
 >  [obj]:I = u
 >  4[obj]:I = v
->  return 
-> }

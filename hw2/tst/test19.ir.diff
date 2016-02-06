@@ -1,24 +1,33 @@
-0a1,23
-> # IR Program
-> 
-> _main ()
-> (a, b)
-> {
->  a = 0
->  b = 0
+8,17c8,11
+<  t3 = call _ClassInfo:  A null {} 0 ClassDecl A 
+<   MethodDecl IntType f ()
+<    Return 10
+< _A(a)
+<  call _printInt(a)
+<  t4 = call _ClassInfo:  A null {} 0 ClassDecl A 
+<   MethodDecl IntType f ()
+<    Return 10
+< _A(b)
+<  call _printInt(b)
+---
 >  t1 = call _A_f(a)
 >  call _printInt(t1)
 >  t2 = call _A_f(b)
 >  call _printInt(t2)
->  return 
-> }
-> 
+21,24c15
+< _ClassInfo:  A null {} 0 ClassDecl A 
+<   MethodDecl IntType f ()
+<    Return 10
+< _f (obj)
+---
 > _A_f (obj)
-> {
->  return 10
-> }
-> 
+29,35c20
+< _ClassInfo:  B ClassInfo:  A null {} 0 ClassDecl A 
+<   MethodDecl IntType f ()
+<    Return 10
+<  {} 0 ClassDecl B A
+<   MethodDecl IntType f ()
+<    Return 20
+< _f (obj)
+---
 > _B_f (obj)
-> {
->  return 20
-> }

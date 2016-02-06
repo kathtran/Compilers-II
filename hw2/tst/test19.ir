@@ -1,0 +1,38 @@
+# IR Program
+
+_main ()
+(a, b)
+{
+ a = 0
+ b = 0
+ t3 = call _ClassInfo:  A null {} 0 ClassDecl A 
+  MethodDecl IntType f ()
+   Return 10
+_A(a)
+ call _printInt(a)
+ t4 = call _ClassInfo:  A null {} 0 ClassDecl A 
+  MethodDecl IntType f ()
+   Return 10
+_A(b)
+ call _printInt(b)
+ return 
+}
+
+_ClassInfo:  A null {} 0 ClassDecl A 
+  MethodDecl IntType f ()
+   Return 10
+_f (obj)
+{
+ return 10
+}
+
+_ClassInfo:  B ClassInfo:  A null {} 0 ClassDecl A 
+  MethodDecl IntType f ()
+   Return 10
+ {} 0 ClassDecl B A
+  MethodDecl IntType f ()
+   Return 20
+_f (obj)
+{
+ return 20
+}

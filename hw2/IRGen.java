@@ -265,7 +265,7 @@ public class IRGen {
     //
     static List<IR.Func> gen(Ast.ClassDecl n, ClassInfo cinfo) throws Exception {
 
-        List<IR.Func> func m= new ArrayList<IR.Func>();
+        List<IR.Func> func = new ArrayList<IR.Func>();
 
         for (Ast.MethodDecl m : n.mthds) {
             func.add(gen(m, cinfo));

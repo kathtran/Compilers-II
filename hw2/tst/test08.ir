@@ -1,0 +1,21 @@
+# IR Program
+
+_main ()
+(b)
+{
+ b = 0
+ call _ClassInfo:  Body null {} 0 ClassDecl Body 
+  MethodDecl void go ()
+   Print "Go!"
+_Body(b)
+ return 
+}
+
+_ClassInfo:  Body null {} 0 ClassDecl Body 
+  MethodDecl void go ()
+   Print "Go!"
+_go (obj)
+{
+ call _printStr("Go!")
+ return 
+}

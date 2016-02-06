@@ -1,22 +1,40 @@
-0a1,21
-> # IR Program
-> 
-> _main ()
-> (b)
-> {
->  b = 0
+7,13c7,8
+<  t2 = call _ClassInfo:  Body null {} 0 ClassDecl Body 
+<   MethodDecl IntType echo ((Param IntType i) )
+<    Return i
+<   MethodDecl IntType go ()
+<    Return (Call This echo (10 ))
+< _Body(b)
+<  call _printInt(b)
+---
 >  t1 = call _Body_go(b)
 >  call _printInt(t1)
->  return 
-> }
-> 
+17,22c12
+< _ClassInfo:  Body null {} 0 ClassDecl Body 
+<   MethodDecl IntType echo ((Param IntType i) )
+<    Return i
+<   MethodDecl IntType go ()
+<    Return (Call This echo (10 ))
+< _echo (obj)
+---
 > _Body_echo (obj, i)
-> {
->  return i
-> }
-> 
+27,32c17
+< _ClassInfo:  Body null {} 0 ClassDecl Body 
+<   MethodDecl IntType echo ((Param IntType i) )
+<    Return i
+<   MethodDecl IntType go ()
+<    Return (Call This echo (10 ))
+< _go (obj)
+---
 > _Body_go (obj)
-> {
+34,40c19,20
+<  t1 = call _ClassInfo:  Body null {} 0 ClassDecl Body 
+<   MethodDecl IntType echo ((Param IntType i) )
+<    Return i
+<   MethodDecl IntType go ()
+<    Return (Call This echo (10 ))
+< _Body(obj, 10)
+<  return obj
+---
 >  t1 = call _Body_echo(obj, 10)
 >  return t1
-> }

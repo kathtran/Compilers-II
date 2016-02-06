@@ -1,16 +1,14 @@
-0a1,15
-> # IR Program
-> 
-> _main ()
-> (b)
-> {
->  b = 0
+7,10c7
+<  call _ClassInfo:  Body null {} 0 ClassDecl Body 
+<   MethodDecl void go ()
+<    Print "Go!"
+< _Body(b)
+---
 >  call _Body_go(b)
->  return 
-> }
-> 
+14,17c11
+< _ClassInfo:  Body null {} 0 ClassDecl Body 
+<   MethodDecl void go ()
+<    Print "Go!"
+< _go (obj)
+---
 > _Body_go (obj)
-> {
->  call _printStr("Go!")
->  return 
-> }

@@ -1,0 +1,39 @@
+# IR Program
+
+_main ()
+(b)
+{
+ b = 0
+ t2 = call _ClassInfo:  B ClassInfo:  A null {} 0 ClassDecl A 
+  MethodDecl IntType echo ((Param IntType a) )
+   Return a
+ {} 0 ClassDecl B A
+  MethodDecl IntType go ()
+   Return (Call This echo (2 ))
+_B(b)
+ call _printInt(b)
+ return 
+}
+
+_ClassInfo:  A null {} 0 ClassDecl A 
+  MethodDecl IntType echo ((Param IntType a) )
+   Return a
+_echo (obj)
+{
+ return a
+}
+
+_ClassInfo:  B ClassInfo:  A null {} 0 ClassDecl A 
+  MethodDecl IntType echo ((Param IntType a) )
+   Return a
+ {} 0 ClassDecl B A
+  MethodDecl IntType go ()
+   Return (Call This echo (2 ))
+_go (obj)
+{
+ t1 = call _ClassInfo:  A null {} 0 ClassDecl A 
+  MethodDecl IntType echo ((Param IntType a) )
+   Return a
+_B(obj, 2)
+ return obj
+}

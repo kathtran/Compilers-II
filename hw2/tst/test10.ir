@@ -1,0 +1,28 @@
+# IR Program
+
+_main ()
+(b)
+{
+ t1 = call _malloc(4)
+ b = t1
+ call _ClassInfo:  Body null {i=4} 4 ClassDecl Body 
+  VarDecl IntType i ()
+  MethodDecl void go ()
+   Assign i 10
+   Print i
+_Body(b)
+ return 
+}
+
+_ClassInfo:  Body null {i=4} 4 ClassDecl Body 
+  VarDecl IntType i ()
+  MethodDecl void go ()
+   Assign i 10
+   Print i
+_go (obj)
+{
+ t1 = 4[obj]:I
+ t2 = 4[obj]:I
+ call _printInt(obj)
+ return 
+}
