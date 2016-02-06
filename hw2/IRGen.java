@@ -393,7 +393,7 @@ public class IRGen {
     //   (b) Call getClassInfo() on the obj component to get the base ClassInfo
     //   (c) From base ClassInfo, find out the field's offset
     //   (d) Combine base address and offset to form an IR.Addr
-    //   (e) Generate and IR.Store instruction
+    //   (e) Generate an IR.Store instruction
     //
     static List<IR.Inst> gen(Ast.Assign n, ClassInfo cinfo, Env env) throws Exception {
 
@@ -404,17 +404,16 @@ public class IRGen {
         CodePack lhs;
         if (n.lhs instanceof Ast.Id) {
             Ast.Id id = (Ast.Id) n.lhs;
-            lhs = gen(id, cinfo, env);
+            lhs = gen(n.lhs, cinfo, env);
             code.addAll(lhs.code);
             if (env.containsKey(id.nm))
                 code.add(new IR.Move((IR.Id) lhs.src, rhs.src));
         } else if (n.lhs instanceof Ast.Field) {
-            Ast.Field field = (Ast.Field) n.lhs;
-            lhs = gen(field, cinfo, env);
+            lhs = gen(n.lhs, cinfo, env);
             code.addAll(lhs.code);
-            ClassInfo base = getClassInfo(field, cinfo, env);
-            IR.Addr addr = new IR.Addr(lhs.src, base.fieldOffset(field.nm));
-            code.add(new IR.Store(lhs.type, addr, rhs.src));
+            ClassInfo base = getClassInfo(n.lhs, cinfo, env);
+            IR.Addr addr = new IR.Addr(lhs.src, base.fieldOffset(((Ast.Field) n.lhs).nm));
+            code.add(new IR.Store(rhs.type, addr, rhs.src));
         } else
             throw new GenException("Unknown lhs: " + n.lhs);
 
@@ -454,7 +453,7 @@ public class IRGen {
 
         List<IR.Inst> code = new ArrayList<IR.Inst>();
         List<IR.Src> al = new ArrayList<IR.Src>();
-        IR.Type type;
+        IR.Type type = null;
 
         ClassInfo base = getClassInfo(obj, cinfo, env);
         IR.Global global = new IR.Global("_" + cinfo.methodBaseClass(base.name) + "_" + base.name);
@@ -470,9 +469,8 @@ public class IRGen {
             al.add(a.src);
         }
 
-        type = gen(base.methodType(name));
-        
         if (retFlag) {
+            type = gen(base.methodType(name));
             IR.Temp t = new IR.Temp();
             code.add(new IR.Call(global, false, al, t));
         } else
