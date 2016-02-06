@@ -265,7 +265,7 @@ public class IRGen {
     //
     static List<IR.Func> gen(Ast.ClassDecl n, ClassInfo cinfo) throws Exception {
 
-        List<IR.Func> func = new ArrayList<IR.Func>();
+        List<IR.Func> func m= new ArrayList<IR.Func>();
 
         for (Ast.MethodDecl m : n.mthds) {
             func.add(gen(m, cinfo));
@@ -413,7 +413,7 @@ public class IRGen {
             code.addAll(lhs.code);
             ClassInfo base = getClassInfo(n.lhs, cinfo, env);
             IR.Addr addr = new IR.Addr(lhs.src, base.fieldOffset(((Ast.Field) n.lhs).nm));
-            code.add(new IR.Store(rhs.type, addr, rhs.src));
+            code.add(new IR.Store(lhs.type, addr, rhs.src));
         } else
             throw new GenException("Unknown lhs: " + n.lhs);
 
@@ -456,7 +456,7 @@ public class IRGen {
         IR.Type type = null;
 
         ClassInfo base = getClassInfo(obj, cinfo, env);
-        IR.Global global = new IR.Global("_" + cinfo.methodBaseClass(base.name) + "_" + base.name);
+        IR.Global global = new IR.Global("_" + base.methodBaseClass(name) + "_" + base.name);
         CodePack exp = gen(obj, cinfo, env);
         code.addAll(exp.code);
         IR.Addr addr = new IR.Addr(exp.src);
