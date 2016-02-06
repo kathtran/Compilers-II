@@ -404,15 +404,16 @@ public class IRGen {
         CodePack lhs;
         if (n.lhs instanceof Ast.Id) {
             Ast.Id id = (Ast.Id) n.lhs;
-            lhs = gen(n.lhs, cinfo, env);
+            lhs = gen(id, cinfo, env);
             code.addAll(lhs.code);
             if (env.containsKey(id.nm))
                 code.add(new IR.Move((IR.Id) lhs.src, rhs.src));
         } else if (n.lhs instanceof Ast.Field) {
-            lhs = gen(n.lhs, cinfo, env);
+            Ast.Field field = (Ast.Field) n.lhs;
+            lhs = gen(field, cinfo, env);
             code.addAll(lhs.code);
-            ClassInfo base = getClassInfo(((Ast.Field) n.lhs).obj, cinfo, env);
-            IR.Addr addr = new IR.Addr(lhs.src, base.fieldOffset(((Ast.Field) n.lhs).nm));
+            ClassInfo base = getClassInfo(field.obj, cinfo, env);
+            IR.Addr addr = new IR.Addr(lhs.src, base.fieldOffset(field.nm));
             code.add(new IR.Store(lhs.type, addr, rhs.src));
         } else
             throw new GenException("Unknown lhs: " + n.lhs);
