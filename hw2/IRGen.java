@@ -222,7 +222,6 @@ public class IRGen {
         for (Ast.ClassDecl c : n.classes) {
             ClassInfo cinfo = createClassInfo(c);
             allFuncs.addAll(gen(c, cinfo));
-            System.out.println(cinfo.name);
         }
 
         return new IR.Program(allData, allFuncs);
@@ -455,7 +454,7 @@ public class IRGen {
 
         List<IR.Inst> code = new ArrayList<IR.Inst>();
         List<IR.Src> al = new ArrayList<IR.Src>();
-        IR.Type type = null;
+        IR.Type type;
 
         ClassInfo base = getClassInfo(obj, cinfo, env);
         IR.Global global = new IR.Global("_" + cinfo.methodBaseClass(base.name) + "_" + base.name);
@@ -471,8 +470,9 @@ public class IRGen {
             al.add(a.src);
         }
 
+        type = gen(base.methodType(name));
+        
         if (retFlag) {
-            type = gen(base.methodType(name));
             IR.Temp t = new IR.Temp();
             code.add(new IR.Call(global, false, al, t));
         } else
