@@ -410,8 +410,9 @@ public class IRGen {
             if (env.containsKey(id.nm))
                 code.add(new IR.Move((IR.Id) lhs.src, rhs.src));
             field = new Ast.Field(Ast.This, id.nm);
-        } if (n.lhs instanceof Ast.Field || field instanceof Ast.Field) {
-//            Ast.Field field = (Ast.Field) n.lhs;
+        } if (n.lhs instanceof Ast.Field || field != null) {
+            if (field == null)
+                field = (Ast.Field) n.lhs;
             lhs = gen(field, cinfo, env);
             code.addAll(lhs.code);
             ClassInfo base = getClassInfo(field.obj, cinfo, env);
