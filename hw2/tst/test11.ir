@@ -22,6 +22,7 @@ _ClassInfo:  Body null {i=4} 4 ClassDecl Body
 _go (obj)
 {
  t1 = 4[obj]:I
+ 4[obj]:I = 10
  t2 = 4[obj]:I
  call _printInt(obj)
  return 

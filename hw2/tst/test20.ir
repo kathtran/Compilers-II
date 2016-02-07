@@ -6,9 +6,7 @@ _main ()
  t1 = call _malloc(8)
  b = t1
  a = b
- t2 = 4[b]:I
  4[b]:I = 11
- t3 = 4[b]:I
  4[b]:I = 22
  t4 = call _ClassInfo:  A null {x=4} 4 ClassDecl A 
   VarDecl IntType x ()
