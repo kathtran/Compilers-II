@@ -3,7 +3,7 @@
 _main ()
 (b)
 {
- b = 0
+ b = t1
  t2 = call _ClassInfo:  B ClassInfo:  A null {} 0 ClassDecl A 
   MethodDecl IntType echo ((Param IntType a) )
    Return a

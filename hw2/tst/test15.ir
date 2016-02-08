@@ -6,29 +6,29 @@ _main ()
  b = t1
  call _ClassInfo:  B ClassInfo:  A null {i=4} 4 ClassDecl A 
   VarDecl IntType i ()
- {i=4, j=4} 8 ClassDecl B A
+ {i=4, j=8} 8 ClassDecl B A
   VarDecl IntType j ()
   MethodDecl void setval ((Param IntType u) (Param IntType v) )
    Assign i u
    Assign j v
 _B(b, 10, 20)
  t2 = 4[b]:I
- call _printInt(b)
- t3 = 4[b]:I
- call _printInt(b)
+ call _printInt(t2)
+ t3 = 8[b]:I
+ call _printInt(t3)
  return 
 }
 
 _ClassInfo:  B ClassInfo:  A null {i=4} 4 ClassDecl A 
   VarDecl IntType i ()
- {i=4, j=4} 8 ClassDecl B A
+ {i=4, j=8} 8 ClassDecl B A
   VarDecl IntType j ()
   MethodDecl void setval ((Param IntType u) (Param IntType v) )
    Assign i u
    Assign j v
 _setval (obj, u, v)
 {
- 4[obj]:I = u
- 4[obj]:I = v
+ 4[t1]:I = u
+ 8[t3]:I = v
  return 
 }

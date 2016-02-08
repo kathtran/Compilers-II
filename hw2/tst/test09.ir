@@ -3,7 +3,7 @@
 _main ()
 (b, i)
 {
- b = 0
+ b = t1
  i = b
  call _printInt(i)
  return 

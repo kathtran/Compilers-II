@@ -19,9 +19,9 @@
 ---
 > _Body_go (obj)
 23,25c14,16
-<  4[obj]:I = 10
+<  4[t1]:I = 10
 <  t3 = 4[obj]:I
-<  call _printInt(obj)
+<  call _printInt(t3)
 ---
 >  [obj]:I = 10
 >  t1 = [obj]:I

@@ -4,8 +4,8 @@ _main ()
 (a)
 {
  a = t1
- 4[a]:I = 10
+ 4[t2]:I = 10
  t4 = 4[a]:I
- call _printInt(a)
+ call _printInt(t4)
  return 
 }
