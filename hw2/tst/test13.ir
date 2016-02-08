@@ -19,7 +19,7 @@ _ClassInfo:  Body null {} 0 ClassDecl Body
    Return i
   MethodDecl IntType go ()
    Return (Call This echo (10 ))
-_echo (obj)
+_echo (obj, i)
 {
  return i
 }

@@ -16,7 +16,7 @@ _Body(b, 1, 2, 3)
 _ClassInfo:  Body null {} 0 ClassDecl Body 
   MethodDecl IntType go ((Param IntType i) (Param IntType j) (Param IntType k) )
    Return k
-_go (obj)
+_go (obj, i, j, k)
 {
  return k
 }

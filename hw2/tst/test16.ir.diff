@@ -14,7 +14,7 @@
 < _ClassInfo:  A null {} 0 ClassDecl A 
 <   MethodDecl IntType echo ((Param IntType a) )
 <    Return a
-< _echo (obj)
+< _echo (obj, a)
 ---
 > _A_echo (obj, a)
 26,32c17

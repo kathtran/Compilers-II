@@ -18,7 +18,7 @@ _B(b)
 _ClassInfo:  A null {} 0 ClassDecl A 
   MethodDecl IntType echo ((Param IntType a) )
    Return a
-_echo (obj)
+_echo (obj, a)
 {
  return a
 }

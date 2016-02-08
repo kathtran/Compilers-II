@@ -15,7 +15,7 @@
 <    Return i
 <   MethodDecl IntType go ()
 <    Return (Call This echo (10 ))
-< _echo (obj)
+< _echo (obj, i)
 ---
 > _Body_echo (obj, i)
 27,32c17

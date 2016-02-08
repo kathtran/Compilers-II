@@ -25,12 +25,10 @@ _ClassInfo:  B ClassInfo:  A null {i=4} 4 ClassDecl A
   MethodDecl void setval ((Param IntType u) )
    Assign i u
    Assign j i
-_setval (obj)
+_setval (obj, u)
 {
- t1 = 4[obj]:I
  4[obj]:I = u
  t2 = 4[obj]:I
- t3 = 4[obj]:I
  4[obj]:I = obj
  return 
 }

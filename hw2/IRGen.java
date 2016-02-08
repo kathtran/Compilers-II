@@ -312,6 +312,8 @@ public class IRGen {
             env.put(v.nm, v.t);
 
         IR.Temp.reset();
+        for (Ast.Param p : n.params)
+            params.add(new IR.Id(p.nm));
         for (Ast.VarDecl v : n.vars) {
             code.addAll(gen(v, cinfo, env));
             locals.add(new IR.Id(v.nm));
@@ -420,8 +422,9 @@ public class IRGen {
             ClassInfo base = getClassInfo(field.obj, cinfo, env);
             IR.Addr addr = new IR.Addr(lhs.src, base.fieldOffset(field.nm));
             code.add(new IR.Store(lhs.type, addr, rhs.src));
-        } else
-            throw new GenException("Unknown lhs: " + n.lhs);
+        }
+        //} else
+        //    throw new GenException("Unknown lhs: " + n.lhs);
 
         return code;
 

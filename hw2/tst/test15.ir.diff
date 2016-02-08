@@ -25,12 +25,10 @@
 <   MethodDecl void setval ((Param IntType u) (Param IntType v) )
 <    Assign i u
 <    Assign j v
-< _setval (obj)
+< _setval (obj, u, v)
 ---
 > _B_setval (obj, u, v)
-32,34c18
-<  t1 = 4[obj]:I
+32c18
 <  4[obj]:I = u
-<  t2 = 4[obj]:I
 ---
 >  [obj]:I = u
