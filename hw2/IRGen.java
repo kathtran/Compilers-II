@@ -652,10 +652,12 @@ public class IRGen {
         ClassInfo base = classEnv.get(n.nm);
         if (base.objSize != 0) {
             srcs.add(new IR.IntLit(base.objSize));
-            code.add(new IR.Call(new IR.Global("_malloc"), false, srcs, t));
-            return new CodePack(IR.Type.PTR, t, code);
+            //code.add(new IR.Call(new IR.Global("_malloc"), false, srcs, t));
+            //return new CodePack(IR.Type.PTR, t, code);
         } else
-            return new CodePack(IR.Type.PTR, new IR.IntLit(0), code);
+            srcs.add(new IR.IntLit(0));
+        code.add(new IR.Call(new IR.Global("_malloc"), false, srcs, t));
+        return new CodePack(IR.Type.PTR, t, code);
     }
 
     // Field ---
@@ -681,7 +683,7 @@ public class IRGen {
         IR.Addr addr = new IR.Addr(exp.src, base.fieldOffset(n.nm));
         code.add(new IR.Load(gen(base.fieldType(n.nm)), t, addr));
 
-        return new CodePack(gen(base.fieldType(n.nm)), exp.src, code);
+        return new CodePack(gen(base.fieldType(n.nm)), t, code);
     }
 
     // Id ---
