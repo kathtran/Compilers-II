@@ -3,7 +3,6 @@
 _main ()
 (b)
 {
- t1 = call _malloc(4)
  b = t1
  call _ClassInfo:  Body null {i=4} 4 ClassDecl Body 
   VarDecl IntType i ()
@@ -22,7 +21,7 @@ _ClassInfo:  Body null {i=4} 4 ClassDecl Body
 _go (obj)
 {
  4[obj]:I = 10
- t2 = 4[obj]:I
+ t3 = 4[obj]:I
  call _printInt(obj)
  return 
 }

@@ -220,7 +220,7 @@ public class IRGen {
         // pass 2: generate IR code
         
         for (Ast.ClassDecl c : n.classes) {
-            ClassInfo cinfo = createClassInfo(c);
+            ClassInfo cinfo = classEnv.get(c.nm);
             allFuncs.addAll(gen(c, cinfo));
         }
 
@@ -306,18 +306,18 @@ public class IRGen {
             global = new IR.Global("_" + n.nm);
 
         Env env = new Env();
-        for (Ast.Param p : n.params)
+        for (Ast.Param p : n.params) {
             env.put(p.nm, p.t);
-        for (Ast.VarDecl v : n.vars)
-            env.put(v.nm, v.t);
-
-        IR.Temp.reset();
-        for (Ast.Param p : n.params)
             params.add(new IR.Id(p.nm));
+        }
         for (Ast.VarDecl v : n.vars) {
-            code.addAll(gen(v, cinfo, env));
+            env.put(v.nm, v.t);
             locals.add(new IR.Id(v.nm));
         }
+
+        IR.Temp.reset();
+        for (Ast.VarDecl v : n.vars)
+            code.addAll(gen(v, cinfo, env));
         for (Ast.Stmt s : n.stmts)
             code.addAll(gen(s, cinfo, env));
 
@@ -345,7 +345,7 @@ public class IRGen {
 
         if (n.init != null) {
             CodePack init = gen(n.init, cinfo, env);
-            code.addAll(init.code);
+            //code.addAll(init.code);
             code.add(new IR.Move(new IR.Id(n.nm), init.src));
         }
 
@@ -403,10 +403,10 @@ public class IRGen {
 
         CodePack rhs = gen(n.rhs, cinfo, env);
         code.addAll(rhs.code);
-        CodePack lhs = null;
+        CodePack lhs;
         if (n.lhs instanceof Ast.Id) {
             Ast.Id id = (Ast.Id) n.lhs;
-            lhs = gen(id, cinfo, env);
+            lhs = gen(n.lhs, cinfo, env);
             if (env.containsKey(id.nm))
                 code.add(new IR.Move((IR.Id) lhs.src, rhs.src));
             else {
@@ -465,10 +465,9 @@ public class IRGen {
         IR.Global global = new IR.Global("_" + base.methodBaseClass(name) + "_" + base.name);
         CodePack exp = gen(obj, cinfo, env);
         code.addAll(exp.code);
-        IR.Addr addr = new IR.Addr(exp.src);
 
         // Adding to argument list (al)
-        al.add(addr.base);
+        al.add(exp.src);
         for (Ast.Exp arg : args) {
             CodePack a = gen(arg, cinfo, env);
             code.addAll(a.code);

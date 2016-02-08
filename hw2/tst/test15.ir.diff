@@ -1,4 +1,6 @@
-8,17c8,10
+5a6
+>  t1 = call _malloc(8)
+7,16c8,10
 <  call _ClassInfo:  B ClassInfo:  A null {i=4} 4 ClassDecl A 
 <   VarDecl IntType i ()
 <  {i=4, j=4} 8 ClassDecl B A
@@ -13,11 +15,11 @@
 >  call _B_setval(b, 10, 20)
 >  t2 = [b]:I
 >  call _printInt(t2)
-19c12
+18c12
 <  call _printInt(b)
 ---
 >  call _printInt(t3)
-23,30c16
+22,29c16
 < _ClassInfo:  B ClassInfo:  A null {i=4} 4 ClassDecl A 
 <   VarDecl IntType i ()
 <  {i=4, j=4} 8 ClassDecl B A
@@ -28,7 +30,7 @@
 < _setval (obj, u, v)
 ---
 > _B_setval (obj, u, v)
-32c18
+31c18
 <  4[obj]:I = u
 ---
 >  [obj]:I = u

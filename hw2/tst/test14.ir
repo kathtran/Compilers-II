@@ -3,13 +3,12 @@
 _main ()
 (b)
 {
- t1 = call _malloc(8)
  b = t1
  4[b]:I = 10
  4[b]:I = 20
- t4 = 4[b]:I
+ t6 = 4[b]:I
  call _printInt(b)
- t5 = 4[b]:I
+ t7 = 4[b]:I
  call _printInt(b)
  return 
 }

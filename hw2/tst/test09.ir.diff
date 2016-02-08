@@ -1,13 +1,9 @@
-7,11c7,8
-<  t2 = call _ClassInfo:  Body null {} 0 ClassDecl Body 
-<   MethodDecl IntType go ((Param IntType i) (Param IntType j) (Param IntType k) )
-<    Return k
-< _Body(b, 1, 2, 3)
+7c7,8
 <  i = b
 ---
 >  t1 = call _Body_go(b, 1, 2, 3)
 >  i = t1
-16,19c13
+12,15c13
 < _ClassInfo:  Body null {} 0 ClassDecl Body 
 <   MethodDecl IntType go ((Param IntType i) (Param IntType j) (Param IntType k) )
 <    Return k

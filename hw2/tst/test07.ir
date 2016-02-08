@@ -3,10 +3,9 @@
 _main ()
 (a)
 {
- t1 = call _malloc(4)
  a = t1
  4[a]:I = 10
- t3 = 4[a]:I
+ t4 = 4[a]:I
  call _printInt(a)
  return 
 }
