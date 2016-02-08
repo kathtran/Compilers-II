@@ -404,24 +404,27 @@ public class IRGen {
         CodePack rhs = gen(n.rhs, cinfo, env);
         code.addAll(rhs.code);
         CodePack lhs = null;
-        Ast.Field field = null;
+//        Ast.Field field = null;
         if (n.lhs instanceof Ast.Id) {
             Ast.Id id = (Ast.Id) n.lhs;
             lhs = gen(id, cinfo, env);
             //code.addAll(lhs.code);
             if (env.containsKey(id.nm))
                 code.add(new IR.Move((IR.Id) lhs.src, rhs.src));
-            else
-                field = new Ast.Field(Ast.This, id.nm);
-        } if (n.lhs instanceof Ast.Field || field != null) {
-            if (field == null) {
-                field = (Ast.Field) n.lhs;
+            else {
+                Ast.Field field = new Ast.Field(Ast.This, id.nm);
+                ClassInfo base = getClassInfo(field.obj, cinfo, env);
+                code.add(new IR.Store(gen(base.fieldType(field.nm)), new IR.Addr(lhs.src, base.fieldOffset(field.nm)), rhs.src));
+            }
+        } else if (n.lhs instanceof Ast.Field) {
+//            if (field == null) {
+                Ast.Field field = (Ast.Field) n.lhs;
                 lhs = gen(field, cinfo, env);
                 //code.addAll(lhs.code);
-            }
+//            }
             ClassInfo base = getClassInfo(field.obj, cinfo, env);
             IR.Addr addr = new IR.Addr(lhs.src, base.fieldOffset(field.nm));
-            code.add(new IR.Store(lhs.type, addr, rhs.src));
+            code.add(new IR.Store(gen(base.fieldType(field.nm)), addr, rhs.src));
         }
         //} else
         //    throw new GenException("Unknown lhs: " + n.lhs);
