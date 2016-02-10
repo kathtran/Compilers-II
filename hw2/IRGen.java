@@ -247,8 +247,8 @@ public class IRGen {
             classInfo = new ClassInfo(n);
         for (Ast.VarDecl v : n.flds) {
             offset = gen(v.t).size;
-            classInfo.objSize += offset;
             classInfo.offsets.put(v.nm, offset);
+            classInfo.objSize += offset;
         }
 
         return classInfo;
@@ -650,11 +650,9 @@ public class IRGen {
         IR.Temp t = new IR.Temp();
 
         ClassInfo base = classEnv.get(n.nm);
-        if (base.objSize != 0) {
+        if (base.objSize != 0)
             srcs.add(new IR.IntLit(base.objSize));
-            //code.add(new IR.Call(new IR.Global("_malloc"), false, srcs, t));
-            //return new CodePack(IR.Type.PTR, t, code);
-        } else
+        else
             srcs.add(new IR.IntLit(0));
         code.add(new IR.Call(new IR.Global("_malloc"), false, srcs, t));
         return new CodePack(IR.Type.PTR, t, code);
