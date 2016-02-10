@@ -1,4 +1,6 @@
-8,17c8,11
+6,17c6,11
+<  a = t1
+<  b = t2
 <  t3 = call _ClassInfo:  A null {} 0 ClassDecl A 
 <   MethodDecl IntType f ()
 <    Return 10
@@ -10,6 +12,8 @@
 < _A(b)
 <  call _printInt(b)
 ---
+>  a = 0
+>  b = 0
 >  t1 = call _A_f(a)
 >  call _printInt(t1)
 >  t2 = call _A_f(b)

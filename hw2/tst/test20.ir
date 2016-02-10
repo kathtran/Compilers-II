@@ -5,8 +5,8 @@ _main ()
 {
  b = t1
  a = b
- 4[b]:I = 11
- 4[b]:I = 22
+ 4[t2]:I = 11
+ 8[t4]:I = 22
  t6 = call _ClassInfo:  A null {x=4} 4 ClassDecl A 
   VarDecl IntType x ()
   MethodDecl IntType f ()
@@ -35,7 +35,7 @@ _ClassInfo:  A null {x=4} 4 ClassDecl A
 _f (obj)
 {
  t1 = 4[obj]:I
- return obj
+ return t1
 }
 
 _ClassInfo:  A null {x=4} 4 ClassDecl A 
@@ -47,7 +47,7 @@ _ClassInfo:  A null {x=4} 4 ClassDecl A
 _g (obj)
 {
  t1 = 4[obj]:I
- return obj
+ return t1
 }
 
 _ClassInfo:  B ClassInfo:  A null {x=4} 4 ClassDecl A 
@@ -56,12 +56,12 @@ _ClassInfo:  B ClassInfo:  A null {x=4} 4 ClassDecl A
    Return x
   MethodDecl IntType g ()
    Return x
- {x=4, y=4} 8 ClassDecl B A
+ {x=4, y=8} 8 ClassDecl B A
   VarDecl IntType y ()
   MethodDecl IntType f ()
    Return y
 _f (obj)
 {
- t1 = 4[obj]:I
- return obj
+ t1 = 8[obj]:I
+ return t1
 }

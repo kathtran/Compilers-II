@@ -1,10 +1,8 @@
 5a6
 >  t1 = call _malloc(8)
-8c9
-<  4[b]:I = 11
----
->  [b]:I = 11
-10,25c11,14
+8,25c9,14
+<  4[t2]:I = 11
+<  8[t4]:I = 22
 <  t6 = call _ClassInfo:  A null {x=4} 4 ClassDecl A 
 <   VarDecl IntType x ()
 <   MethodDecl IntType f ()
@@ -22,6 +20,8 @@
 < _A(a)
 <  call _printInt(a)
 ---
+>  [b]:I = 11
+>  4[b]:I = 22
 >  t2 = call _A_f(a)
 >  call _printInt(t2)
 >  t3 = call _A_g(a)
@@ -36,12 +36,10 @@
 < _f (obj)
 ---
 > _A_f (obj)
-37,38c20,21
+37c20
 <  t1 = 4[obj]:I
-<  return obj
 ---
 >  t1 = [obj]:I
->  return t1
 41,47c24
 < _ClassInfo:  A null {x=4} 4 ClassDecl A 
 <   VarDecl IntType x ()
@@ -52,12 +50,10 @@
 < _g (obj)
 ---
 > _A_g (obj)
-49,50c26,27
+49c26
 <  t1 = 4[obj]:I
-<  return obj
 ---
 >  t1 = [obj]:I
->  return t1
 53,63c30
 < _ClassInfo:  B ClassInfo:  A null {x=4} 4 ClassDecl A 
 <   VarDecl IntType x ()
@@ -65,14 +61,14 @@
 <    Return x
 <   MethodDecl IntType g ()
 <    Return x
-<  {x=4, y=4} 8 ClassDecl B A
+<  {x=4, y=8} 8 ClassDecl B A
 <   VarDecl IntType y ()
 <   MethodDecl IntType f ()
 <    Return y
 < _f (obj)
 ---
 > _B_f (obj)
-66c33
-<  return obj
+65c32
+<  t1 = 8[obj]:I
 ---
->  return t1
+>  t1 = 4[obj]:I

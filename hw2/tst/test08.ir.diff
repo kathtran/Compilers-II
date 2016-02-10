@@ -1,9 +1,11 @@
-7,10c7
+6,10c6,7
+<  b = t1
 <  call _ClassInfo:  Body null {} 0 ClassDecl Body 
 <   MethodDecl void go ()
 <    Print "Go!"
 < _Body(b)
 ---
+>  b = 0
 >  call _Body_go(b)
 14,17c11
 < _ClassInfo:  Body null {} 0 ClassDecl Body 

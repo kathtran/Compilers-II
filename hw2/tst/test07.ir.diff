@@ -1,9 +1,9 @@
 5a6
 >  t1 = call _malloc(4)
 7,9c8,10
-<  4[a]:I = 10
+<  4[t2]:I = 10
 <  t4 = 4[a]:I
-<  call _printInt(a)
+<  call _printInt(t4)
 ---
 >  [a]:I = 10
 >  t2 = [a]:I
