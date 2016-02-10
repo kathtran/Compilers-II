@@ -345,7 +345,7 @@ public class IRGen {
 
         if (n.init != null) {
             CodePack init = gen(n.init, cinfo, env);
-            //code.addAll(init.code);
+            code.addAll(init.code);
             code.add(new IR.Move(new IR.Id(n.nm), init.src));
         }
 
