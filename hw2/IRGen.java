@@ -245,8 +245,8 @@ public class IRGen {
             classInfo = new ClassInfo(n, classEnv.get(n.pnm));
         else
             classInfo = new ClassInfo(n);
+        offset = classInfo.objSize;
         for (Ast.VarDecl v : n.flds) {
-            offset = gen(v.t).size;
             classInfo.offsets.put(v.nm, offset);
             classInfo.objSize += offset;
         }
@@ -407,6 +407,7 @@ public class IRGen {
         if (n.lhs instanceof Ast.Id) {
             Ast.Id id = (Ast.Id) n.lhs;
             lhs = gen(n.lhs, cinfo, env);
+            code.addAll(lhs.code);
             if (env.containsKey(id.nm))
                 code.add(new IR.Move((IR.Id) lhs.src, rhs.src));
             else {
@@ -418,6 +419,7 @@ public class IRGen {
         } else if (n.lhs instanceof Ast.Field) {
             Ast.Field field = (Ast.Field) n.lhs;
             lhs = gen(field, cinfo, env);
+            code.addAll(lhs.code);
             ClassInfo base = getClassInfo(field.obj, cinfo, env);
             IR.Addr addr = new IR.Addr(lhs.src, base.fieldOffset(field.nm));
             code.add(new IR.Store(gen(field, cinfo, env).type, addr, rhs.src));

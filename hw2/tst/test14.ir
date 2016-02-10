@@ -4,11 +4,13 @@ _main ()
 (b)
 {
  b = t1
- 4[t2]:I = 10
- 8[t4]:I = 20
- t6 = 4[b]:I
+ t2 = [b]:I
+ [t2]:I = 10
+ t4 = [b]:I
+ [t4]:I = 20
+ t6 = [b]:I
  call _printInt(t6)
- t7 = 8[b]:I
+ t7 = [b]:I
  call _printInt(t7)
  return 
 }

@@ -4,7 +4,7 @@ _main ()
 (b)
 {
  b = t1
- call _ClassInfo:  Body null {i=4} 4 ClassDecl Body 
+ call _ClassInfo:  Body null {i=0} 0 ClassDecl Body 
   VarDecl IntType i ()
   MethodDecl void go ()
    Assign i 10
@@ -13,15 +13,16 @@ _Body(b)
  return 
 }
 
-_ClassInfo:  Body null {i=4} 4 ClassDecl Body 
+_ClassInfo:  Body null {i=0} 0 ClassDecl Body 
   VarDecl IntType i ()
   MethodDecl void go ()
    Assign i 10
    Print (Field This i) 
 _go (obj)
 {
- 4[t1]:I = 10
- t3 = 4[obj]:I
+ t1 = [obj]:I
+ [t1]:I = 10
+ t3 = [obj]:I
  call _printInt(t3)
  return 
 }

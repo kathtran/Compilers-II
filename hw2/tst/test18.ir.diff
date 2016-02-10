@@ -1,22 +1,20 @@
 5a6
 >  t1 = call _malloc(8)
-7,15c8,9
-<  call _ClassInfo:  B ClassInfo:  A null {i=4} 4 ClassDecl A 
+7,14c8
+<  call _ClassInfo:  B ClassInfo:  A null {i=0} 0 ClassDecl A 
 <   VarDecl IntType i ()
-<  {i=4, j=8} 8 ClassDecl B A
+<  {i=0, j=0} 0 ClassDecl B A
 <   VarDecl IntType j ()
 <   MethodDecl void setval ((Param IntType u) )
 <    Assign i u
 <    Assign j i
 < _B(b, 10)
-<  t2 = 4[b]:I
 ---
 >  call _B_setval(b, 10)
->  t2 = [b]:I
 20,27c14
-< _ClassInfo:  B ClassInfo:  A null {i=4} 4 ClassDecl A 
+< _ClassInfo:  B ClassInfo:  A null {i=0} 0 ClassDecl A 
 <   VarDecl IntType i ()
-<  {i=4, j=8} 8 ClassDecl B A
+<  {i=0, j=0} 0 ClassDecl B A
 <   VarDecl IntType j ()
 <   MethodDecl void setval ((Param IntType u) )
 <    Assign i u
@@ -24,11 +22,12 @@
 < _setval (obj, u)
 ---
 > _B_setval (obj, u)
-29,31c16,18
-<  4[t1]:I = u
-<  t3 = 4[obj]:I
-<  8[t4]:I = t3
----
+28a16
 >  [obj]:I = u
->  t1 = [obj]:I
+30,33c18
+<  [t1]:I = u
+<  t3 = [obj]:I
+<  t4 = [obj]:I
+<  [t4]:I = t3
+---
 >  4[obj]:I = t1
