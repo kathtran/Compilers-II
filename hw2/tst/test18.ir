@@ -3,6 +3,7 @@
 _main ()
 (b)
 {
+ t1 = call _malloc(0)
  b = t1
  call _ClassInfo:  B ClassInfo:  A null {i=0} 0 ClassDecl A 
   VarDecl IntType i ()
@@ -13,7 +14,7 @@ _main ()
    Assign j i
 _B(b, 10)
  t2 = [b]:I
- call _printInt(t2)
+ call _printInt(b)
  return 
 }
 
@@ -26,10 +27,8 @@ _ClassInfo:  B ClassInfo:  A null {i=0} 0 ClassDecl A
    Assign j i
 _setval (obj, u)
 {
- t1 = [obj]:I
- [t1]:I = u
+ [obj]:I = u
  t3 = [obj]:I
- t4 = [obj]:I
- [t4]:I = t3
+ [obj]:I = obj
  return 
 }

@@ -3,12 +3,11 @@
 _main ()
 (b, a)
 {
+ t1 = call _malloc(0)
  b = t1
  a = b
- t2 = [b]:I
- [t2]:I = 11
- t4 = [b]:I
- [t4]:I = 22
+ [b]:I = 11
+ [b]:I = 22
  t6 = call _ClassInfo:  A null {x=0} 0 ClassDecl A 
   VarDecl IntType x ()
   MethodDecl IntType f ()
@@ -37,7 +36,7 @@ _ClassInfo:  A null {x=0} 0 ClassDecl A
 _f (obj)
 {
  t1 = [obj]:I
- return t1
+ return obj
 }
 
 _ClassInfo:  A null {x=0} 0 ClassDecl A 
@@ -49,7 +48,7 @@ _ClassInfo:  A null {x=0} 0 ClassDecl A
 _g (obj)
 {
  t1 = [obj]:I
- return t1
+ return obj
 }
 
 _ClassInfo:  B ClassInfo:  A null {x=0} 0 ClassDecl A 
@@ -65,5 +64,5 @@ _ClassInfo:  B ClassInfo:  A null {x=0} 0 ClassDecl A
 _f (obj)
 {
  t1 = [obj]:I
- return t1
+ return obj
 }

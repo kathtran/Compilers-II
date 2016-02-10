@@ -407,7 +407,7 @@ public class IRGen {
         if (n.lhs instanceof Ast.Id) {
             Ast.Id id = (Ast.Id) n.lhs;
             lhs = gen(n.lhs, cinfo, env);
-            code.addAll(lhs.code);
+            //code.addAll(lhs.code);
             if (env.containsKey(id.nm))
                 code.add(new IR.Move((IR.Id) lhs.src, rhs.src));
             else {
@@ -419,7 +419,7 @@ public class IRGen {
         } else if (n.lhs instanceof Ast.Field) {
             Ast.Field field = (Ast.Field) n.lhs;
             lhs = gen(field, cinfo, env);
-            code.addAll(lhs.code);
+            //code.addAll(lhs.code);
             ClassInfo base = getClassInfo(field.obj, cinfo, env);
             IR.Addr addr = new IR.Addr(lhs.src, base.fieldOffset(field.nm));
             code.add(new IR.Store(gen(field, cinfo, env).type, addr, rhs.src));
@@ -683,7 +683,7 @@ public class IRGen {
         IR.Addr addr = new IR.Addr(exp.src, base.fieldOffset(n.nm));
         code.add(new IR.Load(gen(base.fieldType(n.nm)), t, addr));
 
-        return new CodePack(gen(base.fieldType(n.nm)), t, code);
+        return new CodePack(gen(base.fieldType(n.nm)), new IR.Id(exp.src.toString()), code);
     }
 
     // Id ---

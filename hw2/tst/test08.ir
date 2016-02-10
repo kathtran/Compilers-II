@@ -3,6 +3,7 @@
 _main ()
 (b)
 {
+ t1 = call _malloc(0)
  b = t1
  call _ClassInfo:  Body null {} 0 ClassDecl Body 
   MethodDecl void go ()

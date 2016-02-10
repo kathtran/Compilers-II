@@ -1,5 +1,7 @@
-6,17c6,11
+6,19c6,11
+<  t1 = call _malloc(0)
 <  a = t1
+<  t2 = call _malloc(0)
 <  b = t2
 <  t3 = call _ClassInfo:  A null {} 0 ClassDecl A 
 <   MethodDecl IntType f ()
@@ -18,14 +20,14 @@
 >  call _printInt(t1)
 >  t2 = call _A_f(b)
 >  call _printInt(t2)
-21,24c15
+23,26c15
 < _ClassInfo:  A null {} 0 ClassDecl A 
 <   MethodDecl IntType f ()
 <    Return 10
 < _f (obj)
 ---
 > _A_f (obj)
-29,35c20
+31,37c20
 < _ClassInfo:  B ClassInfo:  A null {} 0 ClassDecl A 
 <   MethodDecl IntType f ()
 <    Return 10

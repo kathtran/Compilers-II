@@ -1,4 +1,5 @@
-6,14c6,8
+6,15c6,8
+<  t1 = call _malloc(0)
 <  b = t1
 <  t2 = call _ClassInfo:  B ClassInfo:  A null {} 0 ClassDecl A 
 <   MethodDecl IntType echo ((Param IntType a) )
@@ -12,14 +13,14 @@
 >  b = 0
 >  t1 = call _B_go(b)
 >  call _printInt(t1)
-18,21c12
+19,22c12
 < _ClassInfo:  A null {} 0 ClassDecl A 
 <   MethodDecl IntType echo ((Param IntType a) )
 <    Return a
 < _echo (obj, a)
 ---
 > _A_echo (obj, a)
-26,32c17
+27,33c17
 < _ClassInfo:  B ClassInfo:  A null {} 0 ClassDecl A 
 <   MethodDecl IntType echo ((Param IntType a) )
 <    Return a
@@ -29,7 +30,7 @@
 < _go (obj)
 ---
 > _B_go (obj)
-34,38c19,20
+35,39c19,20
 <  t1 = call _ClassInfo:  A null {} 0 ClassDecl A 
 <   MethodDecl IntType echo ((Param IntType a) )
 <    Return a

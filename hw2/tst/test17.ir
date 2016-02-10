@@ -3,13 +3,12 @@
 _main ()
 (b)
 {
+ t1 = call _malloc(0)
  b = t1
- t2 = [b]:I
- [t2]:I = 10
- t4 = [b]:B
- [t4]:B = true
+ [b]:I = 10
+ [b]:B = true
  t6 = [b]:B
- if t6 == false goto L0
+ if b == false goto L0
  call _ClassInfo:  B ClassInfo:  A null {b=0, i=0} 0 ClassDecl A 
   VarDecl IntType i ()
   VarDecl BoolType b ()
@@ -30,6 +29,6 @@ _ClassInfo:  B ClassInfo:  A null {b=0, i=0} 0 ClassDecl A
 _go (obj)
 {
  t1 = [obj]:I
- call _printInt(t1)
+ call _printInt(obj)
  return 
 }

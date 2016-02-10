@@ -1,10 +1,10 @@
-5a6
->  t1 = call _malloc(4)
-6a8
->  [a]:I = 10
-8,10c10
-<  [t2]:I = 10
-<  t4 = [a]:I
-<  call _printInt(t4)
+6c6
+<  t1 = call _malloc(0)
 ---
+>  t1 = call _malloc(4)
+9,10c9,10
+<  t4 = [a]:I
+<  call _printInt(a)
+---
+>  t2 = [a]:I
 >  call _printInt(t2)
