@@ -1,14 +1,12 @@
-6c6
-<  t1 = call _malloc(0)
----
->  t1 = call _malloc(8)
-9,13c9,13
-<  [b]:I = 20
+8,13c8,13
+<  [t2]:I = 10
+<  4[t4]:I = 20
 <  t6 = [b]:I
-<  call _printInt(b)
-<  t7 = [b]:I
-<  call _printInt(b)
+<  call _printInt(t6)
+<  t7 = 4[b]:I
+<  call _printInt(t7)
 ---
+>  [b]:I = 10
 >  4[b]:I = 20
 >  t2 = [b]:I
 >  call _printInt(t2)

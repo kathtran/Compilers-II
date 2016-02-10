@@ -3,33 +3,33 @@
 _main ()
 (b)
 {
- t1 = call _malloc(0)
+ t1 = call _malloc(8)
  b = t1
- call _ClassInfo:  B ClassInfo:  A null {i=0} 0 ClassDecl A 
+ call _ClassInfo:  B ClassInfo:  A null {i=0} 4 ClassDecl A 
   VarDecl IntType i ()
- {i=0, j=0} 0 ClassDecl B A
+ {i=0, j=4} 8 ClassDecl B A
   VarDecl IntType j ()
   MethodDecl void setval ((Param IntType u) (Param IntType v) )
    Assign i u
    Assign j v
 _B(b, 10, 20)
  t2 = [b]:I
- call _printInt(b)
- t3 = [b]:I
- call _printInt(b)
+ call _printInt(t2)
+ t3 = 4[b]:I
+ call _printInt(t3)
  return 
 }
 
-_ClassInfo:  B ClassInfo:  A null {i=0} 0 ClassDecl A 
+_ClassInfo:  B ClassInfo:  A null {i=0} 4 ClassDecl A 
   VarDecl IntType i ()
- {i=0, j=0} 0 ClassDecl B A
+ {i=0, j=4} 8 ClassDecl B A
   VarDecl IntType j ()
   MethodDecl void setval ((Param IntType u) (Param IntType v) )
    Assign i u
    Assign j v
 _setval (obj, u, v)
 {
- [obj]:I = u
- [obj]:I = v
+ [t1]:I = u
+ 4[t3]:I = v
  return 
 }

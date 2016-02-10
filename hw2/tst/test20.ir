@@ -3,12 +3,12 @@
 _main ()
 (b, a)
 {
- t1 = call _malloc(0)
+ t1 = call _malloc(8)
  b = t1
  a = b
- [b]:I = 11
- [b]:I = 22
- t6 = call _ClassInfo:  A null {x=0} 0 ClassDecl A 
+ [t2]:I = 11
+ 4[t4]:I = 22
+ t6 = call _ClassInfo:  A null {x=0} 4 ClassDecl A 
   VarDecl IntType x ()
   MethodDecl IntType f ()
    Return x
@@ -16,7 +16,7 @@ _main ()
    Return x
 _A(a)
  call _printInt(a)
- t7 = call _ClassInfo:  A null {x=0} 0 ClassDecl A 
+ t7 = call _ClassInfo:  A null {x=0} 4 ClassDecl A 
   VarDecl IntType x ()
   MethodDecl IntType f ()
    Return x
@@ -27,7 +27,7 @@ _A(a)
  return 
 }
 
-_ClassInfo:  A null {x=0} 0 ClassDecl A 
+_ClassInfo:  A null {x=0} 4 ClassDecl A 
   VarDecl IntType x ()
   MethodDecl IntType f ()
    Return x
@@ -36,10 +36,10 @@ _ClassInfo:  A null {x=0} 0 ClassDecl A
 _f (obj)
 {
  t1 = [obj]:I
- return obj
+ return t1
 }
 
-_ClassInfo:  A null {x=0} 0 ClassDecl A 
+_ClassInfo:  A null {x=0} 4 ClassDecl A 
   VarDecl IntType x ()
   MethodDecl IntType f ()
    Return x
@@ -48,21 +48,21 @@ _ClassInfo:  A null {x=0} 0 ClassDecl A
 _g (obj)
 {
  t1 = [obj]:I
- return obj
+ return t1
 }
 
-_ClassInfo:  B ClassInfo:  A null {x=0} 0 ClassDecl A 
+_ClassInfo:  B ClassInfo:  A null {x=0} 4 ClassDecl A 
   VarDecl IntType x ()
   MethodDecl IntType f ()
    Return x
   MethodDecl IntType g ()
    Return x
- {x=0, y=0} 0 ClassDecl B A
+ {x=0, y=4} 8 ClassDecl B A
   VarDecl IntType y ()
   MethodDecl IntType f ()
    Return y
 _f (obj)
 {
- t1 = [obj]:I
- return obj
+ t1 = 4[obj]:I
+ return t1
 }

@@ -1,9 +1,5 @@
-6c6
-<  t1 = call _malloc(0)
----
->  t1 = call _malloc(4)
 8,13c8
-<  call _ClassInfo:  Body null {i=0} 0 ClassDecl Body 
+<  call _ClassInfo:  Body null {i=0} 4 ClassDecl Body 
 <   VarDecl IntType i ()
 <   MethodDecl void go ()
 <    Assign i 10
@@ -12,7 +8,7 @@
 ---
 >  call _Body_go(b)
 17,22c12
-< _ClassInfo:  Body null {i=0} 0 ClassDecl Body 
+< _ClassInfo:  Body null {i=0} 4 ClassDecl Body 
 <   VarDecl IntType i ()
 <   MethodDecl void go ()
 <    Assign i 10
@@ -20,9 +16,11 @@
 < _go (obj)
 ---
 > _Body_go (obj)
-25,26c15,16
+24,26c14,16
+<  [t1]:I = 10
 <  t3 = [obj]:I
-<  call _printInt(obj)
+<  call _printInt(t3)
 ---
+>  [obj]:I = 10
 >  t1 = [obj]:I
 >  call _printInt(t1)

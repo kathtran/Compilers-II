@@ -1,34 +1,28 @@
-6c6
-<  t1 = call _malloc(0)
----
->  t1 = call _malloc(5)
-9,18c9,12
-<  [b]:B = true
-<  t6 = [b]:B
-<  if b == false goto L0
-<  call _ClassInfo:  B ClassInfo:  A null {b=0, i=0} 0 ClassDecl A 
+8,18c8,12
+<  [t2]:I = 10
+<  4[t4]:B = true
+<  t6 = 4[b]:B
+<  if t6 == false goto L0
+<  call _ClassInfo:  B ClassInfo:  A null {b=4, i=0} 5 ClassDecl A 
 <   VarDecl IntType i ()
 <   VarDecl BoolType b ()
-<  {i=0, b=0} 0 ClassDecl B A
+<  {i=0, b=4} 5 ClassDecl B A
 <   MethodDecl void go ()
 <    Print i
 < _B(b)
 ---
+>  [b]:I = 10
 >  4[b]:B = true
 >  t2 = 4[b]:B
 >  if t2 == false goto L0
 >  call _B_go(b)
 23,29c17
-< _ClassInfo:  B ClassInfo:  A null {b=0, i=0} 0 ClassDecl A 
+< _ClassInfo:  B ClassInfo:  A null {b=4, i=0} 5 ClassDecl A 
 <   VarDecl IntType i ()
 <   VarDecl BoolType b ()
-<  {i=0, b=0} 0 ClassDecl B A
+<  {i=0, b=4} 5 ClassDecl B A
 <   MethodDecl void go ()
 <    Print i
 < _go (obj)
 ---
 > _B_go (obj)
-32c20
-<  call _printInt(obj)
----
->  call _printInt(t1)

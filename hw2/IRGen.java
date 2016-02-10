@@ -248,8 +248,9 @@ public class IRGen {
         offset = classInfo.objSize;
         for (Ast.VarDecl v : n.flds) {
             classInfo.offsets.put(v.nm, offset);
-            classInfo.objSize += offset;
+            offset += gen(v.t).size;
         }
+        classInfo.objSize = offset;
 
         return classInfo;
 

@@ -3,9 +3,9 @@
 _main ()
 (b)
 {
- t1 = call _malloc(0)
+ t1 = call _malloc(4)
  b = t1
- call _ClassInfo:  Body null {i=0} 0 ClassDecl Body 
+ call _ClassInfo:  Body null {i=0} 4 ClassDecl Body 
   VarDecl IntType i ()
   MethodDecl void go ()
    Assign i 10
@@ -14,15 +14,15 @@ _Body(b)
  return 
 }
 
-_ClassInfo:  Body null {i=0} 0 ClassDecl Body 
+_ClassInfo:  Body null {i=0} 4 ClassDecl Body 
   VarDecl IntType i ()
   MethodDecl void go ()
    Assign i 10
    Print i
 _go (obj)
 {
- [obj]:I = 10
+ [t1]:I = 10
  t3 = [obj]:I
- call _printInt(obj)
+ call _printInt(t3)
  return 
 }
