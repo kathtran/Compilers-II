@@ -683,7 +683,7 @@ public class IRGen {
         IR.Addr addr = new IR.Addr(exp.src, base.fieldOffset(n.nm));
         code.add(new IR.Load(gen(base.fieldType(n.nm)), t, addr));
 
-        return new CodePack(gen(base.fieldType(n.nm)), new IR.Id(exp.src.toString()), code);
+        return new CodePack(gen(base.fieldType(n.nm)), t, code);
     }
 
     // Id ---
