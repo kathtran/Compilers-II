@@ -5,7 +5,7 @@ _main ()
 {
  b = 0
  t2 = call _Body_go(b, 1, 2, 3)
- i = b
+ i = t2
  call _printInt(i)
  return 
 }

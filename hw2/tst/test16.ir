@@ -5,7 +5,7 @@ _main ()
 {
  b = 0
  t2 = call _B_go(b)
- call _printInt(b)
+ call _printInt(t2)
  return 
 }
 
@@ -17,5 +17,5 @@ _A_echo (obj, a)
 _B_go (obj)
 {
  t1 = call _A_echo(obj, 2)
- return obj
+ return t1
 }

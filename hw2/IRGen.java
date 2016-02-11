@@ -479,13 +479,13 @@ public class IRGen {
             al.add(a.src);
         }
 
+        IR.Temp t = new IR.Temp();
         if (retFlag) {
             type = gen(base.methodType(name));
-            IR.Temp t = new IR.Temp();
             code.add(new IR.Call(global, false, al, t));
         } else
             code.add(new IR.Call(global, false, al));
-        return new CodePack(type, exp.src, code);
+        return new CodePack(type, t, code);
     }
 
     // If ---

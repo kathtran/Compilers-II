@@ -1,8 +1,0 @@
-12c12
-<  call _printInt(a)
----
->  call _printInt(t2)
-14c14
-<  call _printInt(a)
----
->  call _printInt(t3)

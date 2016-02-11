@@ -1,0 +1,6 @@
+9,10c9,10
+<  t3 = [b]:I
+<  call _printInt(t3)
+---
+>  t2 = [b]:I
+>  call _printInt(t2)

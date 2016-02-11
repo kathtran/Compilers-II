@@ -6,8 +6,8 @@ _main ()
  t1 = call _malloc(8)
  b = t1
  call _B_setval(b, 10)
- t2 = [b]:I
- call _printInt(t2)
+ t3 = [b]:I
+ call _printInt(t3)
  return 
 }
 

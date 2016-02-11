@@ -5,7 +5,7 @@ _main ()
 {
  b = 0
  t2 = call _Body_go(b)
- call _printInt(b)
+ call _printInt(t2)
  return 
 }
 
@@ -17,5 +17,5 @@ _Body_echo (obj, i)
 _Body_go (obj)
 {
  t1 = call _Body_echo(obj, 10)
- return obj
+ return t1
 }

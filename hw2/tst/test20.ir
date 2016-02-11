@@ -9,9 +9,9 @@ _main ()
  [b]:I = 11
  4[b]:I = 22
  t2 = call _A_f(a)
- call _printInt(a)
+ call _printInt(t2)
  t3 = call _A_g(a)
- call _printInt(a)
+ call _printInt(t3)
  return 
 }
 
