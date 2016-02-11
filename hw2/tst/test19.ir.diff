@@ -1,0 +1,10 @@
+8,11c8,11
+<  t3 = call _A_f(a)
+<  call _printInt(t3)
+<  t4 = call _A_f(b)
+<  call _printInt(t4)
+---
+>  t1 = call _A_f(a)
+>  call _printInt(t1)
+>  t2 = call _A_f(b)
+>  call _printInt(t2)

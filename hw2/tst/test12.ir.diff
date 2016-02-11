@@ -1,0 +1,6 @@
+7,8c7,8
+<  t2 = call _Body_go(b)
+<  call _printInt(t2)
+---
+>  t1 = call _Body_go(b)
+>  call _printInt(t1)

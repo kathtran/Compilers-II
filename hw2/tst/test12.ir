@@ -1,0 +1,21 @@
+# IR Program
+
+_main ()
+(b)
+{
+ b = 0
+ t2 = call _Body_go(b)
+ call _printInt(t2)
+ return 
+}
+
+_Body_echo (obj, i)
+{
+ return i
+}
+
+_Body_go (obj)
+{
+ t1 = call _Body_echo(obj, 10)
+ return t1
+}
