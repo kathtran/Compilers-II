@@ -16,11 +16,3 @@
 < _go (obj)
 ---
 > _Body_go (obj)
-24,26c14,16
-<  [t1]:I = 10
-<  t3 = [obj]:I
-<  call _printInt(t3)
----
->  [obj]:I = 10
->  t1 = [obj]:I
->  call _printInt(t1)

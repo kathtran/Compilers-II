@@ -21,8 +21,8 @@ _ClassInfo:  Body null {i=0} 4 ClassDecl Body
    Print i
 _go (obj)
 {
- [t1]:I = 10
- t3 = [obj]:I
- call _printInt(t3)
+ [obj]:I = 10
+ t1 = [obj]:I
+ call _printInt(t1)
  return 
 }

@@ -1,8 +1,4 @@
-8,18c8,12
-<  [t2]:I = 10
-<  4[t4]:B = true
-<  t6 = 4[b]:B
-<  if t6 == false goto L0
+12,18c12
 <  call _ClassInfo:  B ClassInfo:  A null {b=4, i=0} 5 ClassDecl A 
 <   VarDecl IntType i ()
 <   VarDecl BoolType b ()
@@ -11,10 +7,6 @@
 <    Print i
 < _B(b)
 ---
->  [b]:I = 10
->  4[b]:B = true
->  t2 = 4[b]:B
->  if t2 == false goto L0
 >  call _B_go(b)
 23,29c17
 < _ClassInfo:  B ClassInfo:  A null {b=4, i=0} 5 ClassDecl A 

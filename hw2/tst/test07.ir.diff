@@ -1,8 +1,0 @@
-8,10c8,10
-<  [t2]:I = 10
-<  t4 = [a]:I
-<  call _printInt(t4)
----
->  [a]:I = 10
->  t2 = [a]:I
->  call _printInt(t2)

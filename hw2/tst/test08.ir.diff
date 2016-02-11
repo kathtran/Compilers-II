@@ -1,14 +1,11 @@
-6,11c6,7
-<  t1 = call _malloc(0)
-<  b = t1
+7,10c7
 <  call _ClassInfo:  Body null {} 0 ClassDecl Body 
 <   MethodDecl void go ()
 <    Print "Go!"
 < _Body(b)
 ---
->  b = 0
 >  call _Body_go(b)
-15,18c11
+14,17c11
 < _ClassInfo:  Body null {} 0 ClassDecl Body 
 <   MethodDecl void go ()
 <    Print "Go!"

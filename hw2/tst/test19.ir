@@ -3,10 +3,8 @@
 _main ()
 (a, b)
 {
- t1 = call _malloc(0)
- a = t1
- t2 = call _malloc(0)
- b = t2
+ a = 0
+ b = 0
  t3 = call _ClassInfo:  A null {} 0 ClassDecl A 
   MethodDecl IntType f ()
    Return 10

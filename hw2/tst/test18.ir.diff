@@ -20,11 +20,3 @@
 < _setval (obj, u)
 ---
 > _B_setval (obj, u)
-30,32c16,18
-<  [t1]:I = u
-<  t3 = [obj]:I
-<  4[t4]:I = t3
----
->  [obj]:I = u
->  t1 = [obj]:I
->  4[obj]:I = t1

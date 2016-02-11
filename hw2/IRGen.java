@@ -407,23 +407,25 @@ public class IRGen {
         CodePack lhs;
         if (n.lhs instanceof Ast.Id) {
             Ast.Id id = (Ast.Id) n.lhs;
-            lhs = gen(n.lhs, cinfo, env);
+            //lhs = gen(n.lhs, cinfo, env);
             //code.addAll(lhs.code);
             if (env.containsKey(id.nm))
-                code.add(new IR.Move((IR.Id) lhs.src, rhs.src));
+                code.add(new IR.Move(new IR.Id(id.nm), rhs.src));
             else {
                 Ast.Field field = new Ast.Field(Ast.This, id.nm);
+                lhs = gen(field.obj, cinfo, env);
+                code.addAll(lhs.code);
                 ClassInfo base = getClassInfo(field.obj, cinfo, env);
                 IR.Addr addr = new IR.Addr(lhs.src, base.fieldOffset(field.nm));
-                code.add(new IR.Store(gen(field, cinfo, env).type, addr, rhs.src));
+                code.add(new IR.Store(gen(base.fieldType(field.nm)), addr, rhs.src));
             }
         } else if (n.lhs instanceof Ast.Field) {
             Ast.Field field = (Ast.Field) n.lhs;
-            lhs = gen(field, cinfo, env);
-            //code.addAll(lhs.code);
+            lhs = gen(field.obj, cinfo, env);
+            code.addAll(lhs.code);
             ClassInfo base = getClassInfo(field.obj, cinfo, env);
             IR.Addr addr = new IR.Addr(lhs.src, base.fieldOffset(field.nm));
-            code.add(new IR.Store(gen(field, cinfo, env).type, addr, rhs.src));
+            code.add(new IR.Store(gen(base.fieldType(field.nm)), addr, rhs.src));
         }
 
         return code;
@@ -653,12 +655,13 @@ public class IRGen {
         IR.Temp t = new IR.Temp();
 
         ClassInfo base = classEnv.get(n.nm);
-        if (base.objSize != 0)
-            srcs.add(new IR.IntLit(base.objSize));
+        srcs.add(new IR.IntLit(base.objSize));
+        if (base.objSize != 0) {
+            code.add(new IR.Call(new IR.Global("_malloc"), false, srcs, t));
+            return new CodePack(IR.Type.PTR, t, code);
+        }
         else
-            srcs.add(new IR.IntLit(0));
-        code.add(new IR.Call(new IR.Global("_malloc"), false, srcs, t));
-        return new CodePack(IR.Type.PTR, t, code);
+            return new CodePack(IR.Type.PTR, new IR.IntLit(0), code);
     }
 
     // Field ---

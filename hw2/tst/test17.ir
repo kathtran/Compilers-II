@@ -5,10 +5,10 @@ _main ()
 {
  t1 = call _malloc(5)
  b = t1
- [t2]:I = 10
- 4[t4]:B = true
- t6 = 4[b]:B
- if t6 == false goto L0
+ [b]:I = 10
+ 4[b]:B = true
+ t2 = 4[b]:B
+ if t2 == false goto L0
  call _ClassInfo:  B ClassInfo:  A null {b=4, i=0} 5 ClassDecl A 
   VarDecl IntType i ()
   VarDecl BoolType b ()

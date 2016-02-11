@@ -1,7 +1,5 @@
-9,26c9,14
-<  [t2]:I = 11
-<  4[t4]:I = 22
-<  t6 = call _ClassInfo:  A null {x=0} 4 ClassDecl A 
+11,26c11,14
+<  t2 = call _ClassInfo:  A null {x=0} 4 ClassDecl A 
 <   VarDecl IntType x ()
 <   MethodDecl IntType f ()
 <    Return x
@@ -9,7 +7,7 @@
 <    Return x
 < _A(a)
 <  call _printInt(a)
-<  t7 = call _ClassInfo:  A null {x=0} 4 ClassDecl A 
+<  t3 = call _ClassInfo:  A null {x=0} 4 ClassDecl A 
 <   VarDecl IntType x ()
 <   MethodDecl IntType f ()
 <    Return x
@@ -18,8 +16,6 @@
 < _A(a)
 <  call _printInt(a)
 ---
->  [b]:I = 11
->  4[b]:I = 22
 >  t2 = call _A_f(a)
 >  call _printInt(t2)
 >  t3 = call _A_g(a)

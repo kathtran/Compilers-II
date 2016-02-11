@@ -1,6 +1,4 @@
-6,14c6,8
-<  t1 = call _malloc(0)
-<  b = t1
+7,13c7,8
 <  t2 = call _ClassInfo:  Body null {} 0 ClassDecl Body 
 <   MethodDecl IntType echo ((Param IntType i) )
 <    Return i
@@ -9,10 +7,9 @@
 < _Body(b)
 <  call _printInt(b)
 ---
->  b = 0
 >  t1 = call _Body_go(b)
 >  call _printInt(t1)
-18,23c12
+17,22c12
 < _ClassInfo:  Body null {} 0 ClassDecl Body 
 <   MethodDecl IntType echo ((Param IntType i) )
 <    Return i
@@ -21,7 +18,7 @@
 < _echo (obj, i)
 ---
 > _Body_echo (obj, i)
-28,33c17
+27,32c17
 < _ClassInfo:  Body null {} 0 ClassDecl Body 
 <   MethodDecl IntType echo ((Param IntType i) )
 <    Return i
@@ -30,7 +27,7 @@
 < _go (obj)
 ---
 > _Body_go (obj)
-35,41c19,20
+34,40c19,20
 <  t1 = call _ClassInfo:  Body null {} 0 ClassDecl Body 
 <   MethodDecl IntType echo ((Param IntType i) )
 <    Return i

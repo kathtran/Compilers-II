@@ -29,7 +29,7 @@ _ClassInfo:  B ClassInfo:  A null {i=0} 4 ClassDecl A
    Assign j v
 _setval (obj, u, v)
 {
- [t1]:I = u
- 4[t3]:I = v
+ [obj]:I = u
+ 4[obj]:I = v
  return 
 }

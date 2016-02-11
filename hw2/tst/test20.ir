@@ -6,9 +6,9 @@ _main ()
  t1 = call _malloc(8)
  b = t1
  a = b
- [t2]:I = 11
- 4[t4]:I = 22
- t6 = call _ClassInfo:  A null {x=0} 4 ClassDecl A 
+ [b]:I = 11
+ 4[b]:I = 22
+ t2 = call _ClassInfo:  A null {x=0} 4 ClassDecl A 
   VarDecl IntType x ()
   MethodDecl IntType f ()
    Return x
@@ -16,7 +16,7 @@ _main ()
    Return x
 _A(a)
  call _printInt(a)
- t7 = call _ClassInfo:  A null {x=0} 4 ClassDecl A 
+ t3 = call _ClassInfo:  A null {x=0} 4 ClassDecl A 
   VarDecl IntType x ()
   MethodDecl IntType f ()
    Return x
