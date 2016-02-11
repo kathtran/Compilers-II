@@ -1,56 +1,8 @@
-11,26c11,14
-<  t2 = call _ClassInfo:  A null {x=0} 4 ClassDecl A 
-<   VarDecl IntType x ()
-<   MethodDecl IntType f ()
-<    Return x
-<   MethodDecl IntType g ()
-<    Return x
-< _A(a)
-<  call _printInt(a)
-<  t3 = call _ClassInfo:  A null {x=0} 4 ClassDecl A 
-<   VarDecl IntType x ()
-<   MethodDecl IntType f ()
-<    Return x
-<   MethodDecl IntType g ()
-<    Return x
-< _A(a)
+12c12
 <  call _printInt(a)
 ---
->  t2 = call _A_f(a)
 >  call _printInt(t2)
->  t3 = call _A_g(a)
+14c14
+<  call _printInt(a)
+---
 >  call _printInt(t3)
-30,36c18
-< _ClassInfo:  A null {x=0} 4 ClassDecl A 
-<   VarDecl IntType x ()
-<   MethodDecl IntType f ()
-<    Return x
-<   MethodDecl IntType g ()
-<    Return x
-< _f (obj)
----
-> _A_f (obj)
-42,48c24
-< _ClassInfo:  A null {x=0} 4 ClassDecl A 
-<   VarDecl IntType x ()
-<   MethodDecl IntType f ()
-<    Return x
-<   MethodDecl IntType g ()
-<    Return x
-< _g (obj)
----
-> _A_g (obj)
-54,64c30
-< _ClassInfo:  B ClassInfo:  A null {x=0} 4 ClassDecl A 
-<   VarDecl IntType x ()
-<   MethodDecl IntType f ()
-<    Return x
-<   MethodDecl IntType g ()
-<    Return x
-<  {x=0, y=4} 8 ClassDecl B A
-<   VarDecl IntType y ()
-<   MethodDecl IntType f ()
-<    Return y
-< _f (obj)
----
-> _B_f (obj)

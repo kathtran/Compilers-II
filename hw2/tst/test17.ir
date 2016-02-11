@@ -9,24 +9,12 @@ _main ()
  4[b]:B = true
  t2 = 4[b]:B
  if t2 == false goto L0
- call _ClassInfo:  B ClassInfo:  A null {b=4, i=0} 5 ClassDecl A 
-  VarDecl IntType i ()
-  VarDecl BoolType b ()
- {i=0, b=4} 5 ClassDecl B A
-  MethodDecl void go ()
-   Print i
-_B(b)
+ call _B_go(b)
 L0:
  return 
 }
 
-_ClassInfo:  B ClassInfo:  A null {b=4, i=0} 5 ClassDecl A 
-  VarDecl IntType i ()
-  VarDecl BoolType b ()
- {i=0, b=4} 5 ClassDecl B A
-  MethodDecl void go ()
-   Print i
-_go (obj)
+_B_go (obj)
 {
  t1 = [obj]:I
  call _printInt(t1)

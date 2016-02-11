@@ -5,27 +5,13 @@ _main ()
 {
  t1 = call _malloc(8)
  b = t1
- call _ClassInfo:  B ClassInfo:  A null {i=0} 4 ClassDecl A 
-  VarDecl IntType i ()
- {i=0, j=4} 8 ClassDecl B A
-  VarDecl IntType j ()
-  MethodDecl void setval ((Param IntType u) )
-   Assign i u
-   Assign j i
-_B(b, 10)
+ call _B_setval(b, 10)
  t2 = [b]:I
  call _printInt(t2)
  return 
 }
 
-_ClassInfo:  B ClassInfo:  A null {i=0} 4 ClassDecl A 
-  VarDecl IntType i ()
- {i=0, j=4} 8 ClassDecl B A
-  VarDecl IntType j ()
-  MethodDecl void setval ((Param IntType u) )
-   Assign i u
-   Assign j i
-_setval (obj, u)
+_B_setval (obj, u)
 {
  [obj]:I = u
  t1 = [obj]:I

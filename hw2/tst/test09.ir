@@ -4,19 +4,13 @@ _main ()
 (b, i)
 {
  b = 0
- t2 = call _ClassInfo:  Body null {} 0 ClassDecl Body 
-  MethodDecl IntType go ((Param IntType i) (Param IntType j) (Param IntType k) )
-   Return k
-_Body(b, 1, 2, 3)
+ t2 = call _Body_go(b, 1, 2, 3)
  i = b
  call _printInt(i)
  return 
 }
 
-_ClassInfo:  Body null {} 0 ClassDecl Body 
-  MethodDecl IntType go ((Param IntType i) (Param IntType j) (Param IntType k) )
-   Return k
-_go (obj, i, j, k)
+_Body_go (obj, i, j, k)
 {
  return k
 }

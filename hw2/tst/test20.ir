@@ -8,60 +8,26 @@ _main ()
  a = b
  [b]:I = 11
  4[b]:I = 22
- t2 = call _ClassInfo:  A null {x=0} 4 ClassDecl A 
-  VarDecl IntType x ()
-  MethodDecl IntType f ()
-   Return x
-  MethodDecl IntType g ()
-   Return x
-_A(a)
+ t2 = call _A_f(a)
  call _printInt(a)
- t3 = call _ClassInfo:  A null {x=0} 4 ClassDecl A 
-  VarDecl IntType x ()
-  MethodDecl IntType f ()
-   Return x
-  MethodDecl IntType g ()
-   Return x
-_A(a)
+ t3 = call _A_g(a)
  call _printInt(a)
  return 
 }
 
-_ClassInfo:  A null {x=0} 4 ClassDecl A 
-  VarDecl IntType x ()
-  MethodDecl IntType f ()
-   Return x
-  MethodDecl IntType g ()
-   Return x
-_f (obj)
+_A_f (obj)
 {
  t1 = [obj]:I
  return t1
 }
 
-_ClassInfo:  A null {x=0} 4 ClassDecl A 
-  VarDecl IntType x ()
-  MethodDecl IntType f ()
-   Return x
-  MethodDecl IntType g ()
-   Return x
-_g (obj)
+_A_g (obj)
 {
  t1 = [obj]:I
  return t1
 }
 
-_ClassInfo:  B ClassInfo:  A null {x=0} 4 ClassDecl A 
-  VarDecl IntType x ()
-  MethodDecl IntType f ()
-   Return x
-  MethodDecl IntType g ()
-   Return x
- {x=0, y=4} 8 ClassDecl B A
-  VarDecl IntType y ()
-  MethodDecl IntType f ()
-   Return y
-_f (obj)
+_B_f (obj)
 {
  t1 = 4[obj]:I
  return t1

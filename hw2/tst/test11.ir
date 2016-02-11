@@ -5,21 +5,11 @@ _main ()
 {
  t1 = call _malloc(4)
  b = t1
- call _ClassInfo:  Body null {i=0} 4 ClassDecl Body 
-  VarDecl IntType i ()
-  MethodDecl void go ()
-   Assign i 10
-   Print (Field This i) 
-_Body(b)
+ call _Body_go(b)
  return 
 }
 
-_ClassInfo:  Body null {i=0} 4 ClassDecl Body 
-  VarDecl IntType i ()
-  MethodDecl void go ()
-   Assign i 10
-   Print (Field This i) 
-_go (obj)
+_Body_go (obj)
 {
  [obj]:I = 10
  t1 = [obj]:I

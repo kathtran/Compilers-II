@@ -4,17 +4,11 @@ _main ()
 (b)
 {
  b = 0
- call _ClassInfo:  Body null {} 0 ClassDecl Body 
-  MethodDecl void go ()
-   Print "Go!"
-_Body(b)
+ call _Body_go(b)
  return 
 }
 
-_ClassInfo:  Body null {} 0 ClassDecl Body 
-  MethodDecl void go ()
-   Print "Go!"
-_go (obj)
+_Body_go (obj)
 {
  call _printStr("Go!")
  return 

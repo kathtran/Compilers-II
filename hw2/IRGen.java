@@ -301,7 +301,7 @@ public class IRGen {
         IR.Global global = null;
 
         if (!n.nm.equals("main")) {
-            global = new IR.Global("_" + cinfo.methodBaseClass(n.nm) + "_" + n.nm);
+            global = new IR.Global("_" + cinfo.methodBaseClass(n.nm).name + "_" + n.nm);
             params.add(thisObj);
         } else
             global = new IR.Global("_" + n.nm);
@@ -467,7 +467,7 @@ public class IRGen {
         IR.Type type = null;
 
         ClassInfo base = getClassInfo(obj, cinfo, env);
-        IR.Global global = new IR.Global("_" + base.methodBaseClass(name) + "_" + base.name);
+        IR.Global global = new IR.Global("_" + base.methodBaseClass(name).name + "_" + name);
         CodePack exp = gen(obj, cinfo, env);
         code.addAll(exp.code);
 

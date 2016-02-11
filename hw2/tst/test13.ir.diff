@@ -1,40 +1,10 @@
-7,13c7,8
-<  t2 = call _ClassInfo:  Body null {} 0 ClassDecl Body 
-<   MethodDecl IntType echo ((Param IntType i) )
-<    Return i
-<   MethodDecl IntType go ()
-<    Return (Call This echo (10 ))
-< _Body(b)
+7,8c7,8
+<  t2 = call _Body_go(b)
 <  call _printInt(b)
 ---
 >  t1 = call _Body_go(b)
 >  call _printInt(t1)
-17,22c12
-< _ClassInfo:  Body null {} 0 ClassDecl Body 
-<   MethodDecl IntType echo ((Param IntType i) )
-<    Return i
-<   MethodDecl IntType go ()
-<    Return (Call This echo (10 ))
-< _echo (obj, i)
----
-> _Body_echo (obj, i)
-27,32c17
-< _ClassInfo:  Body null {} 0 ClassDecl Body 
-<   MethodDecl IntType echo ((Param IntType i) )
-<    Return i
-<   MethodDecl IntType go ()
-<    Return (Call This echo (10 ))
-< _go (obj)
----
-> _Body_go (obj)
-34,40c19,20
-<  t1 = call _ClassInfo:  Body null {} 0 ClassDecl Body 
-<   MethodDecl IntType echo ((Param IntType i) )
-<    Return i
-<   MethodDecl IntType go ()
-<    Return (Call This echo (10 ))
-< _Body(obj, 10)
+20c20
 <  return obj
 ---
->  t1 = call _Body_echo(obj, 10)
 >  return t1

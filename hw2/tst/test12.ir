@@ -4,38 +4,18 @@ _main ()
 (b)
 {
  b = 0
- t2 = call _ClassInfo:  Body null {} 0 ClassDecl Body 
-  MethodDecl IntType echo ((Param IntType i) )
-   Return i
-  MethodDecl IntType go ()
-   Return (Call This echo (10 ))
-_Body(b)
+ t2 = call _Body_go(b)
  call _printInt(b)
  return 
 }
 
-_ClassInfo:  Body null {} 0 ClassDecl Body 
-  MethodDecl IntType echo ((Param IntType i) )
-   Return i
-  MethodDecl IntType go ()
-   Return (Call This echo (10 ))
-_echo (obj, i)
+_Body_echo (obj, i)
 {
  return i
 }
 
-_ClassInfo:  Body null {} 0 ClassDecl Body 
-  MethodDecl IntType echo ((Param IntType i) )
-   Return i
-  MethodDecl IntType go ()
-   Return (Call This echo (10 ))
-_go (obj)
+_Body_go (obj)
 {
- t1 = call _ClassInfo:  Body null {} 0 ClassDecl Body 
-  MethodDecl IntType echo ((Param IntType i) )
-   Return i
-  MethodDecl IntType go ()
-   Return (Call This echo (10 ))
-_Body(obj, 10)
+ t1 = call _Body_echo(obj, 10)
  return obj
 }

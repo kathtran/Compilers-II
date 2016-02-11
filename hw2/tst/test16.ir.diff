@@ -1,38 +1,10 @@
-7,14c7,8
-<  t2 = call _ClassInfo:  B ClassInfo:  A null {} 0 ClassDecl A 
-<   MethodDecl IntType echo ((Param IntType a) )
-<    Return a
-<  {} 0 ClassDecl B A
-<   MethodDecl IntType go ()
-<    Return (Call This echo (2 ))
-< _B(b)
+7,8c7,8
+<  t2 = call _B_go(b)
 <  call _printInt(b)
 ---
 >  t1 = call _B_go(b)
 >  call _printInt(t1)
-18,21c12
-< _ClassInfo:  A null {} 0 ClassDecl A 
-<   MethodDecl IntType echo ((Param IntType a) )
-<    Return a
-< _echo (obj, a)
----
-> _A_echo (obj, a)
-26,32c17
-< _ClassInfo:  B ClassInfo:  A null {} 0 ClassDecl A 
-<   MethodDecl IntType echo ((Param IntType a) )
-<    Return a
-<  {} 0 ClassDecl B A
-<   MethodDecl IntType go ()
-<    Return (Call This echo (2 ))
-< _go (obj)
----
-> _B_go (obj)
-34,38c19,20
-<  t1 = call _ClassInfo:  A null {} 0 ClassDecl A 
-<   MethodDecl IntType echo ((Param IntType a) )
-<    Return a
-< _B(obj, 2)
+20c20
 <  return obj
 ---
->  t1 = call _A_echo(obj, 2)
 >  return t1
