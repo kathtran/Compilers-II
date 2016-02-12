@@ -60,7 +60,7 @@ class SC0Interp {
       int pc = 0, n;
       String lnum, name;
       while (pc < insts.length) {
-	sc = new Scanner(insts[idx]);
+	sc = new Scanner(insts[pc]);
 	lnum = sc.next(); 		   	 // line number (ignored)
 	name = sc.next(); 			 // inst name          
 	n = sc.hasNextInt() ? sc.nextInt() : 0;  // inst operand
@@ -87,49 +87,80 @@ class SC0Interp {
   static int execute(String instName, int n) 
   {
     int disp = 1;  // default displacement value
+    int val, val1, val2, res;
 
     switch (instName) {
     case "ADD": 
-      int val2 = stack.pop(); 
-      int val1 = stack.pop(); 
-      int res = val1 + val2;
+      val2 = stack.pop(); 
+      val1 = stack.pop(); 
+      res = val1 + val2;
       stack.push(res);
       break;
 
     case "SUB":   
       // ... need code ...
+      val2 = stack.pop();
+      val1 = stack.pop();
+      res = val1 - val2;
+      stack.push(res);
       break; 
 
     case "MUL": 
       // ... need code ...
+      val2 = stack.pop();
+      val1 = stack.pop();
+      res = val1 * val2;
+      stack.push(res);
       break; 
 
     case "DIV":   
       // ... need code ...
+      val2 = stack.pop();
+      val1 = stack.pop();
+      res = val1 / val2;
+      stack.push(res);
       break; 
     
     case "AND": 
       // ... need code ...
+      val2 = stack.pop();
+      val1 = stack.pop();
+      res = val1 & val2;
+      stack.push(res);
       break; 
     
     case "OR":    
       // ... need code ...
+      val2 = stack.pop();
+      val1 = stack.pop();
+      res = val1 | val2;
+      stack.push(res);
       break; 
 
     case "SWAP":   
       // ... need code ...
+      val2 = stack.pop();
+      val1 = stack.pop();
+      stack.push(val2);
+      stack.push(val1);
       break;
 
     case "NEG":   
       // ... need code ...
+      val1 = stack.pop();
+      res = -val1;
+      stack.push(res);
       break;
 
     case "PRINT": 
       // ... need code ...
+      val1 = stack.pop();
+      System.out.println(val1);
       break; 
 
     case "CONST": 
       // ... need code ...
+      stack.push(n);
       break;
 
     case "LOAD":  
@@ -139,6 +170,8 @@ class SC0Interp {
 
     case "STORE": 
       // ... need code ...
+      val = stack.pop();
+      vars.put(n, val);
       break; 
 
     case "GOTO":  
@@ -147,34 +180,64 @@ class SC0Interp {
 
     case "IFZ":   
       // ... need code ...
+      val = stack.pop();
+      if (val == 0)
+        disp = n;
       break;
 
     case "IFNZ":   
       // ... need code ...
+      val = stack.pop();
+      if (val != 0)
+        disp = n;
       break;
 
     case "IFEQ": 
       // ... need code ...
+      val2 = stack.pop();
+      val1 = stack.pop();
+      if (val2 == val1)
+        disp = n;
       break;
 
     case "IFNE":  
       // ... need code ...
+      val2 = stack.pop();
+      val1 = stack.pop();
+      if (val2 != val1)
+        disp = n;
       break;
 
     case "IFLT": 
       // ... need code ...
+      val2 = stack.pop();
+      val1 = stack.pop();
+      if (val1 < val2)
+        disp = n;
       break;
 
     case "IFLE":  
       // ... need code ...
+      val2 = stack.pop();
+      val1 = stack.pop();
+      if (val1 <= val2)
+        disp = n;
       break;
 
     case "IFGT": 
       // ... need code ...
+      val2 = stack.pop();
+      val1 = stack.pop();
+      if (val1 > val2)
+        disp = n;
       break;
 
     case "IFGE":  
       // ... need code ...
+      val2 = stack.pop();
+      val1 = stack.pop();
+      if (val1 >= val2)
+        disp = n;
       break;
     }
 
