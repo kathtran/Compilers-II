@@ -3,6 +3,8 @@
 //---------------------------------------------------------------------------
 // For CS322 W'16 (J. Li).
 //
+// Kathleen Tran
+//
 
 // IR1 interpreter. (A starter version)
 //
@@ -285,7 +287,8 @@ public class IR1Interp {
   //
   static int execute(IR1.Call n, Env env) throws Exception {
 
-    // ... code needed ...
+    for (IR1.Src arg : n.args)
+      evaluate(arg, env);
 
     return CONTINUE;
   }	
@@ -298,7 +301,8 @@ public class IR1Interp {
   // 
   static int execute(IR1.Return n, Env env) throws Exception {
 
-    // ... code needed ...
+    if (n.val != null)
+      retVal = evaluate(n.val, env);
 
     return RETURN;
   }
@@ -319,7 +323,7 @@ public class IR1Interp {
   // 2. Return the result (which should be an index to memory).
   //
   static int evaluate(IR1.Addr n, Env env) throws Exception {
-    int loc = evaluate(n.base, env).asInt();
+    int loc = ((IntVal) evaluate(n.base, env)).i;
     return loc + n.offset;
   }
 
@@ -333,13 +337,12 @@ public class IR1Interp {
   //  - For the literals, wrap their value in a Val and return.
   //
   static Val evaluate(IR1.Src n, Env env) throws Exception {
-    Val val;
-    // if (n instanceof IR1.Temp)    val = 
-    // if (n instanceof IR1.Id)      val = 
-    // if (n instanceof IR1.IntLit)  val = 
-    // if (n instanceof IR1.BoolLit) val = 
-    // if (n instanceof IR1.StrLit)  val = 
-    return val;
+    if (n instanceof IR1.Temp)    return env.get(n);
+    if (n instanceof IR1.Id)      return env.get(n);
+    if (n instanceof IR1.IntLit)  return new IntVal(((IR1.IntLit) n).i);
+    if (n instanceof IR1.BoolLit) return new BoolVal(((IR1.BoolLit) n).b);
+    if (n instanceof IR1.StrLit)  return new StrVal(((IR1.StrLit) n).s);
+    return new UndVal();
   }
 
   // Dst Nodes 
@@ -350,11 +353,9 @@ public class IR1Interp {
   //  in a Val and return.
   //
   static Val evaluate(IR1.Dest n, Env env) throws Exception {
-    Val val;
-
-    // ... code needed ...
-
-    return val;
+    if (env.containsKey(n))
+      return env.get(n.toString());
+    return new UndVal();
   }
 
 }
