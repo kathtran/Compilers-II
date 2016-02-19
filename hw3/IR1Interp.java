@@ -129,6 +129,7 @@ public class IR1Interp {
       execute(func, env);
     } else
       throw new Exception("Cannot find func _main");
+
   }
 
   // Func ---
@@ -190,9 +191,58 @@ public class IR1Interp {
   //
   static int execute(IR1.Binop n, Env env) throws Exception {
 
-    // ... code needed ...
+    Val val1 = evaluate(n.src1, env);
+    Val val2 = evaluate(n.src2, env);
 
-    return CONTINUE;  
+    if (n.op instanceof IR1.AOP) {
+      switch ((IR1.AOP) n.op) {
+        case ADD:
+          env.put(n.dst.toString(), new IntVal(((IntVal) val1).i + ((IntVal) val2).i));
+          break;
+        case SUB:
+          env.put(n.dst.toString(), new IntVal(((IntVal) val1).i - ((IntVal) val2).i));
+          break;
+        case MUL:
+          env.put(n.dst.toString(), new IntVal(((IntVal) val1).i * ((IntVal) val2).i));
+          break;
+        case DIV:
+          env.put(n.dst.toString(), new IntVal(((IntVal) val1).i / ((IntVal) val2).i));
+          break;
+        case AND:
+          env.put(n.dst.toString(), new IntVal(((IntVal) val1).i & ((IntVal) val2).i));
+          break;
+        case OR:
+          env.put(n.dst.toString(), new IntVal(((IntVal) val1).i | ((IntVal) val2).i));
+          break;
+        default:
+          throw new Exception("Cannot evaluate AOP: " + n.op);
+      }
+    } else if (n.op instanceof IR1.ROP) {
+      switch ((IR1.ROP) n.op) {
+        case EQ:
+          env.put(n.dst.toString(), new BoolVal(((IntVal) val1).i == ((IntVal) val2).i));
+          break;
+        case NE:
+          env.put(n.dst.toString(), new BoolVal(((IntVal) val1).i != ((IntVal) val2).i));
+          break;
+        case LT:
+          env.put(n.dst.toString(), new BoolVal(((IntVal) val1).i < ((IntVal) val2).i));
+          break;
+        case LE:
+          env.put(n.dst.toString(), new BoolVal(((IntVal) val1).i <= ((IntVal) val2).i));
+          break;
+        case GT:
+          env.put(n.dst.toString(), new BoolVal(((IntVal) val1).i > ((IntVal) val2).i));
+          break;
+        case GE:
+          env.put(n.dst.toString(), new BoolVal(((IntVal) val1).i >= ((IntVal) val2).i));
+          break;
+        default:
+          throw new Exception("Cannot evaluate ROP: " + n.op);
+      }
+    }
+
+    return CONTINUE;
   }
 
   // Unop ---
