@@ -79,7 +79,7 @@ public class IR1Interp {
   //
   static HashMap<String, IR1.Func> funcMap;
   static HashMap<String, HashMap<String, Integer>> labelMap;
-  static final String funcName = "_FuncName";
+  static final String FUNCNAME = "_FuncName";
 
   // -- Useful global variables
   //
@@ -158,7 +158,7 @@ public class IR1Interp {
   //
   static void execute(IR1.Func n, Env env) throws Exception {
 
-    env.put(funcName, new StrVal(n.gname.s));
+    env.put(FUNCNAME, new StrVal(n.gname.s));
 
     int idx = 0;
     while (idx < n.code.length) {
@@ -350,9 +350,38 @@ public class IR1Interp {
   //
   static int execute(IR1.CJump n, Env env) throws Exception {
 
-    // ... code needed ...
+    Val val1 = evaluate(n.src1, env);
+    Val val2 = evaluate(n.src2, env);
 
-    return 0;
+    BoolVal cond;
+
+    switch (n.op) {
+      case EQ:
+        cond = new BoolVal(((IntVal) val1).i == ((IntVal) val2).i);
+        break;
+      case NE:
+        cond = new BoolVal(((IntVal) val1).i != ((IntVal) val2).i);
+        break;
+      case LT:
+        cond = new BoolVal(((IntVal) val1).i < ((IntVal) val2).i);
+        break;
+      case LE:
+        cond = new BoolVal(((IntVal) val1).i <= ((IntVal) val2).i);
+        break;
+      case GT:
+        cond = new BoolVal(((IntVal) val1).i > ((IntVal) val2).i);
+        break;
+      case GE:
+        cond = new BoolVal(((IntVal) val1).i >= ((IntVal) val2).i);
+        break;
+      default:
+        throw new Exception("Cannot evaluate ROP: " + n.op);
+    }
+
+    if (cond.b) {
+      return labelMap.get(FUNCNAME).get(n.lab.name);
+    } else
+    return CONTINUE;
 
   }	
 
@@ -364,7 +393,7 @@ public class IR1Interp {
   //
   static int execute(IR1.Jump n, Env env) throws Exception {
 
-    return labelMap.get(funcName).get(n.lab.name);
+    return labelMap.get(FUNCNAME).get(n.lab.name);
 
   }	
 
@@ -379,27 +408,34 @@ public class IR1Interp {
   //    names with arguments' values, and add them to the new Env.
   // 3. Find callee's Func node and switch to execute it.
   // 4. If 'rdst' is not null, update its entry in the Env with
-  //    the return value (should be avaiable in variable 'retVal').
+  //    the return value (should be available in variable 'retVal').
   //
   static int execute(IR1.Call n, Env env) throws Exception {
 
     Env callee = new Env();
-    for (IR1.Src arg : n.args) {
-      Val val = evaluate(arg, env);
-      callee.put(n.gname.s, val);
+    IR1.Func func = funcMap.get(n.gname.s);
 
+    Val val = evaluate(n.args[0], env);
 
-
-      switch (n.gname.s) {
-        case "_printInt":
-          System.out.println(val);
-          break;
-        case "_printStr":
-          System.out.println(val);
-          break;
-        case "_malloc":
-          break;
-      }
+    switch (n.gname.s) {
+      case "_printInt":
+        System.out.println(val);
+        break;
+      case "_printStr":
+        System.out.println(val);
+        break;
+      case "_malloc":
+        int sz = ((IntVal) val).i;
+        int loc = memory.size();
+        for (int i = 0; i < sz; i++)
+          memory.add(new UndVal());
+        env.put(n.rdst.toString(), new IntVal(loc));
+        break;
+      default:
+        for (int i = 0; i < func.params.length; i++)
+          callee.put(func.params[i].s, evaluate(n.args[i], env));
+        execute(func, callee);
+        break;
     }
 
     if (n.rdst != null) {
