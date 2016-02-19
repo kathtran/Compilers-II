@@ -77,7 +77,7 @@ public class IR1Interp {
   //  You have control over these. Either define look-up tables for 
   //  functions and labels, or searching functions.
   //
-  HashMap<String, IR1.Func> funcMap;
+  static HashMap<String, IR1.Func> funcMap;
   static HashMap<String, HashMap<String, Integer>> labelMap;
 
   // -- Useful global variables
@@ -117,8 +117,18 @@ public class IR1Interp {
   //
   public static void execute(IR1.Program n) throws Exception { 
 
-    // ... code needed ...
+    funcMap = new HashMap<String, IR1.Func>();
+    labelMap = new HashMap<String, HashMap<String, Integer>>();
 
+    for (IR1.Func f : n.funcs)
+      funcMap.put(f.gname.s, f);
+
+    IR1.Func func = funcMap.get("_main");
+    if (func != null) {
+      Env env = new Env();
+      execute(func, env);
+    } else
+      throw new Exception("Cannot find func _main");
   }
 
   // Func ---
