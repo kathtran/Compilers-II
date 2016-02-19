@@ -505,7 +505,7 @@ public class IR1Interp {
   //  in a Val and return.
   //
   static Val evaluate(IR1.Dest n, Env env) throws Exception {
-    if (env.containsKey(n))
+    if (env.containsKey(n.toString()))
       return env.get(n.toString());
     throw new Exception("Dest node value could not be found: " + n);
   }
