@@ -120,8 +120,19 @@ public class IR1Interp {
     funcMap = new HashMap<String, IR1.Func>();
     labelMap = new HashMap<String, HashMap<String, Integer>>();
 
-    for (IR1.Func f : n.funcs)
+    int line;
+
+    for (IR1.Func f : n.funcs) {
       funcMap.put(f.gname.s, f);
+      labelMap.put(f.gname.s, new HashMap<String, Integer>());
+      line = 0;
+      for (IR1.Inst i : f.code) {
+        if (i instanceof IR1.LabelDec) {
+          labelMap.get(f.gname.s).put(((IR1.LabelDec) i).lab.name, line);
+          line++;
+        }
+      }
+    }
 
     IR1.Func func = funcMap.get("_main");
     if (func != null) {
@@ -281,7 +292,8 @@ public class IR1Interp {
   //
   static int execute(IR1.Move n, Env env) throws Exception {
 
-    // ... code needed ...
+    Val src = evaluate(n.src, env);
+
 
     return CONTINUE;  
   }
