@@ -210,14 +210,18 @@ public class IR1Interp {
     Val src1 = evaluate(n.src1, env);
     Val src2 = evaluate(n.src2, env);
 
+    int val1, val2;
+    val1 = ((IntVal) src1).i;
+    val2 = ((IntVal) src2).i;
+
     if (n.op instanceof IR1.AOP) {
-      int val1, val2;
+      /*int val1, val2;
       if (src1 instanceof IntVal && src2 instanceof IntVal) {
         val1 = ((IntVal) src1).i;
         val2 = ((IntVal) src2).i;
       } else
         throw new Exception("Srcs are not valid operands");
-      switch ((IR1.AOP) n.op) {
+      */switch ((IR1.AOP) n.op) {
         case ADD:
           env.put(n.dst.toString(), new IntVal(val1 + val2));
           break;
@@ -231,21 +235,22 @@ public class IR1Interp {
           env.put(n.dst.toString(), new IntVal(val1 / val2));
           break;
         case AND:
-          env.put(n.dst.toString(), new IntVal(val1 & val2));
+          env.put(n.dst.toString(), new BoolVal(((BoolVal) src1).b && ((BoolVal) src2).b));
           break;
         case OR:
-          env.put(n.dst.toString(), new IntVal(val1 | val2));
+          env.put(n.dst.toString(), new BoolVal(((BoolVal) src1).b || ((BoolVal) src2).b));
           break;
         default:
           throw new Exception("Cannot evaluate AOP: " + n.op);
       }
     } else if (n.op instanceof IR1.ROP) {
-      boolean val1, val2;
+  /*    boolean val1, val2;
       if (src1 instanceof IntVal && src2 instanceof IntVal) {
         val1 = ((BoolVal) src1).b;
         val2 = ((BoolVal) src2).b;
       } else
         throw new Exception("Srcs are not valid operands");
+*/
       switch ((IR1.ROP) n.op) {
         case EQ:
           env.put(n.dst.toString(), new BoolVal(val1 == val2));
@@ -285,18 +290,13 @@ public class IR1Interp {
   static int execute(IR1.Unop n, Env env) throws Exception {
 
     Val src = evaluate(n.src, env);
-    int val;
-    if (src instanceof IntVal) {
-      val = ((IntVal) src).i;
-    } else
-      throw new Exception("Src is not a valid operand");
 
     switch (n.op) {
       case NEG:
-        env.put(n.dst.toString(), new IntVal(- val));
+        env.put(n.dst.toString(), new IntVal(- ((IntVal) src).i));
         break;
       case NOT:
-        env.put(n.dst.toString(), new BoolVal(! val));
+        env.put(n.dst.toString(), new BoolVal(! ((BoolVal) src).b));
         break;
       default:
         throw new Exception("Cannot evaluate UOP: " + n.op);
@@ -370,13 +370,10 @@ public class IR1Interp {
     Val src1 = evaluate(n.src1, env);
     Val src2 = evaluate(n.src2, env);
 
-    boolean val1, val2;
+    int val1, val2;
 
-    if (src1 instanceof BoolVal && src2 instanceof BoolVal) {
-      val1 = ((BoolVal) src1).b;
-      val2 = ((BoolVal) src2).b;
-    } else
-      throw new Exception("Srcs are not valid operands");
+    val1 = ((IntVal) src1).i;
+    val2 = ((IntVal) src2).i;
 
     Val cond;
 
