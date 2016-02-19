@@ -256,7 +256,18 @@ public class IR1Interp {
   //
   static int execute(IR1.Unop n, Env env) throws Exception {
 
-    // ... code needed ...
+    Val val = evaluate(n.src, env);
+
+    switch (n.op) {
+      case NEG:
+        env.put(n.dst.toString(), new IntVal(- ((IntVal) val).i));
+        break;
+      case NOT:
+        env.put(n.dst.toString(), new BoolVal(! ((BoolVal) val).b));
+        break;
+      default:
+        throw new Exception("Cannot evaluate UOP: " + n.op);
+    }
 
     return CONTINUE;  
   }
