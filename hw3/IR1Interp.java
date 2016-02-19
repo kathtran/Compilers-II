@@ -79,6 +79,7 @@ public class IR1Interp {
   //
   static HashMap<String, IR1.Func> funcMap;
   static HashMap<String, HashMap<String, Integer>> labelMap;
+  static final String funcName = "_FuncName";
 
   // -- Useful global variables
   //
@@ -117,6 +118,7 @@ public class IR1Interp {
   //
   public static void execute(IR1.Program n) throws Exception { 
 
+    memory = new ArrayList<Val>();
     funcMap = new HashMap<String, IR1.Func>();
     labelMap = new HashMap<String, HashMap<String, Integer>>();
 
@@ -154,7 +156,10 @@ public class IR1Interp {
   //  - The parameter 'env' is the function's initial Env, which
   //    contains its parameters' values.
   //
-  static void execute(IR1.Func n, Env env) throws Exception { 
+  static void execute(IR1.Func n, Env env) throws Exception {
+
+    env.put(funcName, new StrVal(n.gname.s));
+
     int idx = 0;
     while (idx < n.code.length) {
       int next = execute(n.code[idx], env);
@@ -293,7 +298,7 @@ public class IR1Interp {
   static int execute(IR1.Move n, Env env) throws Exception {
 
     Val src = evaluate(n.src, env);
-
+    env.put(n.dst.toString(), src);
 
     return CONTINUE;  
   }
@@ -308,7 +313,9 @@ public class IR1Interp {
   //
   static int execute(IR1.Load n, Env env) throws Exception {
 
-    // ... code needed ...
+    int addr = evaluate(n.addr, env);
+    Val val = memory.get(addr);
+    env.put(n.dst.toString(), val);
 
     return CONTINUE;  
   }
@@ -324,7 +331,9 @@ public class IR1Interp {
   //
   static int execute(IR1.Store n, Env env) throws Exception {
 
-    // ... code needed ...
+    Val src = evaluate(n.src, env);
+    int addr = evaluate(n.addr, env);
+    memory.add(addr, src);
 
     return CONTINUE;  
   }
@@ -355,9 +364,7 @@ public class IR1Interp {
   //
   static int execute(IR1.Jump n, Env env) throws Exception {
 
-    // ... code needed ...
-
-    return 0;
+    return labelMap.get(funcName).get(n.lab.name);
 
   }	
 
