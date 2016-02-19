@@ -77,8 +77,8 @@ public class IR1Interp {
   //  You have control over these. Either define look-up tables for 
   //  functions and labels, or searching functions.
   //
-  static class LabMap extends HashMap<String, Val> {}
-  static HashMap<String, LabMap> labelMap;
+  HashMap<String, IR1.Func> funcMap;
+  static HashMap<String, HashMap<String, Integer>> labelMap;
 
   // -- Useful global variables
   //
@@ -293,8 +293,28 @@ public class IR1Interp {
   //
   static int execute(IR1.Call n, Env env) throws Exception {
 
-    for (IR1.Src arg : n.args)
-      evaluate(arg, env);
+    Env callee = new Env();
+    for (IR1.Src arg : n.args) {
+      Val val = evaluate(arg, env);
+      callee.put(n.gname.s, val);
+
+
+
+      switch (n.gname.s) {
+        case "_printInt":
+          System.out.println(val);
+          break;
+        case "_printStr":
+          System.out.println(val);
+          break;
+        case "_malloc":
+          break;
+      }
+    }
+
+    if (n.rdst != null) {
+      env.put(n.rdst.toString(), retVal);
+    }
 
     return CONTINUE;
   }	
@@ -348,7 +368,7 @@ public class IR1Interp {
     if (n instanceof IR1.IntLit)  return new IntVal(((IR1.IntLit) n).i);
     if (n instanceof IR1.BoolLit) return new BoolVal(((IR1.BoolLit) n).b);
     if (n instanceof IR1.StrLit)  return new StrVal(((IR1.StrLit) n).s);
-    return new UndVal();
+    throw new Exception("Src node value could not be found: " + n);
   }
 
   // Dst Nodes 
@@ -361,7 +381,7 @@ public class IR1Interp {
   static Val evaluate(IR1.Dest n, Env env) throws Exception {
     if (env.containsKey(n))
       return env.get(n.toString());
-    return new UndVal();
+    throw new Exception("Dest node value could not be found: " + n);
   }
 
 }
