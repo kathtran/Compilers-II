@@ -210,29 +210,19 @@ public class IR1Interp {
     Val src1 = evaluate(n.src1, env);
     Val src2 = evaluate(n.src2, env);
 
-    int val1, val2;
-    val1 = ((IntVal) src1).i;
-    val2 = ((IntVal) src2).i;
-
     if (n.op instanceof IR1.AOP) {
-      /*int val1, val2;
-      if (src1 instanceof IntVal && src2 instanceof IntVal) {
-        val1 = ((IntVal) src1).i;
-        val2 = ((IntVal) src2).i;
-      } else
-        throw new Exception("Srcs are not valid operands");
-      */switch ((IR1.AOP) n.op) {
+      switch ((IR1.AOP) n.op) {
         case ADD:
-          env.put(n.dst.toString(), new IntVal(val1 + val2));
+          env.put(n.dst.toString(), new IntVal(((IntVal) src1).i + ((IntVal) src2).i));
           break;
         case SUB:
-          env.put(n.dst.toString(), new IntVal(val1 - val2));
+          env.put(n.dst.toString(), new IntVal(((IntVal) src1).i - ((IntVal) src2).i));
           break;
         case MUL:
-          env.put(n.dst.toString(), new IntVal(val1 * val2));
+          env.put(n.dst.toString(), new IntVal(((IntVal) src1).i * ((IntVal) src2).i));
           break;
         case DIV:
-          env.put(n.dst.toString(), new IntVal(val1 / val2));
+          env.put(n.dst.toString(), new IntVal(((IntVal) src1).i / ((IntVal) src2).i));
           break;
         case AND:
           env.put(n.dst.toString(), new BoolVal(((BoolVal) src1).b && ((BoolVal) src2).b));
@@ -244,31 +234,24 @@ public class IR1Interp {
           throw new Exception("Cannot evaluate AOP: " + n.op);
       }
     } else if (n.op instanceof IR1.ROP) {
-  /*    boolean val1, val2;
-      if (src1 instanceof IntVal && src2 instanceof IntVal) {
-        val1 = ((BoolVal) src1).b;
-        val2 = ((BoolVal) src2).b;
-      } else
-        throw new Exception("Srcs are not valid operands");
-*/
       switch ((IR1.ROP) n.op) {
         case EQ:
-          env.put(n.dst.toString(), new BoolVal(val1 == val2));
+          env.put(n.dst.toString(), new BoolVal(((IntVal) src1).i == ((IntVal) src2).i));
           break;
         case NE:
-          env.put(n.dst.toString(), new BoolVal(val1 != val2));
+          env.put(n.dst.toString(), new BoolVal(((IntVal) src1).i != ((IntVal) src2).i));
           break;
         case LT:
-          env.put(n.dst.toString(), new BoolVal(val1 < val2));
+          env.put(n.dst.toString(), new BoolVal(((IntVal) src1).i < ((IntVal) src2).i));
           break;
         case LE:
-          env.put(n.dst.toString(), new BoolVal(val1 <= val2));
+          env.put(n.dst.toString(), new BoolVal(((IntVal) src1).i <= ((IntVal) src2).i));
           break;
         case GT:
-          env.put(n.dst.toString(), new BoolVal(val1 > val2));
+          env.put(n.dst.toString(), new BoolVal(((IntVal) src1).i > ((IntVal) src2).i));
           break;
         case GE:
-          env.put(n.dst.toString(), new BoolVal(val1 >= val2));
+          env.put(n.dst.toString(), new BoolVal(((IntVal) src1).i >= ((IntVal) src2).i));
           break;
         default:
           throw new Exception("Cannot evaluate ROP: " + n.op);
@@ -370,31 +353,26 @@ public class IR1Interp {
     Val src1 = evaluate(n.src1, env);
     Val src2 = evaluate(n.src2, env);
 
-    int val1, val2;
-
-    val1 = ((IntVal) src1).i;
-    val2 = ((IntVal) src2).i;
-
     Val cond;
 
     switch (n.op) {
       case EQ:
-        cond = new BoolVal(val1 == val2);
+        cond = new BoolVal(((IntVal) src1).i == ((IntVal) src2).i);
         break;
       case NE:
-        cond = new BoolVal(val1 != val2);
+        cond = new BoolVal(((IntVal) src1).i != ((IntVal) src2).i);
         break;
       case LT:
-        cond = new BoolVal(val1 < val2);
+        cond = new BoolVal(((IntVal) src1).i < ((IntVal) src2).i);
         break;
       case LE:
-        cond = new BoolVal(val1 <= val2);
+        cond = new BoolVal(((IntVal) src1).i <= ((IntVal) src2).i);
         break;
       case GT:
-        cond = new BoolVal(val1 > val2);
+        cond = new BoolVal(((IntVal) src1).i > ((IntVal) src2).i);
         break;
       case GE:
-        cond = new BoolVal(val1 >= val2);
+        cond = new BoolVal(((IntVal) src1).i >= ((IntVal) src2).i);
         break;
       default:
         throw new Exception("Cannot evaluate ROP: " + n.op);
