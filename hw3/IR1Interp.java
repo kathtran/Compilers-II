@@ -128,9 +128,9 @@ public class IR1Interp {
       funcMap.put(f.gname.s, f);
       labelMap.put(f.gname.s, new HashMap<String, Integer>());
       line = 0;
-      for (IR1.Inst i : f.code) {
-        if (i instanceof IR1.LabelDec) {
-          labelMap.get(f.gname.s).put(((IR1.LabelDec) i).lab.name, line);
+      for (IR1.Inst inst : f.code) {
+        if (inst instanceof IR1.LabelDec) {
+          labelMap.get(f.gname.s).put(((IR1.LabelDec) inst).lab.name, line);
           line++;
         }
       }
@@ -169,6 +169,11 @@ public class IR1Interp {
         break;
       else
 	idx = next;
+    }
+
+    for (int i = 0; i < n.code.length; i++) {
+      if (n.code[i] instanceof IR1.LabelDec)
+        labelMap.get(n.gname.s).put(((IR1.LabelDec) n.code[i]).lab.name, i);
     }
   }
 
@@ -231,7 +236,7 @@ public class IR1Interp {
           env.put(n.dst.toString(), new BoolVal(((BoolVal) src1).b || ((BoolVal) src2).b));
           break;
         default:
-          throw new Exception("Cannot evaluate AOP: " + n.op);
+          throw new Exception("Cannot evaluate AOP: " + n);
       }
     } else if (n.op instanceof IR1.ROP) {
       switch ((IR1.ROP) n.op) {
@@ -254,7 +259,7 @@ public class IR1Interp {
           env.put(n.dst.toString(), new BoolVal(((IntVal) src1).i >= ((IntVal) src2).i));
           break;
         default:
-          throw new Exception("Cannot evaluate ROP: " + n.op);
+          throw new Exception("Cannot evaluate ROP: " + n);
       }
     }
 
@@ -282,7 +287,7 @@ public class IR1Interp {
         env.put(n.dst.toString(), new BoolVal(! ((BoolVal) src).b));
         break;
       default:
-        throw new Exception("Cannot evaluate UOP: " + n.op);
+        throw new Exception("Cannot evaluate UOP: " + n);
     }
 
     return CONTINUE;  
@@ -375,7 +380,7 @@ public class IR1Interp {
         cond = new BoolVal(((IntVal) src1).i >= ((IntVal) src2).i);
         break;
       default:
-        throw new Exception("Cannot evaluate ROP: " + n.op);
+        throw new Exception("Cannot evaluate ROP: " + n);
     }
 
     if (((BoolVal) cond).b) {
