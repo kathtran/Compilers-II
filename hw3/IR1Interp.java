@@ -121,6 +121,7 @@ public class IR1Interp {
     memory = new ArrayList<Val>();
     funcMap = new HashMap<String, IR1.Func>();
     labelMap = new HashMap<String, HashMap<String, Integer>>();
+    retVal = new UndVal();
 
     int line;
 
