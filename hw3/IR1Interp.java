@@ -348,7 +348,7 @@ public class IR1Interp {
 
     Val src = evaluate(n.src, env);
     int addr = evaluate(n.addr, env);
-    memory.add(addr, src);
+    memory.set(addr, src);
 
     return CONTINUE;  
   }
@@ -438,7 +438,6 @@ public class IR1Interp {
   static int execute(IR1.Call n, Env env) throws Exception {
 
     Env callee = new Env();
-    IR1.Func func = funcMap.get(n.gname.s);
 
     Val val = evaluate(n.args[0], env);
 
@@ -457,6 +456,7 @@ public class IR1Interp {
         env.put(n.rdst.toString(), new IntVal(loc));
         break;
       default:
+        IR1.Func func = funcMap.get(n.gname.s);
         for (int i = 0; i < func.params.length; i++)
           callee.put(func.params[i].s, evaluate(n.args[i], env));
         execute(func, callee);
