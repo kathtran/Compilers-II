@@ -241,10 +241,20 @@ public class IR1Interp {
     } else if (n.op instanceof IR1.ROP) {
       switch ((IR1.ROP) n.op) {
         case EQ:
-          env.put(n.dst.toString(), new BoolVal(((IntVal) src1).i == ((IntVal) src2).i));
+          if (src1 instanceof IntVal && src2 instanceof IntVal)
+            env.put(n.dst.toString(), new BoolVal(((IntVal) src1).i == ((IntVal) src2).i));
+          else if (src1 instanceof BoolVal && src2 instanceof BoolVal)
+            env.put(n.dst.toString(), new BoolVal(((BoolVal) src1).b == ((BoolVal) src2).b));
+          else
+            throw new Exception("Invalid operand in: " + n);
           break;
         case NE:
-          env.put(n.dst.toString(), new BoolVal(((IntVal) src1).i != ((IntVal) src2).i));
+          if (src1 instanceof IntVal && src2 instanceof IntVal)
+            env.put(n.dst.toString(), new BoolVal(((IntVal) src1).i != ((IntVal) src2).i));
+          else if (src1 instanceof BoolVal && src2 instanceof BoolVal)
+            env.put(n.dst.toString(), new BoolVal(((BoolVal) src1).b != ((BoolVal) src2).b));
+          else
+            throw new Exception("Invalid operand in: " + n);
           break;
         case LT:
           env.put(n.dst.toString(), new BoolVal(((IntVal) src1).i < ((IntVal) src2).i));
@@ -362,10 +372,20 @@ public class IR1Interp {
 
     switch (n.op) {
       case EQ:
-        cond = new BoolVal(((IntVal) src1).i == ((IntVal) src2).i);
+        if (src1 instanceof IntVal && src2 instanceof IntVal)
+          cond = new BoolVal(((IntVal) src1).i == ((IntVal) src2).i);
+        else if (src1 instanceof BoolVal && src2 instanceof BoolVal)
+          cond = new BoolVal(((BoolVal) src1).b == ((BoolVal) src2).b);
+        else
+          throw new Exception("Invalid operand in: " + n);
         break;
       case NE:
-        cond = new BoolVal(((IntVal) src1).i != ((IntVal) src2).i);
+        if (src1 instanceof IntVal && src2 instanceof IntVal)
+          cond = new BoolVal(((IntVal) src1).i != ((IntVal) src2).i);
+        else if (src1 instanceof BoolVal && src2 instanceof BoolVal)
+          cond = new BoolVal(((BoolVal) src1).b != ((BoolVal) src2).b);
+        else
+          throw new Exception("Invalid operand in: " + n);
         break;
       case LT:
         cond = new BoolVal(((IntVal) src1).i < ((IntVal) src2).i);
