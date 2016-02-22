@@ -437,7 +437,7 @@ public class IR1Interp {
 
     Env callee = new Env();
 
-    if (n.args != null) {
+    if (n.args != null && n.args.length != 0) {
 
       Val val = evaluate(n.args[0], env);
 

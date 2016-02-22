@@ -1,6 +1,6 @@
-Exception in thread "main" java.lang.ClassCastException: IR1Interp$BoolVal cannot be cast to IR1Interp$IntVal
-	at IR1Interp.execute(IR1Interp.java:374)
-	at IR1Interp.execute(IR1Interp.java:186)
-	at IR1Interp.execute(IR1Interp.java:165)
-	at IR1Interp.execute(IR1Interp.java:142)
-	at IR1Interp.main(IR1Interp.java:100)
+Exception in thread "main" java.lang.NullPointerException
+	at IR1Interp.execute(IR1Interp.java:419)
+	at IR1Interp.execute(IR1Interp.java:188)
+	at IR1Interp.execute(IR1Interp.java:168)
+	at IR1Interp.execute(IR1Interp.java:145)
+	at IR1Interp.main(IR1Interp.java:102)

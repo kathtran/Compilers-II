@@ -1,6 +1,0 @@
-Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: 0
-	at IR1Interp.execute(IR1Interp.java:439)
-	at IR1Interp.execute(IR1Interp.java:183)
-	at IR1Interp.execute(IR1Interp.java:165)
-	at IR1Interp.execute(IR1Interp.java:142)
-	at IR1Interp.main(IR1Interp.java:100)
