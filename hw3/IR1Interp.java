@@ -125,16 +125,16 @@ public class IR1Interp {
     labelMap = new HashMap<String, HashMap<String, Integer>>();
     retVal = new UndVal();
 
-    int line;
+    int index;
 
     for (IR1.Func f : n.funcs) {
       funcMap.put(f.gname.s, f);
       labelMap.put(f.gname.s, new HashMap<String, Integer>());
-      line = 0;
+      index = 0;
       for (IR1.Inst inst : f.code) {
         if (inst instanceof IR1.LabelDec) {
-          labelMap.get(f.gname.s).put(((IR1.LabelDec) inst).lab.name, line);
-          line++;
+          labelMap.get(f.gname.s).put(((IR1.LabelDec) inst).lab.name, index);
+          index++;
         }
       }
     }
