@@ -11,6 +11,8 @@
 //
 import java.util.*;
 import java.io.*;
+import java.util.concurrent.SynchronousQueue;
+
 import ir.*;
 
 public class IR1Interp {
@@ -165,16 +167,11 @@ public class IR1Interp {
     while (idx < n.code.length) {
       int next = execute(n.code[idx], env);
       if (next == CONTINUE)
-	idx++; 
+        idx++;
       else if (next == RETURN)
         break;
       else
-	idx = next;
-    }
-
-    for (int i = 0; i < n.code.length; i++) {
-      if (n.code[i] instanceof IR1.LabelDec)
-        labelMap.get(n.gname.s).put(((IR1.LabelDec) n.code[i]).lab.name, i);
+        idx = next;
     }
   }
 
@@ -369,45 +366,45 @@ public class IR1Interp {
     Val src1 = evaluate(n.src1, env);
     Val src2 = evaluate(n.src2, env);
 
-    Val cond;
+    boolean cond;
 
     switch (n.op) {
       case EQ:
         if (src1 instanceof IntVal && src2 instanceof IntVal)
-          cond = new BoolVal(((IntVal) src1).i == ((IntVal) src2).i);
+          cond = ((IntVal) src1).i == ((IntVal) src2).i;
         else if (src1 instanceof BoolVal && src2 instanceof BoolVal)
-          cond = new BoolVal(((BoolVal) src1).b == ((BoolVal) src2).b);
+          cond = ((BoolVal) src1).b == ((BoolVal) src2).b;
         else
           throw new Exception("Invalid operand in: " + n);
         break;
       case NE:
         if (src1 instanceof IntVal && src2 instanceof IntVal)
-          cond = new BoolVal(((IntVal) src1).i != ((IntVal) src2).i);
+          cond = ((IntVal) src1).i != ((IntVal) src2).i;
         else if (src1 instanceof BoolVal && src2 instanceof BoolVal)
-          cond = new BoolVal(((BoolVal) src1).b != ((BoolVal) src2).b);
+          cond = ((BoolVal) src1).b != ((BoolVal) src2).b;
         else
           throw new Exception("Invalid operand in: " + n);
         break;
       case LT:
-        cond = new BoolVal(((IntVal) src1).i < ((IntVal) src2).i);
+        cond = ((IntVal) src1).i < ((IntVal) src2).i;
         break;
       case LE:
-        cond = new BoolVal(((IntVal) src1).i <= ((IntVal) src2).i);
+        cond = ((IntVal) src1).i <= ((IntVal) src2).i;
         break;
       case GT:
-        cond = new BoolVal(((IntVal) src1).i > ((IntVal) src2).i);
+        cond = ((IntVal) src1).i > ((IntVal) src2).i;
         break;
       case GE:
-        cond = new BoolVal(((IntVal) src1).i >= ((IntVal) src2).i);
+        cond = ((IntVal) src1).i >= ((IntVal) src2).i;
         break;
       default:
         throw new Exception("Cannot evaluate ROP: " + n);
     }
 
-    if (((BoolVal) cond).b) {
+    if (cond) {
       return labelMap.get(FUNCNAME).get(n.lab.name);
     } else
-    return CONTINUE;
+      return CONTINUE;
 
   }	
 
@@ -440,28 +437,34 @@ public class IR1Interp {
 
     Env callee = new Env();
 
-    Val val = evaluate(n.args[0], env);
+    if (n.args != null) {
 
-    switch (n.gname.s) {
-      case "_printInt":
-        System.out.println(val);
-        break;
-      case "_printStr":
-        System.out.println(val);
-        break;
-      case "_malloc":
-        int sz = ((IntVal) val).i;
-        int loc = memory.size();
-        for (int i = 0; i < sz; i++)
-          memory.add(new UndVal());
-        env.put(n.rdst.toString(), new IntVal(loc));
-        break;
-      default:
-        IR1.Func func = funcMap.get(n.gname.s);
-        for (int i = 0; i < func.params.length; i++)
-          callee.put(func.params[i].s, evaluate(n.args[i], env));
-        execute(func, callee);
-        break;
+      Val val = evaluate(n.args[0], env);
+
+      switch (n.gname.s) {
+        case "_printInt":
+          System.out.println(val);
+          break;
+        case "_printStr":
+          System.out.println(val);
+          break;
+        case "_malloc":
+          int sz = ((IntVal) val).i;
+          int loc = memory.size();
+          for (int i = 0; i < sz; i++)
+            memory.add(new UndVal());
+          env.put(n.rdst.toString(), new IntVal(loc));
+          break;
+        default:
+          IR1.Func func = funcMap.get(n.gname.s);
+          for (int i = 0; i < func.params.length; i++)
+            callee.put(func.params[i].s, evaluate(n.args[i], env));
+          execute(func, callee);
+          break;
+      }
+    } else {
+      if (n.gname.s.equals("_printStr"))
+        System.out.println();
     }
 
     if (n.rdst != null) {
