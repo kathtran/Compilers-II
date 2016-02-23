@@ -261,6 +261,7 @@ public class IR1Interp {
     } else if (src1 instanceof BoolVal && src2 instanceof BoolVal) {
       boolean val1 = ((BoolVal) src1).b;
       boolean val2 = ((BoolVal) src2).b;
+
       if (n.op instanceof IR1.AOP) {
         switch ((IR1.AOP) n.op) {
           case AND:
@@ -305,10 +306,12 @@ public class IR1Interp {
 
     if (src instanceof IntVal) {
       int val = ((IntVal) src).i;
+
       if (n.op == IR1.UOP.NEG)
         env.put(n.dst.toString(), new IntVal(- val));
     } else if (src instanceof BoolVal) {
       boolean val = ((BoolVal) src).b;
+
       if (n.op == IR1.UOP.NOT)
         env.put(n.dst.toString(), new BoolVal(! val));
     } else
@@ -385,35 +388,41 @@ public class IR1Interp {
     boolean cond;
 
     if (src1 instanceof IntVal && src2 instanceof IntVal) {
+      int val1 = ((IntVal) src1).i;
+      int val2 = ((IntVal) src2).i;
+
       switch (n.op) {
         case EQ:
-          cond = ((IntVal) src1).i == ((IntVal) src2).i;
+          cond = val1 == val2;
           break;
         case NE:
-          cond = ((IntVal) src1).i != ((IntVal) src2).i;
+          cond = val1 != val2;
           break;
         case LT:
-          cond = ((IntVal) src1).i < ((IntVal) src2).i;
+          cond = val1 < val2;
           break;
         case LE:
-          cond = ((IntVal) src1).i <= ((IntVal) src2).i;
+          cond = val1 <= val2;
           break;
         case GT:
-          cond = ((IntVal) src1).i > ((IntVal) src2).i;
+          cond = val1 > val2;
           break;
         case GE:
-          cond = ((IntVal) src1).i >= ((IntVal) src2).i;
+          cond = val1 >= val2;
           break;
         default:
           throw new Exception("Cannot evaluate ROP: " + n);
       }
     } else if (src1 instanceof BoolVal && src2 instanceof BoolVal) {
+      boolean val1 = ((BoolVal) src1).b;
+      boolean val2 = ((BoolVal) src2).b;
+
       switch (n.op) {
         case EQ:
-          cond = ((BoolVal) src1).b == ((BoolVal) src2).b;
+          cond = val1 == val2;
           break;
         case NE:
-          cond = ((BoolVal) src1).b != ((BoolVal) src2).b;
+          cond = val1 != val2;
           break;
         default:
           throw new Exception("Cannot evaluate ROP: " + n);
