@@ -303,16 +303,16 @@ public class IR1Interp {
 
     Val src = evaluate(n.src, env);
 
-    switch (n.op) {
-      case NEG:
-        env.put(n.dst.toString(), new IntVal(- ((IntVal) src).i));
-        break;
-      case NOT:
-        env.put(n.dst.toString(), new BoolVal(! ((BoolVal) src).b));
-        break;
-      default:
-        throw new Exception("Cannot evaluate UOP: " + n);
-    }
+    if (src instanceof IntVal) {
+      int val = ((IntVal) src).i;
+      if (n.op == IR1.UOP.NEG)
+        env.put(n.dst.toString(), new IntVal(- val));
+    } else if (src instanceof BoolVal) {
+      boolean val = ((BoolVal) src).b;
+      if (n.op == IR1.UOP.NOT)
+        env.put(n.dst.toString(), new BoolVal(! val));
+    } else
+      throw new Exception("Cannot evaluate UOP: " + n);
 
     return CONTINUE;  
   }
@@ -384,38 +384,42 @@ public class IR1Interp {
 
     boolean cond;
 
-    switch (n.op) {
-      case EQ:
-        if (src1 instanceof IntVal && src2 instanceof IntVal)
+    if (src1 instanceof IntVal && src2 instanceof IntVal) {
+      switch (n.op) {
+        case EQ:
           cond = ((IntVal) src1).i == ((IntVal) src2).i;
-        else if (src1 instanceof BoolVal && src2 instanceof BoolVal)
-          cond = ((BoolVal) src1).b == ((BoolVal) src2).b;
-        else
-          throw new Exception("Invalid operand in: " + n);
-        break;
-      case NE:
-        if (src1 instanceof IntVal && src2 instanceof IntVal)
+          break;
+        case NE:
           cond = ((IntVal) src1).i != ((IntVal) src2).i;
-        else if (src1 instanceof BoolVal && src2 instanceof BoolVal)
+          break;
+        case LT:
+          cond = ((IntVal) src1).i < ((IntVal) src2).i;
+          break;
+        case LE:
+          cond = ((IntVal) src1).i <= ((IntVal) src2).i;
+          break;
+        case GT:
+          cond = ((IntVal) src1).i > ((IntVal) src2).i;
+          break;
+        case GE:
+          cond = ((IntVal) src1).i >= ((IntVal) src2).i;
+          break;
+        default:
+          throw new Exception("Cannot evaluate ROP: " + n);
+      }
+    } else if (src1 instanceof BoolVal && src2 instanceof BoolVal) {
+      switch (n.op) {
+        case EQ:
+          cond = ((BoolVal) src1).b == ((BoolVal) src2).b;
+          break;
+        case NE:
           cond = ((BoolVal) src1).b != ((BoolVal) src2).b;
-        else
-          throw new Exception("Invalid operand in: " + n);
-        break;
-      case LT:
-        cond = ((IntVal) src1).i < ((IntVal) src2).i;
-        break;
-      case LE:
-        cond = ((IntVal) src1).i <= ((IntVal) src2).i;
-        break;
-      case GT:
-        cond = ((IntVal) src1).i > ((IntVal) src2).i;
-        break;
-      case GE:
-        cond = ((IntVal) src1).i >= ((IntVal) src2).i;
-        break;
-      default:
-        throw new Exception("Cannot evaluate ROP: " + n);
-    }
+          break;
+        default:
+          throw new Exception("Cannot evaluate ROP: " + n);
+      }
+    } else
+      throw new Exception("Invalid operand(s): " + n);
 
     if (cond) {
       return labelMap.get(FUNCNAME).get(n.lab.name);
