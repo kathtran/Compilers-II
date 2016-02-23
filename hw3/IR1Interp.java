@@ -142,6 +142,7 @@ public class IR1Interp {
     IR1.Func func = funcMap.get("_main");
     if (func != null) {
       Env env = new Env();
+      env.put(FUNCNAME, new StrVal(func.gname.s));
       execute(func, env);
     } else
       throw new IntException("Cannot find func _main");
@@ -160,8 +161,6 @@ public class IR1Interp {
   //    contains its parameters' values.
   //
   static void execute(IR1.Func n, Env env) throws Exception {
-
-    env.put(FUNCNAME, new StrVal(n.gname.s));
 
     int idx = 0;
     while (idx < n.code.length) {
