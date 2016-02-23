@@ -489,6 +489,7 @@ public class IR1Interp {
           for (int i = 0; i < func.params.length; i++)
             callee.put(func.params[i].s, evaluate(n.args[i], env));
           execute(func, callee);
+          env.put(n.rdst.toString(), retVal);
           break;
       }
     } else {
@@ -496,9 +497,9 @@ public class IR1Interp {
         System.out.println();
     }
 
-    if (n.rdst != null) {
-      env.put(n.rdst.toString(), retVal);
-    }
+//    if (n.rdst != null) {
+//      env.put(n.rdst.toString(), retVal);
+//    }
 
     return CONTINUE;
   }	
