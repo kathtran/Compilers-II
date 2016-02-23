@@ -142,7 +142,6 @@ public class IR1Interp {
     IR1.Func func = funcMap.get("_main");
     if (func != null) {
       Env env = new Env();
-      env.put(FUNCNAME, new StrVal(func.gname.s));
       execute(func, env);
     } else
       throw new IntException("Cannot find func _main");
@@ -161,6 +160,8 @@ public class IR1Interp {
   //    contains its parameters' values.
   //
   static void execute(IR1.Func n, Env env) throws Exception {
+
+    env.put(FUNCNAME, new StrVal(n.gname.s));
 
     int idx = 0;
     while (idx < n.code.length) {
@@ -430,7 +431,18 @@ public class IR1Interp {
       throw new IntException("Invalid operand(s): " + n);
 
     if (cond) {
-      return labelMap.get(FUNCNAME).get(n.lab.name);
+//      return labelMap.get(FUNCNAME).get(n.lab.name);
+//      for (Map.Entry<String, HashMap<String, Integer>> func : labelMap.entrySet()) {
+//        for (Map.Entry<String, Integer> label : func.getValue().entrySet()) {
+//          if (n.lab.name.equals(label.getKey()))
+//            return
+//        }
+//      }
+      for (HashMap<String, Integer> label : labelMap.values()) {
+        if (label.containsKey(n.lab.name))
+          return label.get(n.lab.name);
+      }
+      return CONTINUE;
     } else
       return CONTINUE;
 
@@ -444,8 +456,12 @@ public class IR1Interp {
   //
   static int execute(IR1.Jump n, Env env) throws Exception {
 
-    return labelMap.get(FUNCNAME).get(n.lab.name);
-
+    for (HashMap<String, Integer> label : labelMap.values()) {
+      if (label.containsKey(n.lab.name))
+        return label.get(n.lab.name);
+    }
+//    return labelMap.get(FUNCNAME).get(n.lab.name);
+    return CONTINUE;
   }	
 
   // Call ---
