@@ -213,63 +213,74 @@ public class IR1Interp {
     Val src1 = evaluate(n.src1, env);
     Val src2 = evaluate(n.src2, env);
 
-    if (n.op instanceof IR1.AOP) {
-      switch ((IR1.AOP) n.op) {
-        case ADD:
-          env.put(n.dst.toString(), new IntVal(((IntVal) src1).i + ((IntVal) src2).i));
-          break;
-        case SUB:
-          env.put(n.dst.toString(), new IntVal(((IntVal) src1).i - ((IntVal) src2).i));
-          break;
-        case MUL:
-          env.put(n.dst.toString(), new IntVal(((IntVal) src1).i * ((IntVal) src2).i));
-          break;
-        case DIV:
-          env.put(n.dst.toString(), new IntVal(((IntVal) src1).i / ((IntVal) src2).i));
-          break;
-        case AND:
-          env.put(n.dst.toString(), new BoolVal(((BoolVal) src1).b && ((BoolVal) src2).b));
-          break;
-        case OR:
-          env.put(n.dst.toString(), new BoolVal(((BoolVal) src1).b || ((BoolVal) src2).b));
-          break;
-        default:
-          throw new Exception("Cannot evaluate AOP: " + n);
-      }
-    } else if (n.op instanceof IR1.ROP) {
-      switch ((IR1.ROP) n.op) {
-        case EQ:
-          if (src1 instanceof IntVal && src2 instanceof IntVal)
+    if (src1 instanceof IntVal && src2 instanceof IntVal) {
+      if (n.op instanceof IR1.AOP) {
+        switch ((IR1.AOP) n.op) {
+          case ADD:
+            env.put(n.dst.toString(), new IntVal(((IntVal) src1).i + ((IntVal) src2).i));
+            break;
+          case SUB:
+            env.put(n.dst.toString(), new IntVal(((IntVal) src1).i - ((IntVal) src2).i));
+            break;
+          case MUL:
+            env.put(n.dst.toString(), new IntVal(((IntVal) src1).i * ((IntVal) src2).i));
+            break;
+          case DIV:
+            env.put(n.dst.toString(), new IntVal(((IntVal) src1).i / ((IntVal) src2).i));
+            break;
+          default:
+            throw new Exception("Cannot evaluate AOP: " + n);
+        }
+      } else if (n.op instanceof IR1.ROP) {
+        switch ((IR1.ROP) n.op) {
+          case EQ:
             env.put(n.dst.toString(), new BoolVal(((IntVal) src1).i == ((IntVal) src2).i));
-          else if (src1 instanceof BoolVal && src2 instanceof BoolVal)
-            env.put(n.dst.toString(), new BoolVal(((BoolVal) src1).b == ((BoolVal) src2).b));
-          else
-            throw new Exception("Invalid operand in: " + n);
-          break;
-        case NE:
-          if (src1 instanceof IntVal && src2 instanceof IntVal)
+            break;
+          case NE:
             env.put(n.dst.toString(), new BoolVal(((IntVal) src1).i != ((IntVal) src2).i));
-          else if (src1 instanceof BoolVal && src2 instanceof BoolVal)
-            env.put(n.dst.toString(), new BoolVal(((BoolVal) src1).b != ((BoolVal) src2).b));
-          else
-            throw new Exception("Invalid operand in: " + n);
-          break;
-        case LT:
-          env.put(n.dst.toString(), new BoolVal(((IntVal) src1).i < ((IntVal) src2).i));
-          break;
-        case LE:
-          env.put(n.dst.toString(), new BoolVal(((IntVal) src1).i <= ((IntVal) src2).i));
-          break;
-        case GT:
-          env.put(n.dst.toString(), new BoolVal(((IntVal) src1).i > ((IntVal) src2).i));
-          break;
-        case GE:
-          env.put(n.dst.toString(), new BoolVal(((IntVal) src1).i >= ((IntVal) src2).i));
-          break;
-        default:
-          throw new Exception("Cannot evaluate ROP: " + n);
+            break;
+          case LT:
+            env.put(n.dst.toString(), new BoolVal(((IntVal) src1).i < ((IntVal) src2).i));
+            break;
+          case LE:
+            env.put(n.dst.toString(), new BoolVal(((IntVal) src1).i <= ((IntVal) src2).i));
+            break;
+          case GT:
+            env.put(n.dst.toString(), new BoolVal(((IntVal) src1).i > ((IntVal) src2).i));
+            break;
+          case GE:
+            env.put(n.dst.toString(), new BoolVal(((IntVal) src1).i >= ((IntVal) src2).i));
+            break;
+          default:
+            throw new Exception("Cannot evaluate ROP: " + n);
+        }
       }
-    }
+    } else if (src1 instanceof BoolVal && src2 instanceof BoolVal) {
+      if (n.op instanceof IR1.AOP) {
+        switch ((IR1.AOP) n.op) {
+          case AND:
+            env.put(n.dst.toString(), new BoolVal(((BoolVal) src1).b && ((BoolVal) src2).b));
+            break;
+          case OR:
+            env.put(n.dst.toString(), new BoolVal(((BoolVal) src1).b || ((BoolVal) src2).b));
+            break;
+          default:
+            throw new Exception("Cannot evaluate AOP: " + n);
+        }
+      } else if (n.op instanceof IR1.ROP) {
+        switch ((IR1.ROP) n.op) {
+          case EQ:
+            env.put(n.dst.toString(), new BoolVal(((BoolVal) src1).b == ((BoolVal) src2).b));
+            break;
+          case NE:
+            env.put(n.dst.toString(), new BoolVal(((BoolVal) src1).b != ((BoolVal) src2).b));
+            break;
+          default:
+            throw new Exception("Cannot evaluate ROP: " + n);
+        }
+      }
+    } else
+      throw new Exception("Invalid operand(s): " + n);
 
     return CONTINUE;
   }
