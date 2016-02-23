@@ -144,7 +144,7 @@ public class IR1Interp {
       Env env = new Env();
       execute(func, env);
     } else
-      throw new Exception("Cannot find func _main");
+      throw new IntException("Cannot find func _main");
 
   }
 
@@ -232,7 +232,7 @@ public class IR1Interp {
             env.put(n.dst.toString(), new IntVal(val1 / val2));
             break;
           default:
-            throw new Exception("Cannot evaluate AOP: " + n);
+            throw new IntException("Cannot evaluate AOP: " + n);
         }
       } else if (n.op instanceof IR1.ROP) {
         switch ((IR1.ROP) n.op) {
@@ -255,7 +255,7 @@ public class IR1Interp {
             env.put(n.dst.toString(), new BoolVal(val1 >= val2));
             break;
           default:
-            throw new Exception("Cannot evaluate ROP: " + n);
+            throw new IntException("Cannot evaluate ROP: " + n);
         }
       }
     } else if (src1 instanceof BoolVal && src2 instanceof BoolVal) {
@@ -271,7 +271,7 @@ public class IR1Interp {
             env.put(n.dst.toString(), new BoolVal(val1 || val2));
             break;
           default:
-            throw new Exception("Cannot evaluate AOP: " + n);
+            throw new IntException("Cannot evaluate AOP: " + n);
         }
       } else if (n.op instanceof IR1.ROP) {
         switch ((IR1.ROP) n.op) {
@@ -282,11 +282,11 @@ public class IR1Interp {
             env.put(n.dst.toString(), new BoolVal(val1 != val2));
             break;
           default:
-            throw new Exception("Cannot evaluate ROP: " + n);
+            throw new IntException("Cannot evaluate ROP: " + n);
         }
       }
     } else
-      throw new Exception("Invalid operand(s): " + n);
+      throw new IntException("Invalid operand(s): " + n);
 
     return CONTINUE;
   }
@@ -315,7 +315,7 @@ public class IR1Interp {
       if (n.op == IR1.UOP.NOT)
         env.put(n.dst.toString(), new BoolVal(! val));
     } else
-      throw new Exception("Cannot evaluate UOP: " + n);
+      throw new IntException("Cannot evaluate UOP: " + n);
 
     return CONTINUE;  
   }
@@ -411,7 +411,7 @@ public class IR1Interp {
           cond = val1 >= val2;
           break;
         default:
-          throw new Exception("Cannot evaluate ROP: " + n);
+          throw new IntException("Cannot evaluate ROP: " + n);
       }
     } else if (src1 instanceof BoolVal && src2 instanceof BoolVal) {
       boolean val1 = ((BoolVal) src1).b;
@@ -425,10 +425,10 @@ public class IR1Interp {
           cond = val1 != val2;
           break;
         default:
-          throw new Exception("Cannot evaluate ROP: " + n);
+          throw new IntException("Cannot evaluate ROP: " + n);
       }
     } else
-      throw new Exception("Invalid operand(s): " + n);
+      throw new IntException("Invalid operand(s): " + n);
 
     if (cond) {
       return labelMap.get(FUNCNAME).get(n.lab.name);
@@ -552,7 +552,7 @@ public class IR1Interp {
     if (n instanceof IR1.IntLit)  return new IntVal(((IR1.IntLit) n).i);
     if (n instanceof IR1.BoolLit) return new BoolVal(((IR1.BoolLit) n).b);
     if (n instanceof IR1.StrLit)  return new StrVal(((IR1.StrLit) n).s);
-    throw new Exception("Src node value could not be found: " + n);
+    throw new IntException("Src node value could not be found: " + n);
   }
 
   // Dst Nodes 
@@ -565,7 +565,7 @@ public class IR1Interp {
   static Val evaluate(IR1.Dest n, Env env) throws Exception {
     if (env.containsKey(n.toString()))
       return env.get(n.toString());
-    throw new Exception("Dest node value could not be found: " + n);
+    throw new IntException("Dest node value could not be found: " + n);
   }
 
 }
