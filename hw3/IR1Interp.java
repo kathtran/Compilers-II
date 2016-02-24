@@ -432,13 +432,13 @@ public class IR1Interp {
       throw new IntException("Invalid operand(s): " + n);
 
     if (cond) {
-//      return labelMap.get(FUNCNAME).get(n.lab.name);
-
-      for (HashMap<String, Integer> label : labelMap.values()) {
-        if (label.containsKey(n.lab.name))
-          return label.get(n.lab.name);
-      }
-      return CONTINUE;
+      return labelMap.get(FUNCNAME).get(n.lab.name);
+//
+//      for (HashMap<String, Integer> label : labelMap.values()) {
+//        if (label.containsKey(n.lab.name))
+//          return label.get(n.lab.name);
+//      }
+//      return CONTINUE;
     } else
       return CONTINUE;
 
@@ -452,12 +452,12 @@ public class IR1Interp {
   //
   static int execute(IR1.Jump n, Env env) throws Exception {
 
-    for (HashMap<String, Integer> label : labelMap.values()) {
-      if (label.containsKey(n.lab.name))
-        return label.get(n.lab.name);
-    }
-//    return labelMap.get(FUNCNAME).get(n.lab.name);
-    return CONTINUE;
+//    for (HashMap<String, Integer> label : labelMap.values()) {
+//      if (label.containsKey(n.lab.name))
+//        return label.get(n.lab.name);
+//    }
+    return labelMap.get(FUNCNAME).get(n.lab.name);
+//    return CONTINUE;
   }	
 
   // Call ---
