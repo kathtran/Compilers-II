@@ -1,6 +1,0 @@
-Exception in thread "main" java.lang.NullPointerException
-	at IR1Interp.execute(IR1Interp.java:405)
-	at IR1Interp.execute(IR1Interp.java:189)
-	at IR1Interp.execute(IR1Interp.java:168)
-	at IR1Interp.execute(IR1Interp.java:145)
-	at IR1Interp.main(IR1Interp.java:102)

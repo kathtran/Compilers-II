@@ -1,6 +1,0 @@
-Exception in thread "main" java.lang.ClassCastException: IR1Interp$UndVal cannot be cast to IR1Interp$IntVal
-	at IR1Interp.execute(IR1Interp.java:219)
-	at IR1Interp.execute(IR1Interp.java:181)
-	at IR1Interp.execute(IR1Interp.java:168)
-	at IR1Interp.execute(IR1Interp.java:145)
-	at IR1Interp.main(IR1Interp.java:102)
