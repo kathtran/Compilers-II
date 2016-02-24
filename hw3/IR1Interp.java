@@ -133,7 +133,6 @@ public class IR1Interp {
       for (IR1.Inst inst : f.code) {
         if (inst instanceof IR1.LabelDec) {
           labelMap.get(f.gname.s).put(((IR1.LabelDec) inst).lab.name, index);
-
         }
         index++;
       }
@@ -160,7 +159,7 @@ public class IR1Interp {
   //    contains its parameters' values.
   //
   static void execute(IR1.Func n, Env env) throws Exception {
-    
+
     int idx = 0;
     while (idx < n.code.length) {
       int next = execute(n.code[idx], env);
@@ -498,9 +497,6 @@ public class IR1Interp {
           env.put(n.rdst.toString(), retVal);
           break;
       }
-    } else {
-      if (n.gname.s.equals("_printStr"))
-        System.out.println();
     }
 
     return CONTINUE;
