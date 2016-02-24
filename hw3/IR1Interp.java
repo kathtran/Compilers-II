@@ -134,8 +134,9 @@ public class IR1Interp {
       for (IR1.Inst inst : f.code) {
         if (inst instanceof IR1.LabelDec) {
           labelMap.get(f.gname.s).put(((IR1.LabelDec) inst).lab.name, index);
-          index++;
+
         }
+        index++;
       }
     }
 
@@ -432,12 +433,7 @@ public class IR1Interp {
 
     if (cond) {
 //      return labelMap.get(FUNCNAME).get(n.lab.name);
-//      for (Map.Entry<String, HashMap<String, Integer>> func : labelMap.entrySet()) {
-//        for (Map.Entry<String, Integer> label : func.getValue().entrySet()) {
-//          if (n.lab.name.equals(label.getKey()))
-//            return
-//        }
-//      }
+
       for (HashMap<String, Integer> label : labelMap.values()) {
         if (label.containsKey(n.lab.name))
           return label.get(n.lab.name);
