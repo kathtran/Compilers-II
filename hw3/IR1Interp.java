@@ -470,33 +470,36 @@ public class IR1Interp {
   static int execute(IR1.Call n, Env env) throws Exception {
 
     Env callee = new Env();
+    Val val = null;
 
-    if (n.args != null && n.args.length != 0) {
+    if (n.args != null)
+      val = evaluate(n.args[0], env);
 
-      Val val = evaluate(n.args[0], env);
-
-      switch (n.gname.s) {
-        case "_printInt":
+    switch (n.gname.s) {
+      case "_printInt":
+        if (n.args != null && n.args.length == 1)
           System.out.println(val);
-          break;
-        case "_printStr":
+        break;
+      case "_printStr":
+        if (n.args != null || n.args.length == 0)
           System.out.println(val);
-          break;
-        case "_malloc":
+        break;
+      case "_malloc":
+        if (val != null) {
           int sz = ((IntVal) val).i;
           int loc = memory.size();
           for (int i = 0; i < sz; i++)
             memory.add(new UndVal());
           env.put(n.rdst.toString(), new IntVal(loc));
-          break;
-        default:
-          IR1.Func func = funcMap.get(n.gname.s);
-          for (int i = 0; i < func.params.length; i++)
-            callee.put(func.params[i].s, evaluate(n.args[i], env));
-          execute(func, callee);
-          env.put(n.rdst.toString(), retVal);
-          break;
-      }
+        }
+        break;
+      default:
+        IR1.Func func = funcMap.get(n.gname.s);
+        for (int i = 0; i < func.params.length; i++)
+          callee.put(func.params[i].s, evaluate(n.args[i], env));
+        execute(func, callee);
+        env.put(n.rdst.toString(), retVal);
+        break;
     }
 
     return CONTINUE;
