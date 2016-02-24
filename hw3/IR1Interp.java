@@ -470,22 +470,27 @@ public class IR1Interp {
   static int execute(IR1.Call n, Env env) throws Exception {
 
     Env callee = new Env();
-    Val val = null;
-
-    if (n.args != null)
-      val = evaluate(n.args[0], env);
 
     switch (n.gname.s) {
       case "_printInt":
-        if (n.args != null && n.args.length == 1)
+        if (n.args != null && n.args.length == 1) {
+          Val val = evaluate(n.args[0], env);
           System.out.println(val);
+        }
         break;
       case "_printStr":
-        if (n.args != null || n.args.length == 0)
-          System.out.println(val);
+        if (n.args != null) {
+          if (n.args.length == 0)
+            System.out.println();
+          else {
+            Val val = evaluate(n.args[0], env);
+            System.out.println(val);
+          }
+        }
         break;
       case "_malloc":
-        if (val != null) {
+        if (n.args != null) {
+          Val val = evaluate(n.args[0], env);
           int sz = ((IntVal) val).i;
           int loc = memory.size();
           for (int i = 0; i < sz; i++)
