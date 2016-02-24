@@ -81,7 +81,6 @@ public class IR1Interp {
   //
   static HashMap<String, IR1.Func> funcMap;
   static HashMap<String, HashMap<String, Integer>> labelMap;
-  static final String FUNCNAME = "_FuncName";
 
   // -- Useful global variables
   //
@@ -161,9 +160,7 @@ public class IR1Interp {
   //    contains its parameters' values.
   //
   static void execute(IR1.Func n, Env env) throws Exception {
-
-    env.put(FUNCNAME, new StrVal(n.gname.s));
-
+    
     int idx = 0;
     while (idx < n.code.length) {
       int next = execute(n.code[idx], env);
@@ -432,15 +429,13 @@ public class IR1Interp {
       throw new IntException("Invalid operand(s): " + n);
 
     if (cond) {
-      return labelMap.get(FUNCNAME).get(n.lab.name);
-//
-//      for (HashMap<String, Integer> label : labelMap.values()) {
-//        if (label.containsKey(n.lab.name))
-//          return label.get(n.lab.name);
-//      }
-//      return CONTINUE;
-    } else
-      return CONTINUE;
+      for (HashMap<String, Integer> label : labelMap.values()) {
+        if (label.containsKey(n.lab.name))
+          return label.get(n.lab.name);
+      }
+    }
+
+    return CONTINUE;
 
   }	
 
@@ -452,12 +447,12 @@ public class IR1Interp {
   //
   static int execute(IR1.Jump n, Env env) throws Exception {
 
-//    for (HashMap<String, Integer> label : labelMap.values()) {
-//      if (label.containsKey(n.lab.name))
-//        return label.get(n.lab.name);
-//    }
-    return labelMap.get(FUNCNAME).get(n.lab.name);
-//    return CONTINUE;
+    for (HashMap<String, Integer> label : labelMap.values()) {
+      if (label.containsKey(n.lab.name))
+        return label.get(n.lab.name);
+    }
+
+    return CONTINUE;
   }	
 
   // Call ---
@@ -507,10 +502,6 @@ public class IR1Interp {
       if (n.gname.s.equals("_printStr"))
         System.out.println();
     }
-
-//    if (n.rdst != null) {
-//      env.put(n.rdst.toString(), retVal);
-//    }
 
     return CONTINUE;
   }	
