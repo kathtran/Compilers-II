@@ -3,12 +3,16 @@
 //---------------------------------------------------------------------------
 // For CS322 W'16 (J. Li).
 //
+// Kathleen Tran
+//
 
 // IR1 interpreter. (A starter version)
 //
 //
 import java.util.*;
 import java.io.*;
+import java.util.concurrent.SynchronousQueue;
+
 import ir.*;
 
 public class IR1Interp {
@@ -75,6 +79,8 @@ public class IR1Interp {
   //  You have control over these. Either define look-up tables for 
   //  functions and labels, or searching functions.
   //
+  static HashMap<String, IR1.Func> funcMap;
+  static HashMap<String, HashMap<String, Integer>> labelMap;
 
   // -- Useful global variables
   //
@@ -90,7 +96,7 @@ public class IR1Interp {
   public static void main(String [] args) throws Exception {
     if (args.length == 1) {
       FileInputStream stream = new FileInputStream(args[0]);
-      IR1.Program p = new ir1Parser(stream).Program();
+      IR1.Program p = new IR1Parser(stream).Program();
       stream.close();
       IR1Interp.execute(p);
     } else {
@@ -113,7 +119,31 @@ public class IR1Interp {
   //
   public static void execute(IR1.Program n) throws Exception { 
 
-    // ... code needed ...
+    memory = new ArrayList<Val>();
+    funcMap = new HashMap<String, IR1.Func>();
+    labelMap = new HashMap<String, HashMap<String, Integer>>();
+    retVal = new UndVal();
+
+    int index;
+
+    for (IR1.Func f : n.funcs) {
+      funcMap.put(f.gname.s, f);
+      labelMap.put(f.gname.s, new HashMap<String, Integer>());
+      index = 0;
+      for (IR1.Inst inst : f.code) {
+        if (inst instanceof IR1.LabelDec) {
+          labelMap.get(f.gname.s).put(((IR1.LabelDec) inst).lab.name, index);
+        }
+        index++;
+      }
+    }
+
+    IR1.Func func = funcMap.get("_main");
+    if (func != null) {
+      Env env = new Env();
+      execute(func, env);
+    } else
+      throw new IntException("Cannot find func _main");
 
   }
 
@@ -128,16 +158,17 @@ public class IR1Interp {
   //  - The parameter 'env' is the function's initial Env, which
   //    contains its parameters' values.
   //
-  static void execute(IR1.Func n, Env env) throws Exception { 
+  static void execute(IR1.Func n, Env env) throws Exception {
+
     int idx = 0;
     while (idx < n.code.length) {
       int next = execute(n.code[idx], env);
       if (next == CONTINUE)
-	idx++; 
+        idx++;
       else if (next == RETURN)
         break;
       else
-	idx = next;
+        idx = next;
     }
   }
 
@@ -176,9 +207,85 @@ public class IR1Interp {
   //
   static int execute(IR1.Binop n, Env env) throws Exception {
 
-    // ... code needed ...
+    Val src1 = evaluate(n.src1, env);
+    Val src2 = evaluate(n.src2, env);
 
-    return CONTINUE;  
+    if (src1 instanceof IntVal && src2 instanceof IntVal) {
+      int val1 = ((IntVal) src1).i;
+      int val2 = ((IntVal) src2).i;
+
+      if (n.op instanceof IR1.AOP) {
+        switch ((IR1.AOP) n.op) {
+          case ADD:
+            env.put(n.dst.toString(), new IntVal(val1 + val2));
+            break;
+          case SUB:
+            env.put(n.dst.toString(), new IntVal(val1 - val2));
+            break;
+          case MUL:
+            env.put(n.dst.toString(), new IntVal(val1 * val2));
+            break;
+          case DIV:
+            env.put(n.dst.toString(), new IntVal(val1 / val2));
+            break;
+          default:
+            throw new IntException("Cannot evaluate AOP: " + n);
+        }
+      } else if (n.op instanceof IR1.ROP) {
+        switch ((IR1.ROP) n.op) {
+          case EQ:
+            env.put(n.dst.toString(), new BoolVal(val1 == val2));
+            break;
+          case NE:
+            env.put(n.dst.toString(), new BoolVal(val1 != val2));
+            break;
+          case LT:
+            env.put(n.dst.toString(), new BoolVal(val1 < val2));
+            break;
+          case LE:
+            env.put(n.dst.toString(), new BoolVal(val1 <= val2));
+            break;
+          case GT:
+            env.put(n.dst.toString(), new BoolVal(val1 > val2));
+            break;
+          case GE:
+            env.put(n.dst.toString(), new BoolVal(val1 >= val2));
+            break;
+          default:
+            throw new IntException("Cannot evaluate ROP: " + n);
+        }
+      }
+    } else if (src1 instanceof BoolVal && src2 instanceof BoolVal) {
+      boolean val1 = ((BoolVal) src1).b;
+      boolean val2 = ((BoolVal) src2).b;
+
+      if (n.op instanceof IR1.AOP) {
+        switch ((IR1.AOP) n.op) {
+          case AND:
+            env.put(n.dst.toString(), new BoolVal(val1 && val2));
+            break;
+          case OR:
+            env.put(n.dst.toString(), new BoolVal(val1 || val2));
+            break;
+          default:
+            throw new IntException("Cannot evaluate AOP: " + n);
+        }
+      } else if (n.op instanceof IR1.ROP) {
+        switch ((IR1.ROP) n.op) {
+          case EQ:
+            env.put(n.dst.toString(), new BoolVal(val1 == val2));
+            break;
+          case NE:
+            env.put(n.dst.toString(), new BoolVal(val1 != val2));
+            break;
+          default:
+            throw new IntException("Cannot evaluate ROP: " + n);
+        }
+      }
+    } else
+      throw new IntException("Invalid operand(s): " + n);
+
+    return CONTINUE;
   }
 
   // Unop ---
@@ -192,7 +299,20 @@ public class IR1Interp {
   //
   static int execute(IR1.Unop n, Env env) throws Exception {
 
-    // ... code needed ...
+    Val src = evaluate(n.src, env);
+
+    if (src instanceof IntVal) {
+      int val = ((IntVal) src).i;
+
+      if (n.op == IR1.UOP.NEG)
+        env.put(n.dst.toString(), new IntVal(- val));
+    } else if (src instanceof BoolVal) {
+      boolean val = ((BoolVal) src).b;
+
+      if (n.op == IR1.UOP.NOT)
+        env.put(n.dst.toString(), new BoolVal(! val));
+    } else
+      throw new IntException("Cannot evaluate UOP: " + n);
 
     return CONTINUE;  
   }
@@ -206,7 +326,8 @@ public class IR1Interp {
   //
   static int execute(IR1.Move n, Env env) throws Exception {
 
-    // ... code needed ...
+    Val src = evaluate(n.src, env);
+    env.put(n.dst.toString(), src);
 
     return CONTINUE;  
   }
@@ -221,7 +342,9 @@ public class IR1Interp {
   //
   static int execute(IR1.Load n, Env env) throws Exception {
 
-    // ... code needed ...
+    int addr = evaluate(n.addr, env);
+    Val val = memory.get(addr);
+    env.put(n.dst.toString(), val);
 
     return CONTINUE;  
   }
@@ -237,7 +360,9 @@ public class IR1Interp {
   //
   static int execute(IR1.Store n, Env env) throws Exception {
 
-    // ... code needed ...
+    Val src = evaluate(n.src, env);
+    int addr = evaluate(n.addr, env);
+    memory.set(addr, src);
 
     return CONTINUE;  
   }
@@ -254,7 +379,62 @@ public class IR1Interp {
   //
   static int execute(IR1.CJump n, Env env) throws Exception {
 
-    // ... code needed ...
+    Val src1 = evaluate(n.src1, env);
+    Val src2 = evaluate(n.src2, env);
+
+    boolean cond;
+
+    if (src1 instanceof IntVal && src2 instanceof IntVal) {
+      int val1 = ((IntVal) src1).i;
+      int val2 = ((IntVal) src2).i;
+
+      switch (n.op) {
+        case EQ:
+          cond = val1 == val2;
+          break;
+        case NE:
+          cond = val1 != val2;
+          break;
+        case LT:
+          cond = val1 < val2;
+          break;
+        case LE:
+          cond = val1 <= val2;
+          break;
+        case GT:
+          cond = val1 > val2;
+          break;
+        case GE:
+          cond = val1 >= val2;
+          break;
+        default:
+          throw new IntException("Cannot evaluate ROP: " + n);
+      }
+    } else if (src1 instanceof BoolVal && src2 instanceof BoolVal) {
+      boolean val1 = ((BoolVal) src1).b;
+      boolean val2 = ((BoolVal) src2).b;
+
+      switch (n.op) {
+        case EQ:
+          cond = val1 == val2;
+          break;
+        case NE:
+          cond = val1 != val2;
+          break;
+        default:
+          throw new IntException("Cannot evaluate ROP: " + n);
+      }
+    } else
+      throw new IntException("Invalid operand(s): " + n);
+
+    if (cond) {
+      for (HashMap<String, Integer> label : labelMap.values()) {
+        if (label.containsKey(n.lab.name))
+          return label.get(n.lab.name);
+      }
+    }
+
+    return CONTINUE;
 
   }	
 
@@ -266,8 +446,12 @@ public class IR1Interp {
   //
   static int execute(IR1.Jump n, Env env) throws Exception {
 
-    // ... code needed ...
+    for (HashMap<String, Integer> label : labelMap.values()) {
+      if (label.containsKey(n.lab.name))
+        return label.get(n.lab.name);
+    }
 
+    return CONTINUE;
   }	
 
   // Call ---
@@ -281,11 +465,45 @@ public class IR1Interp {
   //    names with arguments' values, and add them to the new Env.
   // 3. Find callee's Func node and switch to execute it.
   // 4. If 'rdst' is not null, update its entry in the Env with
-  //    the return value (should be avaiable in variable 'retVal').
+  //    the return value (should be available in variable 'retVal').
   //
   static int execute(IR1.Call n, Env env) throws Exception {
 
-    // ... code needed ...
+    if (n.args != null) {
+
+      switch (n.gname.s) {
+        case "_printInt":
+          if (n.args.length == 1) {
+            Val val = evaluate(n.args[0], env);
+            System.out.println(val);
+          }
+          break;
+        case "_printStr":
+          if (n.args.length == 0)
+            System.out.println();
+          else {
+            Val val = evaluate(n.args[0], env);
+            System.out.println(val);
+          }
+          break;
+        case "_malloc":
+          Val val = evaluate(n.args[0], env);
+          int sz = ((IntVal) val).i;
+          int loc = memory.size();
+          for (int i = 0; i < sz; i++)
+            memory.add(new UndVal());
+          env.put(n.rdst.toString(), new IntVal(loc));
+          break;
+        default:
+          IR1.Func func = funcMap.get(n.gname.s);
+          Env callee = new Env();
+          for (int i = 0; i < func.params.length; i++)
+            callee.put(func.params[i].s, evaluate(n.args[i], env));
+          execute(func, callee);
+          env.put(n.rdst.toString(), retVal);
+          break;
+      }
+    }
 
     return CONTINUE;
   }	
@@ -298,7 +516,8 @@ public class IR1Interp {
   // 
   static int execute(IR1.Return n, Env env) throws Exception {
 
-    // ... code needed ...
+    if (n.val != null)
+      retVal = evaluate(n.val, env);
 
     return RETURN;
   }
@@ -319,7 +538,7 @@ public class IR1Interp {
   // 2. Return the result (which should be an index to memory).
   //
   static int evaluate(IR1.Addr n, Env env) throws Exception {
-    int loc = evaluate(n.base, env).asInt();
+    int loc = ((IntVal) evaluate(n.base, env)).i;
     return loc + n.offset;
   }
 
@@ -333,13 +552,12 @@ public class IR1Interp {
   //  - For the literals, wrap their value in a Val and return.
   //
   static Val evaluate(IR1.Src n, Env env) throws Exception {
-    Val val;
-    // if (n instanceof IR1.Temp)    val = 
-    // if (n instanceof IR1.Id)      val = 
-    // if (n instanceof IR1.IntLit)  val = 
-    // if (n instanceof IR1.BoolLit) val = 
-    // if (n instanceof IR1.StrLit)  val = 
-    return val;
+    if (n instanceof IR1.Temp)    return env.get(n.toString());
+    if (n instanceof IR1.Id)      return env.get(n.toString());
+    if (n instanceof IR1.IntLit)  return new IntVal(((IR1.IntLit) n).i);
+    if (n instanceof IR1.BoolLit) return new BoolVal(((IR1.BoolLit) n).b);
+    if (n instanceof IR1.StrLit)  return new StrVal(((IR1.StrLit) n).s);
+    throw new IntException("Src node value could not be found: " + n);
   }
 
   // Dst Nodes 
@@ -350,11 +568,9 @@ public class IR1Interp {
   //  in a Val and return.
   //
   static Val evaluate(IR1.Dest n, Env env) throws Exception {
-    Val val;
-
-    // ... code needed ...
-
-    return val;
+    if (env.containsKey(n.toString()))
+      return env.get(n.toString());
+    throw new IntException("Dest node value could not be found: " + n);
   }
 
 }
