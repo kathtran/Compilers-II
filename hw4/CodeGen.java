@@ -14,10 +14,12 @@ import ir.*;
 
 class CodeGen {
   static class GenException extends Exception {
-    public GenException(String msg) { super(msg); }
+    public GenException(String msg) {
+      super(msg);
+    }
   }
 
-  public static void main(String [] args) throws Exception {
+  public static void main(String[] args) throws Exception {
     if (args.length == 1) {
       FileInputStream stream = new FileInputStream(args[0]);
       IR1.Program p = new IR1Parser(stream).Program();
@@ -34,23 +36,23 @@ class CodeGen {
 
   // Per-program globals
   //
-  static List<String> stringLiterals; 	    // collection of all string literals
+  static List<String> stringLiterals;        // collection of all string literals
   static final X86.Reg tempReg1 = X86.R10;  // two random scratch registers
   static final X86.Reg tempReg2 = X86.R11;  //
 
   // Per-function globals
   //
-  static List<String> allVars; 	    	    // collection of all params, vars, and temps
-  static int frameSize; 		    // stack frame size (in bytes)
-  static String fnName; 		    // function's name
+  static List<String> allVars;                // collection of all params, vars, and temps
+  static int frameSize;            // stack frame size (in bytes)
+  static String fnName;            // function's name
 
   // Return a variable's stack frame address
   //
   static X86.Mem varMem(IR1.Dest dest) throws Exception {
     int idx = allVars.indexOf(dest.toString());
     if (idx < 0)
-      throw new GenException("Variable not found in allVars collection: " 
-			     + dest.toString());
+      throw new GenException("Variable not found in allVars collection: "
+              + dest.toString());
     int offset = idx * X86.Size.L.bytes;
     return new X86.Mem(X86.RSP, offset);
   }
@@ -66,18 +68,18 @@ class CodeGen {
   // - generate code for each function
   // - emit all accumulated string literals
   //
-  public static void gen(IR1.Program n) throws Exception { 
+  public static void gen(IR1.Program n) throws Exception {
     stringLiterals = new ArrayList<String>();
     X86.emit0(".text");
-    for (IR1.Func f: n.funcs)
+    for (IR1.Func f : n.funcs)
       gen(f);
     int i = 0;
-    for (String s: stringLiterals) {
+    for (String s : stringLiterals) {
       X86.Label lab = new X86.Label("_S" + i);
       X86.emitLabel(lab);
       X86.emitString(s);
       i++;
-    }      
+    }
     System.out.print("\t\t\t  # Total inst cnt: " + X86.instCnt + "\n");
   }
 
@@ -110,10 +112,10 @@ class CodeGen {
   //     X86.resize_reg()
   // - emit code for the body
   //
-  static void gen(IR1.Func n) throws Exception { 
+  static void gen(IR1.Func n) throws Exception {
     if (n.params.length > X86.argRegs.length)
-      throw new GenException("Function has too many paramters: " 
-			     + n.params.length);
+      throw new GenException("Function has too many paramters: "
+              + n.params.length);
     fnName = n.gname.toString();
     System.out.print("\t\t\t  # " + n.header());
 
@@ -127,24 +129,24 @@ class CodeGen {
     // ... need code ...
 
     // emit code for the body
-    for (int i = 1; i <= n.code.length; i++) 
-      gen(n.code[i-1]);
+    for (int i = 1; i <= n.code.length; i++)
+      gen(n.code[i - 1]);
   }
 
   // INSTRUCTIONS
 
   static void gen(IR1.Inst n) throws Exception {
     System.out.print("\t\t\t  # " + n);
-    if (n instanceof IR1.Binop) 	gen((IR1.Binop) n);
-    else if (n instanceof IR1.Unop) 	gen((IR1.Unop) n);
-    else if (n instanceof IR1.Move) 	gen((IR1.Move) n);
-    else if (n instanceof IR1.Load) 	gen((IR1.Load) n);
-    else if (n instanceof IR1.Store) 	gen((IR1.Store) n);
+    if (n instanceof IR1.Binop) gen((IR1.Binop) n);
+    else if (n instanceof IR1.Unop) gen((IR1.Unop) n);
+    else if (n instanceof IR1.Move) gen((IR1.Move) n);
+    else if (n instanceof IR1.Load) gen((IR1.Load) n);
+    else if (n instanceof IR1.Store) gen((IR1.Store) n);
     else if (n instanceof IR1.LabelDec) gen((IR1.LabelDec) n);
-    else if (n instanceof IR1.CJump) 	gen((IR1.CJump) n);
-    else if (n instanceof IR1.Jump) 	gen((IR1.Jump) n);
-    else if (n instanceof IR1.Call)     gen((IR1.Call) n);
-    else if (n instanceof IR1.Return)   gen((IR1.Return) n);
+    else if (n instanceof IR1.CJump) gen((IR1.CJump) n);
+    else if (n instanceof IR1.Jump) gen((IR1.Jump) n);
+    else if (n instanceof IR1.Call) gen((IR1.Call) n);
+    else if (n instanceof IR1.Return) gen((IR1.Return) n);
     else throw new GenException("Illegal IR1 instruction: " + n);
   }
 
@@ -177,7 +179,7 @@ class CodeGen {
 
     // ... need code ...
 
-  }	
+  }
 
   // Unop ---
   //  UOP op;
@@ -272,7 +274,7 @@ class CodeGen {
 
     // ... need code ...
 
-  }	
+  }
 
   // Jump ---
   //  Label lab;
@@ -285,7 +287,7 @@ class CodeGen {
 
     // ... need code ...
 
-  }	
+  }
 
   // Call ---
   //  String name;
@@ -342,7 +344,30 @@ class CodeGen {
   //
   static void to_reg(IR1.Src n, final X86.Reg tempReg) throws Exception {
 
-    // ... need code ...
+    if (n != null) {
+      IR1.Temp temp = new IR1.Temp(tempReg.r);
+
+      if (n instanceof IR1.Id) {
+        X86.emit(((IR1.Id) n).s);
+        new IR1.Load(temp, new IR1.Addr(n));
+      } else if (n instanceof IR1.Temp) {
+        X86.emit(n.toString());
+        new IR1.Load(temp, new IR1.Addr(n));
+      } else if (n instanceof IR1.IntLit) {
+        X86.emit(n.toString());
+        new IR1.Move(temp, n);
+      } else if (n instanceof IR1.BoolLit) {
+        int bool = (((IR1.BoolLit) n).b) ? 1 : 0;
+        X86.emit("" + bool);
+        new IR1.Move(temp, n);
+      } else if (n instanceof IR1.StrLit) {
+        stringLiterals.add(((IR1.StrLit) n).s);
+        int index = stringLiterals.indexOf(((IR1.StrLit) n).s);
+        X86.Label label = new X86.Label("_S" + index);
+        X86.emitLabel(label);
+        new IR1.Move(temp, n);
+      }
+    }
 
   }
 
@@ -358,4 +383,4 @@ class CodeGen {
     to_reg(addr.base, tempReg);
     return new X86.Mem(tempReg, addr.offset);
   }
-
+}
