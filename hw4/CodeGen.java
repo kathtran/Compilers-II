@@ -10,6 +10,8 @@
 //
 import java.io.*;
 import java.util.*;
+
+import com.sun.tools.javac.jvm.Gen;
 import ir.*;
 
 class CodeGen {
@@ -284,7 +286,36 @@ class CodeGen {
   //
   static void gen(IR1.CJump n) throws Exception {
 
-    // ... need code ...
+    to_reg(n.src1, tempReg1);
+    to_reg(n.src2, tempReg2);
+
+    X86.emit2("cmp" + tempReg2.s.suffix, tempReg2, tempReg1);
+
+    X86.Label label = new X86.Label(fnName + "_" + n.lab.name);
+
+    IR1.ROP op = n.op;
+    switch (op) {
+      case EQ:
+        X86.emit1("je", label);
+        break;
+      case NE:
+        X86.emit1("jne", label);
+        break;
+      case LT:
+        X86.emit1("jl", label);
+        break;
+      case LE:
+        X86.emit1("jle", label);
+        break;
+      case GT:
+        X86.emit1("jg", label);
+        break;
+      case GE:
+        X86.emit1("jge", label);
+        break;
+      default:
+        throw new GenException("Invalid ROP: " + op);
+    }
 
   }
 
@@ -297,12 +328,13 @@ class CodeGen {
   //
   static void gen(IR1.Jump n) throws Exception {
 
-    // ... need code ...
+    X86.Label label = new X86.Label(fnName + "_" + n.lab.name);
+    X86.emit1("jmp", label);
 
   }
 
   // Call ---
-  //  String name;
+  //  String gname;
   //  Src[] args;
   //  Dest rdst;
   //
@@ -312,7 +344,7 @@ class CodeGen {
   // - emit a "call" with func's name as the label
   // - if return value is expected, 
   //   . add rdst to 'allVars' if it is not not already there
-  //   . emit a "mov" to move result from rax to rdst's frame slot 
+  //   . emit a "mov" to move result from eax to rdst's frame slot
   //     (pay attention to size info)
   //
   static void gen(IR1.Call n) throws Exception {
@@ -324,13 +356,13 @@ class CodeGen {
     for (int i = 0; i < n.args.length; i++)
       to_reg(n.args[i], X86.argRegs[i]);
 
-    X86.Label label = new X86.Label(fnName);
+    X86.Label label = new X86.Label(n.gname.s);
     X86.emit1("call", label);
 
     if (n.rdst != null) {
       if (!allVars.contains(n.rdst))
         allVars.add(n.rdst.toString());
-      X86.emit2("movl", X86.RAX, varMem(n.rdst));
+      X86.emit2("movl", X86.EAX, varMem(n.rdst));
     }
 
   }
@@ -339,14 +371,14 @@ class CodeGen {
   //  Src val;
   //
   // Guideline:
-  // - if there is a value, emit a "mov" to move it to rax
+  // - if there is a value, emit a "mov" to move it to eax
   // - pop the frame (add frameSize back to stack pointer)
   // - emit a "ret"
   //
   static void gen(IR1.Return n) throws Exception {
 
     if (n.val != null) {
-      to_reg(n.val, X86.RAX);
+      to_reg(n.val, X86.EAX);
       X86.emit2("addq", new X86.Imm(frameSize), X86.RSP);
       X86.emit0("ret");
     }
