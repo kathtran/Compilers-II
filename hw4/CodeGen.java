@@ -102,7 +102,7 @@ class CodeGen {
   //   . the space needed is 
   //       frameSize = (param count + var count + temp count) * 4
   //   . use the following statement to adjust the alignment need:
-  //       if ((frameSize % 16) == 0) 
+  //       if ((frameSize % 16) == 0)
   //	      frameSize += 8;
   // - store the incoming actual arguments to their frame slots:
   //   . translate arg's index in the 'allVars' list to its stack 
@@ -125,8 +125,20 @@ class CodeGen {
     X86.emit1(".globl", f);
     X86.emitLabel(f);
 
+    // Initialize allVars and store all params and local vars
+    allVars = new ArrayList<String>();
+    for (IR1.Id p : n.params)
+      allVars.add(p.s);
+    for (IR1.Id l : n.locals)
+      allVars.add(l.s);
 
-    // ... need code ...
+    // Allocate frame for storing all params, vars, and temps
+    frameSize = (n.params.length + n.locals.length + n.code.length) * 4;
+    if ((frameSize % 16) == 0)
+      frameSize += 8;
+
+    // Store incoming actual arguments to their frame slots
+
 
     // emit code for the body
     for (int i = 1; i <= n.code.length; i++)
@@ -305,7 +317,12 @@ class CodeGen {
   //
   static void gen(IR1.Call n) throws Exception {
 
-    // ... need code ...
+    if (n.args.length > 6)
+      throw new GenException("Function has too many paramters: "
+              + n.args.length);
+
+
+
 
   }
 
@@ -319,7 +336,12 @@ class CodeGen {
   //
   static void gen(IR1.Return n) throws Exception {
 
-    // ... need code ...
+    if (n.val != null) {
+      X86.emit("mov");
+
+      X86.emit("ret");
+      // It may also need to generate code for loading return value to the return-value register RAX.
+    }
 
   }
 
@@ -345,27 +367,26 @@ class CodeGen {
   static void to_reg(IR1.Src n, final X86.Reg tempReg) throws Exception {
 
     if (n != null) {
-      IR1.Temp temp = new IR1.Temp(tempReg.r);
 
       if (n instanceof IR1.Id) {
         X86.emit(((IR1.Id) n).s);
-        new IR1.Load(temp, new IR1.Addr(n));
+        X86.emit2("movl", new X86.AddrName(((IR1.Id) n).s), tempReg);
       } else if (n instanceof IR1.Temp) {
         X86.emit(n.toString());
-        new IR1.Load(temp, new IR1.Addr(n));
+        X86.emit2("movl", new X86.AddrName(n.toString()), tempReg);
       } else if (n instanceof IR1.IntLit) {
         X86.emit(n.toString());
-        new IR1.Move(temp, n);
+        X86.emit2("movl", new X86.Imm(((IR1.IntLit) n).i), tempReg);
       } else if (n instanceof IR1.BoolLit) {
         int bool = (((IR1.BoolLit) n).b) ? 1 : 0;
         X86.emit("" + bool);
-        new IR1.Move(temp, n);
+        X86.emit2("movl", new X86.Imm(bool), tempReg);
       } else if (n instanceof IR1.StrLit) {
         stringLiterals.add(((IR1.StrLit) n).s);
         int index = stringLiterals.indexOf(((IR1.StrLit) n).s);
         X86.Label label = new X86.Label("_S" + index);
         X86.emitLabel(label);
-        new IR1.Move(temp, n);
+        X86.emit2("movl", new X86.AddrName(((IR1.Id) n).s), tempReg);
       }
     }
 
