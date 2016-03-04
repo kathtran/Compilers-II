@@ -258,7 +258,10 @@ class CodeGen {
   //
   static void gen(IR1.Store n) throws Exception {
 
-    // ... need code ...
+    to_reg(n.src, tempReg1);
+    gen_addr(n.addr, tempReg2);
+
+    X86.emit2("mov" + tempReg1.s.suffix, tempReg1, tempReg2);
 
   }
 
