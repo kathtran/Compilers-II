@@ -318,11 +318,20 @@ class CodeGen {
   static void gen(IR1.Call n) throws Exception {
 
     if (n.args.length > 6)
-      throw new GenException("Function has too many paramters: "
+      throw new GenException("Call has too many arguments: "
               + n.args.length);
 
+    for (int i = 0; i < n.args.length; i++)
+      to_reg(n.args[i], X86.argRegs[i]);
 
+    X86.Label label = new X86.Label(fnName);
+    X86.emit1("call", label);
 
+    if (n.rdst != null) {
+      if (!allVars.contains(n.rdst))
+        allVars.add(n.rdst.toString());
+      X86.emit2("movl", X86.RAX, varMem(n.rdst));
+    }
 
   }
 
@@ -337,10 +346,9 @@ class CodeGen {
   static void gen(IR1.Return n) throws Exception {
 
     if (n.val != null) {
-      X86.emit("mov");
-
-      X86.emit("ret");
-      // It may also need to generate code for loading return value to the return-value register RAX.
+      to_reg(n.val, X86.RAX);
+      X86.emit2("addq", new X86.Imm(frameSize), X86.RSP);
+      X86.emit0("ret");
     }
 
   }
@@ -369,24 +377,19 @@ class CodeGen {
     if (n != null) {
 
       if (n instanceof IR1.Id) {
-        X86.emit(((IR1.Id) n).s);
         X86.emit2("movl", new X86.AddrName(((IR1.Id) n).s), tempReg);
       } else if (n instanceof IR1.Temp) {
-        X86.emit(n.toString());
         X86.emit2("movl", new X86.AddrName(n.toString()), tempReg);
       } else if (n instanceof IR1.IntLit) {
-        X86.emit(n.toString());
         X86.emit2("movl", new X86.Imm(((IR1.IntLit) n).i), tempReg);
       } else if (n instanceof IR1.BoolLit) {
         int bool = (((IR1.BoolLit) n).b) ? 1 : 0;
-        X86.emit("" + bool);
         X86.emit2("movl", new X86.Imm(bool), tempReg);
       } else if (n instanceof IR1.StrLit) {
         stringLiterals.add(((IR1.StrLit) n).s);
         int index = stringLiterals.indexOf(((IR1.StrLit) n).s);
         X86.Label label = new X86.Label("_S" + index);
-        X86.emitLabel(label);
-        X86.emit2("movl", new X86.AddrName(((IR1.Id) n).s), tempReg);
+        X86.emit2("lea", new X86.AddrName(label.s), tempReg);
       }
     }
 
