@@ -191,8 +191,73 @@ class CodeGen {
   //
   static void gen(IR1.Binop n) throws Exception {
 
-    // ... need code ...
+    if (!allVars.contains(n.dst))
+      allVars.add(n.dst.toString());
 
+    IR1.BOP op = n.op;
+
+    if (op instanceof IR1.AOP) {
+      if (op == IR1.AOP.DIV) {
+        to_reg(n.src1, X86.RAX);
+        to_reg(n.src2, tempReg1);
+        X86.emit2("cqto", X86.RAX, X86.RDX);
+        X86.emit2("idivq", tempReg1, X86.RAX);
+      } else {
+        to_reg(n.src1, tempReg1);
+        to_reg(n.src2, tempReg2);
+
+        switch ((IR1.AOP) op) {
+          case ADD:
+            X86.emit2("add" + tempReg1.s.suffix, tempReg1, tempReg2);
+            break;
+          case SUB:
+            X86.emit2("sub" + tempReg1.s.suffix, tempReg1, tempReg2);
+            break;
+          case MUL:
+            X86.emit2("imul" + tempReg1.s.suffix, tempReg1, tempReg2);
+            break;
+          case AND:
+            X86.emit2("and" + tempReg1.s.suffix, tempReg1, tempReg2);
+            break;
+          case OR:
+            X86.emit2("or" + tempReg1.s.suffix, tempReg1, tempReg2);
+            break;
+          default:
+            throw new GenException("Invalid AOP: " + op);
+        }
+      }
+    } else if (op instanceof IR1.ROP) {
+//      switch ((IR1.ROP) op) {
+//        case EQ:
+//          X86.emit2("eq" + tempReg1.s.suffix, tempReg1, tempReg2);
+//          break;
+//        case NE:
+//
+//          break;
+//        case LT:
+//
+//          break;
+//
+//        case LE:
+//
+//          break;
+//        case GT:
+//
+//          break;
+//        case GE:
+//
+//          break;
+//        default:
+//          throw new GenException("Invalid ROP: " + op);
+//      }
+
+      X86.emit2("cmp", ,);
+      X86.emit2("set", ,);
+      X86.emit2("movzbl", ,);
+    } else
+      throw new GenException("Invalid BOP: " + op);
+
+    X86.emit2("movl", X86.RAX, varMem(n.dst));
   }
 
   // Unop ---
@@ -209,7 +274,23 @@ class CodeGen {
   //  
   static void gen(IR1.Unop n) throws Exception {
 
-    // ... need code ...
+    if (!allVars.contains(n.dst))
+      allVars.add(n.dst.toString());
+    to_reg(n.src, tempReg1);
+
+    IR1.UOP op = n.op;
+    switch(op) {
+      case NEG:
+        X86.emit2("neg" + tempReg1.s.suffix, tempReg1, varMem(n.dst)) ;
+        break;
+      case NOT:
+        X86.emit2("not" + tempReg1.s.suffix, tempReg1, varMem(n.dst));
+        break;
+      default:
+        throw new GenException("Invalid UOP: " + op);
+    }
+
+    X86.emit2("movl", tempReg1, varMem(n.dst)) ;
 
   }
 
