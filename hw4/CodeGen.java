@@ -243,7 +243,8 @@ class CodeGen {
   //
   static void gen(IR1.Load n) throws Exception {
 
-    // ... need code ...
+    gen_addr(n.addr, tempReg1);
+    X86.emit2("mov" + tempReg1.s.suffix, tempReg1, varMem(n.dst));
 
   }
 
@@ -424,7 +425,7 @@ class CodeGen {
         stringLiterals.add(((IR1.StrLit) n).s);
         int index = stringLiterals.indexOf(((IR1.StrLit) n).s);
         X86.Label label = new X86.Label("_S" + index);
-        X86.emit2("lea", new X86.AddrName(label.s), tempReg);
+        X86.emit2("leaq", new X86.AddrName(label.s), tempReg);
       }
     }
 
