@@ -116,7 +116,7 @@ class CodeGen {
   //
   static void gen(IR1.Func n) throws Exception {
     if (n.params.length > X86.argRegs.length)
-      throw new GenException("Function has too many paramters: "
+      throw new GenException("Function has too many parameters: "
               + n.params.length);
     fnName = n.gname.toString();
     System.out.print("\t\t\t  # " + n.header());
@@ -140,7 +140,10 @@ class CodeGen {
       frameSize += 8;
 
     // Store incoming actual arguments to their frame slots
-
+    for (Object arg : allVars) {
+      int idx = allVars.indexOf(arg) * 4;
+//      X86.resize_reg();
+    }
 
     // emit code for the body
     for (int i = 1; i <= n.code.length; i++)
@@ -208,52 +211,55 @@ class CodeGen {
 
         switch ((IR1.AOP) op) {
           case ADD:
-            X86.emit2("add" + tempReg1.s.suffix, tempReg1, tempReg2);
+            X86.emit2("add" + tempReg1.s.suffix, tempReg2, tempReg1);
             break;
           case SUB:
-            X86.emit2("sub" + tempReg1.s.suffix, tempReg1, tempReg2);
+            X86.emit2("sub" + tempReg1.s.suffix, tempReg2, tempReg1);
             break;
           case MUL:
-            X86.emit2("imul" + tempReg1.s.suffix, tempReg1, tempReg2);
+            X86.emit2("imul" + tempReg1.s.suffix, tempReg2, tempReg1);
             break;
           case AND:
-            X86.emit2("and" + tempReg1.s.suffix, tempReg1, tempReg2);
+            X86.emit2("and" + tempReg1.s.suffix, tempReg2, tempReg1);
             break;
           case OR:
-            X86.emit2("or" + tempReg1.s.suffix, tempReg1, tempReg2);
+            X86.emit2("or" + tempReg1.s.suffix, tempReg2, tempReg1);
             break;
           default:
             throw new GenException("Invalid AOP: " + op);
         }
       }
     } else if (op instanceof IR1.ROP) {
-//      switch ((IR1.ROP) op) {
-//        case EQ:
-//          X86.emit2("eq" + tempReg1.s.suffix, tempReg1, tempReg2);
-//          break;
-//        case NE:
-//
-//          break;
-//        case LT:
-//
-//          break;
-//
-//        case LE:
-//
-//          break;
-//        case GT:
-//
-//          break;
-//        case GE:
-//
-//          break;
-//        default:
-//          throw new GenException("Invalid ROP: " + op);
-//      }
-
-      X86.emit2("cmp", ,);
-      X86.emit2("set", ,);
-      X86.emit2("movzbl", ,);
+      boolean result;
+      switch ((IR1.ROP) op) {
+        case EQ:
+          result = (tempReg1.r == tempReg2.r);
+          break;
+        case NE:
+          result = (tempReg1.r != tempReg2.r);
+          break;
+        case LT:
+          result = (tempReg1.r < tempReg2.r);
+          break;
+        case LE:
+          result = (tempReg1.r <= tempReg2.r);
+          break;
+        case GT:
+          result = (tempReg1.r > tempReg2.r);
+          break;
+        case GE:
+          result = (tempReg1.r >= tempReg2.r);
+          break;
+        default:
+          throw new GenException("Invalid ROP: " + op);
+      }
+      to_reg(n.src1, tempReg1);
+      to_reg(n.src2, tempReg2);
+      X86.emit2("cmp", tempReg2, tempReg1);
+//      X86.emit1("set", );
+      if ((frameSize % 16) == 0)
+        frameSize += 8;
+      X86.emit2("movzbl", new X86.Imm(frameSize), X86.RAX);
     } else
       throw new GenException("Invalid BOP: " + op);
 
@@ -341,9 +347,10 @@ class CodeGen {
   static void gen(IR1.Store n) throws Exception {
 
     to_reg(n.src, tempReg1);
+    X86.Reg reg = X86.resize_reg(X86.Size.L, tempReg1);
     gen_addr(n.addr, tempReg2);
 
-    X86.emit2("mov" + tempReg1.s.suffix, tempReg1, tempReg2);
+    X86.emit2("mov" + tempReg1.s.suffix, reg, tempReg2);
 
   }
 
@@ -372,9 +379,11 @@ class CodeGen {
   static void gen(IR1.CJump n) throws Exception {
 
     to_reg(n.src1, tempReg1);
+    X86.Reg reg1 = X86.resize_reg(X86.Size.L, tempReg1);
     to_reg(n.src2, tempReg2);
+    X86.Reg reg2 = X86.resize_reg(X86.Size.L, tempReg2);
 
-    X86.emit2("cmp" + tempReg2.s.suffix, tempReg2, tempReg1);
+    X86.emit2("cmp" + tempReg2.s.suffix, reg2, reg1);
 
     X86.Label label = new X86.Label(fnName + "_" + n.lab.name);
 
@@ -438,8 +447,10 @@ class CodeGen {
       throw new GenException("Call has too many arguments: "
               + n.args.length);
 
-    for (int i = 0; i < n.args.length; i++)
+    for (int i = 0; i < n.args.length; i++) {
       to_reg(n.args[i], X86.argRegs[i]);
+      X86.resize_reg(X86.Size.L, X86.argRegs[i]);
+    }
 
     X86.Label label = new X86.Label(n.gname.s);
     X86.emit1("call", label);
@@ -464,6 +475,9 @@ class CodeGen {
 
     if (n.val != null) {
       to_reg(n.val, X86.EAX);
+      X86.resize_reg(X86.Size.L, X86.EAX);
+      if ((frameSize % 16) == 0)
+        frameSize += 8;
       X86.emit2("addq", new X86.Imm(frameSize), X86.RSP);
       X86.emit0("ret");
     }
