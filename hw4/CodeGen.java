@@ -286,6 +286,7 @@ class CodeGen {
     if (!allVars.contains(n.dst.toString()))
       allVars.add(n.dst.toString());
     to_reg(n.src, tempReg1);
+    X86.Reg reg = X86.resize_reg(X86.Size.L, tempReg1);
 
     IR1.UOP op = n.op;
     switch(op) {
@@ -299,7 +300,7 @@ class CodeGen {
         throw new GenException("Invalid UOP: " + op);
     }
 
-    X86.emit2("movl", tempReg1, varMem(n.dst)) ;
+    X86.emit2("movl", reg, varMem(n.dst));
 
   }
 
