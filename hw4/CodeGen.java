@@ -266,7 +266,7 @@ class CodeGen {
       throw new GenException("Invalid BOP: " + op);
 
     X86.Reg reg = X86.resize_reg(X86.Size.L, X86.RAX);
-    X86.emit2("movq", reg, varMem(n.dst));
+    X86.emit2("movl", reg, varMem(n.dst));
   }
 
   // Unop ---
@@ -386,11 +386,9 @@ class CodeGen {
   static void gen(IR1.CJump n) throws Exception {
 
     to_reg(n.src1, tempReg1);
-    X86.Reg reg1 = X86.resize_reg(X86.Size.L, tempReg1);
     to_reg(n.src2, tempReg2);
-    X86.Reg reg2 = X86.resize_reg(X86.Size.L, tempReg2);
 
-    X86.emit2("cmp" + tempReg2.s.suffix, reg2, reg1);
+    X86.emit2("cmp" + tempReg2.s.suffix, tempReg2, tempReg1);
 
     X86.Label label = new X86.Label(fnName + "_" + n.lab.name);
 
