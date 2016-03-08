@@ -239,32 +239,34 @@ class CodeGen {
       to_reg(n.src1, tempReg1);
       to_reg(n.src2, tempReg2);
 
+      X86.Reg reg = new X86.Reg(10, X86.Size.B);
+
       X86.emit2("cmp" + tempReg1.s.suffix, tempReg2, tempReg1);
+
       switch ((IR1.ROP) op) {
         case EQ:
-          X86.emit1("sete", tempReg1);
+          X86.emit1("sete", reg);
           break;
         case NE:
-          X86.emit1("setne", tempReg1);
+          X86.emit1("setne", reg);
           break;
         case LT:
-          X86.emit1("setl", tempReg1);
+          X86.emit1("setl", reg);
           break;
         case LE:
-          X86.emit1("setle", tempReg1);
+          X86.emit1("setle", reg);
           break;
         case GT:
-          X86.emit1("setg", tempReg1);
+          X86.emit1("setg", reg);
           break;
         case GE:
-          X86.emit1("setge", tempReg1);
+          X86.emit1("setge", reg);
           break;
         default:
           throw new GenException("Invalid ROP: " + op);
       }
-      if ((frameSize % 16) == 0)
-        frameSize += 8;
-      X86.emit2("movzbl", new X86.Imm(frameSize), X86.RAX);
+
+      X86.emit2("movzbl", reg, new X86.Reg(10, X86.Size.L));
     } else
       throw new GenException("Invalid BOP: " + op);
 
