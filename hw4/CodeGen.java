@@ -510,8 +510,8 @@ class CodeGen {
 
     if (n != null) {
 
-      if (n instanceof IR1.Id) { X86.emit2("movl", new X86.AddrName(((IR1.Id) n).s), tempReg); }
-      else if (n instanceof IR1.Temp) { X86.emit2("movl", new X86.AddrName(n.toString()), tempReg); }
+      if (n instanceof IR1.Id) { X86.emit2("movslq", new X86.AddrName(((IR1.Id) n).s), tempReg); }
+      else if (n instanceof IR1.Temp) { X86.emit2("movslq", new X86.AddrName(n.toString()), tempReg); }
       else if (n instanceof IR1.IntLit) { X86.emit2("movq", new X86.Imm(((IR1.IntLit) n).i), tempReg); }
       else if (n instanceof IR1.BoolLit) {
         int bool = (((IR1.BoolLit) n).b) ? 1 : 0;
