@@ -142,12 +142,13 @@ class CodeGen {
     // Store incoming actual arguments to their frame slots
     for (int i = 0; i < n.params.length; i++) {
       int idx = allVars.indexOf(n.params[i].s) * 4;
+      X86.Mem mem = new X86.Mem(X86.RSP, idx);
       if (i == 0)
-        X86.emit2("movl", new X86.Reg(9, X86.Size.L), new X86.Mem(X86.RSP, idx));
+        X86.emit2("movl", new X86.Reg(9, X86.Size.L), mem);
       else if (i == 1)
-        X86.emit2("movl", new X86.Reg(8, X86.Size.L), new X86.Mem(X86.RSP, idx));
+        X86.emit2("movl", new X86.Reg(8, X86.Size.L), mem);
       else
-        X86.emit2("movl", new X86.Reg(X86.argRegs[i].r, X86.Size.L), new X86.Mem(X86.RSP, idx));
+        X86.emit2("movl", new X86.Reg(X86.argRegs[i].r, X86.Size.L), mem);
     }
 
     // emit code for the body
