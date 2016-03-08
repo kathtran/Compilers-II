@@ -510,10 +510,13 @@ class CodeGen {
 
     if (n != null) {
 
-      if (n instanceof IR1.Id) { X86.emit2("movslq", new X86.AddrName(((IR1.Id) n).s), tempReg); }
-      else if (n instanceof IR1.Temp) { X86.emit2("movslq", new X86.AddrName(n.toString()), tempReg); }
-      else if (n instanceof IR1.IntLit) { X86.emit2("movq", new X86.Imm(((IR1.IntLit) n).i), tempReg); }
-      else if (n instanceof IR1.BoolLit) {
+      int idx = allVars.indexOf(n.toString()) * 4;
+
+      if (n instanceof IR1.Id || n instanceof IR1.Temp) {
+        X86.emit2("movslq", new X86.Mem(X86.RSP, idx), tempReg);
+      } else if (n instanceof IR1.IntLit) {
+        X86.emit2("movq", new X86.Imm(((IR1.IntLit) n).i), tempReg);
+      } else if (n instanceof IR1.BoolLit) {
         int bool = (((IR1.BoolLit) n).b) ? 1 : 0;
         X86.emit2("movq", new X86.Imm(bool), tempReg);
       } else if (n instanceof IR1.StrLit) {
