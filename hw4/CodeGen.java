@@ -265,7 +265,7 @@ class CodeGen {
     } else
       throw new GenException("Invalid BOP: " + op);
 
-    X86.Reg reg = X86.resize_reg(X86.Size.L, X86.RAX);
+    X86.Reg reg = X86.resize_reg(X86.Size.L, tempReg1);
     X86.emit2("movl", reg, varMem(n.dst));
   }
 
