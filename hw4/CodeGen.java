@@ -150,7 +150,7 @@ class CodeGen {
       else if (i == 1)
         X86.emit2("movl", new X86.Reg(8, X86.Size.L), mem);
       else
-        X86.emit2("movl", new X86.Reg(X86.argRegs[i].r, X86.Size.L), mem);
+        X86.emit2("movq", new X86.Reg(X86.argRegs[i].r, X86.Size.L), mem);
     }
 
     // emit code for the body
@@ -344,7 +344,7 @@ class CodeGen {
       allVars.add(n.dst.toString());
 
     gen_addr(n.addr, tempReg1);
-    X86.emit2("mov" + tempReg1.s.suffix, tempReg1, varMem(n.dst));
+    X86.emit2("movq", tempReg1, varMem(n.dst));
 
   }
 
@@ -363,7 +363,7 @@ class CodeGen {
     X86.Reg reg = X86.resize_reg(X86.Size.L, tempReg1);
     gen_addr(n.addr, tempReg2);
 
-    X86.emit2("mov" + tempReg1.s.suffix, reg, tempReg2);
+    X86.emit2("movq", reg, tempReg2);
 
   }
 
@@ -521,10 +521,10 @@ class CodeGen {
 
       if (n instanceof IR1.Id) { X86.emit2("movl", new X86.AddrName(((IR1.Id) n).s), tempReg); }
       else if (n instanceof IR1.Temp) { X86.emit2("movl", new X86.AddrName(n.toString()), tempReg); }
-      else if (n instanceof IR1.IntLit) { X86.emit2("movl", new X86.Imm(((IR1.IntLit) n).i), tempReg); }
+      else if (n instanceof IR1.IntLit) { X86.emit2("movq", new X86.Imm(((IR1.IntLit) n).i), tempReg); }
       else if (n instanceof IR1.BoolLit) {
         int bool = (((IR1.BoolLit) n).b) ? 1 : 0;
-        X86.emit2("movl", new X86.Imm(bool), tempReg);
+        X86.emit2("movq", new X86.Imm(bool), tempReg);
       } else if (n instanceof IR1.StrLit) {
         stringLiterals.add(((IR1.StrLit) n).s);
         int index = stringLiterals.indexOf(((IR1.StrLit) n).s);

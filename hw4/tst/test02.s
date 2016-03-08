@@ -3,14 +3,15 @@
 	.p2align 4,0x90
 	.globl _main
 _main:
+	subq $40,%rsp
 			  #  b = true
-	movl $1,%r10
+	movq $1,%r10
 	movl %r10d,(%rsp)
 			  #  i = 2
-	movl $2,%r10
+	movq $2,%r10
 	movl %r10d,4(%rsp)
 			  #  j = 6
-	movl $6,%r10
+	movq $6,%r10
 	movl %r10d,8(%rsp)
 			  #  call _printBool(b)
 	movl b(%rip),%rdi
@@ -22,4 +23,6 @@ _main:
 	movl j(%rip),%rdi
 	call _printInt
 			  #  return 
-			  # Total inst cnt: 15
+	addq $40,%rsp
+	ret
+			  # Total inst cnt: 18
