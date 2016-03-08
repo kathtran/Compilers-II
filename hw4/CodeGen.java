@@ -203,8 +203,8 @@ class CodeGen {
     if (op instanceof IR1.AOP) {
       if (op == IR1.AOP.DIV) {
         to_reg(n.src1, X86.RAX);
+        X86.emit0("cqto");
         to_reg(n.src2, tempReg1);
-        X86.emit2("cqto", X86.RAX, X86.RDX);
         X86.emit2("idivq", tempReg1, X86.RAX);
       } else {
         to_reg(n.src1, tempReg1);
