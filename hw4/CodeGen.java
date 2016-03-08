@@ -479,7 +479,7 @@ class CodeGen {
 
     if (n.val != null) {
       if (n.val instanceof IR1.IntLit)
-        to_reg(n.val, X86.EAX);
+        to_reg(n.val, X86.RAX);
       else {
         int idx = allVars.indexOf(n.val.toString()) * 4;
         X86.emit2("movslq", new X86.Mem(X86.RSP, idx), X86.RAX);
