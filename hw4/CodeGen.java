@@ -150,7 +150,7 @@ class CodeGen {
       else if (i == 1)
         X86.emit2("movl", new X86.Reg(8, X86.Size.L), mem);
       else
-        X86.emit2("movq", new X86.Reg(X86.argRegs[i].r, X86.Size.L), mem);
+        X86.emit2("movl", new X86.Reg(X86.argRegs[i].r, X86.Size.L), mem);
     }
 
     // emit code for the body
@@ -471,7 +471,7 @@ class CodeGen {
     if (n.rdst != null) {
       if (!allVars.contains(n.rdst.toString()))
         allVars.add(n.rdst.toString());
-      X86.emit2("movl", X86.EAX, varMem(n.rdst));
+      X86.emit2("movq", X86.EAX, varMem(n.rdst));
     }
 
   }
