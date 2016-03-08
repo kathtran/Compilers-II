@@ -140,7 +140,7 @@ class CodeGen {
       allVars.add(l.s);
 
     // Store incoming actual arguments to their frame slots
-    for (int i = 0; i < X86.argRegs.length; i++) {
+    for (int i = 0; i < n.params.length; i++) {
       int idx = allVars.indexOf(n.params[i].s) * 4;
       X86.Mem mem = new X86.Mem(X86.RSP, idx);
       X86.emit2("movl", X86.resize_reg(X86.Size.L, X86.argRegs[i]), mem);
@@ -453,10 +453,8 @@ class CodeGen {
       throw new GenException("Call has too many arguments: "
               + n.args.length);
 
-    for (int i = 0; i < n.args.length; i++) {
+    for (int i = 0; i < n.args.length; i++)
       to_reg(n.args[i], X86.argRegs[i]);
-      X86.resize_reg(X86.Size.L, X86.argRegs[i]);
-    }
 
     X86.Label label = new X86.Label(n.gname.s);
     X86.emit1("call", label);
@@ -464,7 +462,7 @@ class CodeGen {
     if (n.rdst != null) {
       if (!allVars.contains(n.rdst.toString()))
         allVars.add(n.rdst.toString());
-      X86.emit2("movq", X86.EAX, varMem(n.rdst));
+      X86.emit2("movslq", X86.resize_reg(X86.Size.Q, X86.EAX), varMem(n.rdst));
     }
 
   }
