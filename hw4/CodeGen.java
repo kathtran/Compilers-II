@@ -148,7 +148,7 @@ class CodeGen {
       else if (i == 5)
         X86.emit2("movl", new X86.Reg(9, X86.Size.L), mem);
       else
-        X86.emit2("movq", new X86.Reg(X86.argRegs[i].r, X86.Size.L), mem);
+        X86.emit2("movl", new X86.Reg(X86.argRegs[i].r, X86.Size.L), mem);
     }
 
     // emit code for the body
@@ -271,7 +271,7 @@ class CodeGen {
       throw new GenException("Invalid BOP: " + op);
 
     X86.Reg reg = X86.resize_reg(X86.Size.L, X86.RAX);
-    X86.emit2("movl", reg, varMem(n.dst));
+    X86.emit2("movq", reg, varMem(n.dst));
   }
 
   // Unop ---

@@ -1,3 +1,15 @@
+9c9
+< 	movq %r10d,(%rsp)
+---
+> 	movl %r10d,(%rsp)
+12c12
+< 	movq %r10d,4(%rsp)
+---
+> 	movl %r10d,4(%rsp)
+15c15
+< 	movq %r10d,8(%rsp)
+---
+> 	movl %r10d,8(%rsp)
 17c17
 < 	movl b(%rip),%rdi
 ---

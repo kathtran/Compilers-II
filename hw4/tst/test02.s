@@ -6,13 +6,13 @@ _main:
 	subq $40,%rsp
 			  #  b = true
 	movq $1,%r10
-	movl %r10d,(%rsp)
+	movq %r10d,(%rsp)
 			  #  i = 2
 	movq $2,%r10
-	movl %r10d,4(%rsp)
+	movq %r10d,4(%rsp)
 			  #  j = 6
 	movq $6,%r10
-	movl %r10d,8(%rsp)
+	movq %r10d,8(%rsp)
 			  #  call _printBool(b)
 	movl b(%rip),%rdi
 	call _printBool
