@@ -217,19 +217,19 @@ class CodeGen {
 
         switch ((IR1.AOP) op) {
           case ADD:
-            X86.emit2("add" + tempReg1.s.suffix, tempReg2, tempReg1);
+            X86.emit2("addq", tempReg2, tempReg1);
             break;
           case SUB:
-            X86.emit2("sub" + tempReg1.s.suffix, tempReg2, tempReg1);
+            X86.emit2("subq", tempReg2, tempReg1);
             break;
           case MUL:
-            X86.emit2("imul" + tempReg1.s.suffix, tempReg2, tempReg1);
+            X86.emit2("imulq", tempReg2, tempReg1);
             break;
           case AND:
-            X86.emit2("and" + tempReg1.s.suffix, tempReg2, tempReg1);
+            X86.emit2("andq", tempReg2, tempReg1);
             break;
           case OR:
-            X86.emit2("or" + tempReg1.s.suffix, tempReg2, tempReg1);
+            X86.emit2("orq", tempReg2, tempReg1);
             break;
           default:
             throw new GenException("Invalid AOP: " + op);
@@ -295,10 +295,10 @@ class CodeGen {
     IR1.UOP op = n.op;
     switch(op) {
       case NEG:
-        X86.emit2("neg" + tempReg1.s.suffix, tempReg1, varMem(n.dst)) ;
+        X86.emit2("negq", tempReg1, varMem(n.dst)) ;
         break;
       case NOT:
-        X86.emit2("not" + tempReg1.s.suffix, tempReg1, varMem(n.dst));
+        X86.emit2("notq", tempReg1, varMem(n.dst));
         break;
       default:
         throw new GenException("Invalid UOP: " + op);
@@ -515,13 +515,10 @@ class CodeGen {
 
     if (n != null) {
 
-      if (n instanceof IR1.Id) {
-        X86.emit2("movl", new X86.AddrName(((IR1.Id) n).s), tempReg);
-      } else if (n instanceof IR1.Temp) {
-        X86.emit2("movl", new X86.AddrName(n.toString()), tempReg);
-      } else if (n instanceof IR1.IntLit) {
-        X86.emit2("movl", new X86.Imm(((IR1.IntLit) n).i), tempReg);
-      } else if (n instanceof IR1.BoolLit) {
+      if (n instanceof IR1.Id) { X86.emit2("movl", new X86.AddrName(((IR1.Id) n).s), tempReg); }
+      else if (n instanceof IR1.Temp) { X86.emit2("movl", new X86.AddrName(n.toString()), tempReg); }
+      else if (n instanceof IR1.IntLit) { X86.emit2("movl", new X86.Imm(((IR1.IntLit) n).i), tempReg); }
+      else if (n instanceof IR1.BoolLit) {
         int bool = (((IR1.BoolLit) n).b) ? 1 : 0;
         X86.emit2("movl", new X86.Imm(bool), tempReg);
       } else if (n instanceof IR1.StrLit) {
