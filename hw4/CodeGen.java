@@ -11,7 +11,7 @@
 import java.io.*;
 import java.util.*;
 
-import com.sun.tools.javac.jvm.Gen;
+//import com.sun.tools.javac.jvm.Gen;
 import ir.*;
 
 class CodeGen {
@@ -200,7 +200,7 @@ class CodeGen {
   //
   static void gen(IR1.Binop n) throws Exception {
 
-    if (!allVars.contains(n.dst))
+    if (!allVars.contains(n.dst.toString()))
       allVars.add(n.dst.toString());
 
     IR1.BOP op = n.op;
@@ -288,7 +288,7 @@ class CodeGen {
   //  
   static void gen(IR1.Unop n) throws Exception {
 
-    if (!allVars.contains(n.dst))
+    if (!allVars.contains(n.dst.toString()))
       allVars.add(n.dst.toString());
     to_reg(n.src, tempReg1);
 
@@ -337,6 +337,9 @@ class CodeGen {
   //   (pay attention to size info)
   //
   static void gen(IR1.Load n) throws Exception {
+
+    if (!allVars.contains(n.dst.toString()))
+      allVars.add(n.dst.toString());
 
     gen_addr(n.addr, tempReg1);
     X86.emit2("mov" + tempReg1.s.suffix, tempReg1, varMem(n.dst));
@@ -464,7 +467,7 @@ class CodeGen {
     X86.emit1("call", label);
 
     if (n.rdst != null) {
-      if (!allVars.contains(n.rdst))
+      if (!allVars.contains(n.rdst.toString()))
         allVars.add(n.rdst.toString());
       X86.emit2("movl", X86.EAX, varMem(n.rdst));
     }
