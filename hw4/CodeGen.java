@@ -477,11 +477,13 @@ class CodeGen {
   //
   static void gen(IR1.Return n) throws Exception {
 
-    if (n.val != null)
-      to_reg(n.val, X86.EAX);
-    else {
-      int idx = allVars.indexOf(n.val.toString()) * 4;
-      X86.emit2("movslq", new X86.Mem(X86.RSP, idx), X86.RAX);
+    if (n.val != null) {
+      if (n.val instanceof IR1.IntLit)
+        to_reg(n.val, X86.EAX);
+      else {
+        int idx = allVars.indexOf(n.val.toString()) * 4;
+        X86.emit2("movslq", new X86.Mem(X86.RSP, idx), X86.RAX);
+      }
     }
 
     if ((frameSize % 16) == 0)
