@@ -127,6 +127,13 @@ class CodeGen {
     X86.emit1(".globl", f);
     X86.emitLabel(f);
 
+    // Allocate frame for storing all params, vars, and temps
+    frameSize = (n.params.length + n.locals.length + n.code.length) * 4;
+    if ((frameSize % 16) == 0)
+      frameSize += 8;
+
+    X86.emit2("subq", new X86.Imm(frameSize), X86.RSP);
+
     // Initialize allVars and store all params and local vars
     allVars = new ArrayList<String>();
     for (IR1.Id p : n.params)
@@ -134,13 +141,8 @@ class CodeGen {
     for (IR1.Id l : n.locals)
       allVars.add(l.s);
 
-    // Allocate frame for storing all params, vars, and temps
-    frameSize = (n.params.length + n.locals.length + n.code.length) * 4;
-    if ((frameSize % 16) == 0)
-      frameSize += 8;
-
     // Store incoming actual arguments to their frame slots
-    for (int i = 0; i < n.params.length; i++) {
+    for (int i = 0 ; i < n.params.length; i++) {
       int idx = allVars.indexOf(n.params[i].s) * 4;
       X86.Mem mem = new X86.Mem(X86.RSP, idx);
       if (i == 0)
