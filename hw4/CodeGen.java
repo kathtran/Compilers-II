@@ -486,14 +486,13 @@ class CodeGen {
   //
   static void gen(IR1.Return n) throws Exception {
 
-    if (n.val != null) {
+    if (n.val != null)
       to_reg(n.val, X86.EAX);
-      X86.resize_reg(X86.Size.L, X86.EAX);
-      if ((frameSize % 16) == 0)
-        frameSize += 8;
-      X86.emit2("addq", new X86.Imm(frameSize), X86.RSP);
-      X86.emit0("ret");
-    }
+
+    if ((frameSize % 16) == 0)
+      frameSize += 8;
+    X86.emit2("addq", new X86.Imm(frameSize), X86.RSP);
+    X86.emit0("ret");
 
   }
 
