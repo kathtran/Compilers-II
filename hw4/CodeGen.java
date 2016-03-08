@@ -140,9 +140,14 @@ class CodeGen {
       frameSize += 8;
 
     // Store incoming actual arguments to their frame slots
-    for (Object arg : allVars) {
-      int idx = allVars.indexOf(arg) * 4;
-//      X86.resize_reg();
+    for (int i = 0; i < n.params.length; i++) {
+      int idx = allVars.indexOf(n.params[i].s) * 4;
+      if (i == 0)
+        X86.emit2("movl", new X86.Reg(9, X86.Size.L), new X86.Mem(X86.RSP, idx));
+      else if (i == 1)
+        X86.emit2("movl", new X86.Reg(8, X86.Size.L), new X86.Mem(X86.RSP, idx));
+      else
+        X86.emit2("movl", new X86.Reg(X86.argRegs[i].r, X86.Size.L), new X86.Mem(X86.RSP, idx));
     }
 
     // emit code for the body
@@ -230,40 +235,40 @@ class CodeGen {
         }
       }
     } else if (op instanceof IR1.ROP) {
-      boolean result;
+      to_reg(n.src1, tempReg1);
+      to_reg(n.src2, tempReg2);
+
+      X86.emit2("cmp" + tempReg1.s.suffix, tempReg2, tempReg1);
       switch ((IR1.ROP) op) {
         case EQ:
-          result = (tempReg1.r == tempReg2.r);
+          X86.emit1("sete", tempReg1);
           break;
         case NE:
-          result = (tempReg1.r != tempReg2.r);
+          X86.emit1("setne", tempReg1);
           break;
         case LT:
-          result = (tempReg1.r < tempReg2.r);
+          X86.emit1("setl", tempReg1);
           break;
         case LE:
-          result = (tempReg1.r <= tempReg2.r);
+          X86.emit1("setle", tempReg1);
           break;
         case GT:
-          result = (tempReg1.r > tempReg2.r);
+          X86.emit1("setg", tempReg1);
           break;
         case GE:
-          result = (tempReg1.r >= tempReg2.r);
+          X86.emit1("setge", tempReg1);
           break;
         default:
           throw new GenException("Invalid ROP: " + op);
       }
-      to_reg(n.src1, tempReg1);
-      to_reg(n.src2, tempReg2);
-      X86.emit2("cmp", tempReg2, tempReg1);
-//      X86.emit1("set", );
       if ((frameSize % 16) == 0)
         frameSize += 8;
       X86.emit2("movzbl", new X86.Imm(frameSize), X86.RAX);
     } else
       throw new GenException("Invalid BOP: " + op);
 
-    X86.emit2("movl", X86.RAX, varMem(n.dst));
+    X86.Reg reg = X86.resize_reg(X86.Size.L, X86.RAX);
+    X86.emit2("movl", reg, varMem(n.dst));
   }
 
   // Unop ---
