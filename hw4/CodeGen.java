@@ -461,7 +461,8 @@ class CodeGen {
     if (n.rdst != null) {
       if (!allVars.contains(n.rdst.toString()))
         allVars.add(n.rdst.toString());
-      X86.emit2("movslq", X86.resize_reg(X86.Size.Q, X86.EAX), varMem(n.rdst));
+      int idx = allVars.indexOf(n.rdst.toString()) * 4;
+      X86.emit2("movl", X86.EAX, new X86.Mem(X86.RSP, idx));
     }
 
   }
