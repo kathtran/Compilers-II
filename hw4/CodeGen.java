@@ -10,8 +10,6 @@
 //
 import java.io.*;
 import java.util.*;
-
-//import com.sun.tools.javac.jvm.Gen;
 import ir.*;
 
 class CodeGen {
