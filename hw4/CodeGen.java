@@ -471,7 +471,7 @@ class CodeGen {
   //  Src val;
   //
   // Guideline:
-  // - if there is a value, emit a "mov" to move it to eax
+  // - if there is a value, emit a "mov" to move it to rax
   // - pop the frame (add frameSize back to stack pointer)
   // - emit a "ret"
   //
@@ -479,6 +479,10 @@ class CodeGen {
 
     if (n.val != null)
       to_reg(n.val, X86.EAX);
+    else {
+      int idx = allVars.indexOf(n.val.toString()) * 4;
+      X86.emit2("movslq", new X86.Mem(X86.RSP, idx), X86.RAX);
+    }
 
     if ((frameSize % 16) == 0)
       frameSize += 8;
