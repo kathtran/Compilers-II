@@ -291,10 +291,10 @@ class CodeGen {
     IR1.UOP op = n.op;
     switch(op) {
       case NEG:
-        X86.emit2("negq", tempReg1, varMem(n.dst)) ;
+        X86.emit1("negq", tempReg1) ;
         break;
       case NOT:
-        X86.emit2("notq", tempReg1, varMem(n.dst));
+        X86.emit1("notq", tempReg1);
         break;
       default:
         throw new GenException("Invalid UOP: " + op);
