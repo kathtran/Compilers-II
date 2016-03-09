@@ -338,7 +338,8 @@ class CodeGen {
       allVars.add(n.dst.toString());
 
     gen_addr(n.addr, tempReg1);
-    X86.emit2("movq", tempReg1, varMem(n.dst));
+    X86.Reg reg = X86.resize_reg(X86.Size.L, tempReg1);
+    X86.emit2("movl", reg, varMem(n.dst));
 
   }
 
