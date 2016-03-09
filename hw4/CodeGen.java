@@ -3,6 +3,8 @@
 //---------------------------------------------------------------------------
 // For CS322 W'16 (J. Li).
 //
+// Kathleen Tran
+//
 
 // Naive X86-64 code generator for IR1. (A starter version)
 //
