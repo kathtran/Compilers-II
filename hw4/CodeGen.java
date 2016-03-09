@@ -143,7 +143,8 @@ class CodeGen {
     for (int i = 0; i < n.params.length; i++) {
       int idx = allVars.indexOf(n.params[i].s) * 4;
       X86.Mem mem = new X86.Mem(X86.RSP, idx);
-      X86.emit2("movl", X86.resize_reg(X86.Size.L, X86.argRegs[i]), mem);
+      X86.Reg reg = X86.resize_reg(X86.Size.L, X86.argRegs[i]);
+      X86.emit2("movl", reg, mem);
     }
 
     // emit code for the body
@@ -202,14 +203,14 @@ class CodeGen {
 
     if (op instanceof IR1.AOP) {
       if (op == IR1.AOP.DIV) {
-
         int idx = allVars.indexOf(n.dst.toString()) * 4;
+        X86.Mem dstMem = new X86.Mem(X86.RSP, idx);
 
         to_reg(n.src1, X86.RAX);
         X86.emit0("cqto");
         to_reg(n.src2, tempReg2);
         X86.emit1("idivq", tempReg2);
-        X86.emit2("movl", X86.EAX, new X86.Mem(X86.RSP, idx));
+        X86.emit2("movl", X86.EAX, dstMem);
         return;
       } else {
         to_reg(n.src1, tempReg1);
@@ -271,7 +272,8 @@ class CodeGen {
       throw new GenException("Invalid BOP: " + op);
 
     X86.Reg reg = X86.resize_reg(X86.Size.L, tempReg1);
-    X86.emit2("movl", reg, varMem(n.dst));
+    X86.Mem dstMem = varMem(n.dst);
+    X86.emit2("movl", reg, dstMem);
   }
 
   // Unop ---
@@ -290,6 +292,7 @@ class CodeGen {
 
     if (!allVars.contains(n.dst.toString()))
       allVars.add(n.dst.toString());
+
     to_reg(n.src, tempReg1);
     X86.Reg reg = X86.resize_reg(X86.Size.L, tempReg1);
 
@@ -305,7 +308,8 @@ class CodeGen {
         throw new GenException("Invalid UOP: " + op);
     }
 
-    X86.emit2("movl", reg, varMem(n.dst));
+    X86.Mem dstMem = varMem(n.dst);
+    X86.emit2("movl", reg, dstMem);
 
   }
 
@@ -346,7 +350,9 @@ class CodeGen {
 
     X86.Mem mem = gen_addr(n.addr, tempReg1);
     X86.emit2("movslq", mem, tempReg2);
-    X86.emit2("movl", X86.resize_reg(X86.Size.L, tempReg2), new X86.Mem(X86.RSP, idx)); 
+    X86.Reg reg = X86.resize_reg(X86.Size.L, tempReg2);
+    X86.Mem dstMem = new X86.Mem(X86.RSP, idx);
+    X86.emit2("movl", reg, dstMem);
 
   }
 
@@ -365,7 +371,8 @@ class CodeGen {
     X86.Reg reg = X86.resize_reg(X86.Size.L, tempReg1);
     gen_addr(n.addr, tempReg2);
 
-    X86.emit2("movl", reg, new X86.Mem(tempReg2, n.addr.offset));
+    X86.Mem dstMem = new X86.Mem(tempReg2, n.addr.offset);
+    X86.emit2("movl", reg, dstMem);
 
   }
 
@@ -470,7 +477,8 @@ class CodeGen {
       if (!allVars.contains(n.rdst.toString()))
         allVars.add(n.rdst.toString());
       int idx = allVars.indexOf(n.rdst.toString()) * 4;
-      X86.emit2("movl", X86.EAX, new X86.Mem(X86.RSP, idx));
+      X86.Mem dstMem = new X86.Mem(X86.RSP, idx);
+      X86.emit2("movl", X86.EAX, dstMem);
     }
 
   }
@@ -490,7 +498,8 @@ class CodeGen {
         to_reg(n.val, X86.RAX);
       else {
         int idx = allVars.indexOf(n.val.toString()) * 4;
-        X86.emit2("movslq", new X86.Mem(X86.RSP, idx), X86.RAX);
+        X86.Mem mem = new X86.Mem(X86.RSP, idx);
+        X86.emit2("movslq", mem, X86.RAX);
       }
     }
 
@@ -527,7 +536,8 @@ class CodeGen {
       int idx = allVars.indexOf(n.toString()) * 4;
 
       if (n instanceof IR1.Id || n instanceof IR1.Temp) {
-        X86.emit2("movslq", new X86.Mem(X86.RSP, idx), tempReg);
+        X86.Mem mem = new X86.Mem(X86.RSP, idx);
+        X86.emit2("movslq", mem, tempReg);
       } else if (n instanceof IR1.IntLit) {
         X86.emit2("movq", new X86.Imm(((IR1.IntLit) n).i), tempReg);
       } else if (n instanceof IR1.BoolLit) {
