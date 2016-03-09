@@ -357,7 +357,7 @@ class CodeGen {
     X86.Reg reg = X86.resize_reg(X86.Size.L, tempReg1);
     gen_addr(n.addr, tempReg2);
 
-    X86.emit2("movq", reg, tempReg2);
+    X86.emit2("movl", reg, new X86.Mem(tempReg2, n.addr.offset));
 
   }
 
