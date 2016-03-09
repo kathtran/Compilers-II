@@ -3,10 +3,13 @@
 	.p2align 4,0x90
 	.globl _main
 _main:
+	subq $8,%rsp
 			  #  call _printStr("Hello World!")
 	leaq _S0(%rip),%rdi
 	call _printStr
 			  #  return 
+	addq $8,%rsp
+	ret
 _S0:
 	.asciz "Hello World!"
-			  # Total inst cnt: 5
+			  # Total inst cnt: 8

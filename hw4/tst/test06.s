@@ -3,83 +3,89 @@
 	.p2align 4,0x90
 	.globl _go
 _go:
+	subq $68,%rsp
 			  #  t1 = call _malloc(8)
-	movl $8,%rdi
+	movq $8,%rdi
 	call _malloc
 	movl %eax,4(%rsp)
 			  #  b = t1
-	movl t1(%rip),%r10
+	movslq 4(%rsp),%r10
 	movl %r10d,(%rsp)
 			  #  t2 = 0 * 4
-	movl $0,%r10
-	movl $4,%r11
+	movq $0,%r10
+	movq $4,%r11
 	imulq %r11,%r10
-	movl %eax,8(%rsp)
+	movl %r10d,8(%rsp)
 			  #  t3 = b + t2
-	movl b(%rip),%r10
-	movl t2(%rip),%r11
+	movslq (%rsp),%r10
+	movslq 8(%rsp),%r11
 	addq %r11,%r10
-	movl %eax,12(%rsp)
+	movl %r10d,12(%rsp)
 			  #  [t3] = 3
-	movl $3,%r10
-	movl t3(%rip),%r11
-	movq %r10d,%r11
+	movq $3,%r10
+	movslq 12(%rsp),%r11
+	movl %r10d,(%r11)
 			  #  t4 = 1 * 4
-	movl $1,%r10
-	movl $4,%r11
+	movq $1,%r10
+	movq $4,%r11
 	imulq %r11,%r10
-	movl %eax,16(%rsp)
+	movl %r10d,16(%rsp)
 			  #  t5 = b + t4
-	movl b(%rip),%r10
-	movl t4(%rip),%r11
+	movslq (%rsp),%r10
+	movslq 16(%rsp),%r11
 	addq %r11,%r10
-	movl %eax,20(%rsp)
+	movl %r10d,20(%rsp)
 			  #  [t5] = 4
-	movl $4,%r10
-	movl t5(%rip),%r11
-	movq %r10d,%r11
+	movq $4,%r10
+	movslq 20(%rsp),%r11
+	movl %r10d,(%r11)
 			  #  t6 = 1 * 4
-	movl $1,%r10
-	movl $4,%r11
+	movq $1,%r10
+	movq $4,%r11
 	imulq %r11,%r10
-	movl %eax,24(%rsp)
+	movl %r10d,24(%rsp)
 			  #  t7 = b + t6
-	movl b(%rip),%r10
-	movl t6(%rip),%r11
+	movslq (%rsp),%r10
+	movslq 24(%rsp),%r11
 	addq %r11,%r10
-	movl %eax,28(%rsp)
+	movl %r10d,28(%rsp)
 			  #  t8 = [t7]
-	movl t7(%rip),%r10
-	movq %r10,32(%rsp)
+	movslq 28(%rsp),%r10
+	movslq (%r10),%r11
+	movl %r11d,32(%rsp)
 			  #  call _printInt(t8)
-	movl t8(%rip),%rdi
+	movslq 32(%rsp),%rdi
 	call _printInt
 			  #  t9 = 0 * 4
-	movl $0,%r10
-	movl $4,%r11
+	movq $0,%r10
+	movq $4,%r11
 	imulq %r11,%r10
-	movl %eax,36(%rsp)
+	movl %r10d,36(%rsp)
 			  #  t10 = b + t9
-	movl b(%rip),%r10
-	movl t9(%rip),%r11
+	movslq (%rsp),%r10
+	movslq 36(%rsp),%r11
 	addq %r11,%r10
-	movl %eax,40(%rsp)
+	movl %r10d,40(%rsp)
 			  #  t11 = [t10]
-	movl t10(%rip),%r10
-	movq %r10,44(%rsp)
+	movslq 40(%rsp),%r10
+	movslq (%r10),%r11
+	movl %r11d,44(%rsp)
 			  #  return t11
-	movl t11(%rip),%eax
+	movslq 44(%rsp),%rax
 	addq $68,%rsp
 	ret
 			  # _main () 
 	.p2align 4,0x90
 	.globl _main
 _main:
+	subq $12,%rsp
 			  #  t12 = call _go()
 	call _go
 	movl %eax,(%rsp)
 			  #  call _printInt(t12)
-	movl t12(%rip),%rdi
+	movslq (%rsp),%rdi
 	call _printInt
 			  #  return 
-			  # Total inst cnt: 61
+	addq $12,%rsp
+	ret
+			  # Total inst cnt: 67

@@ -3,48 +3,52 @@
 	.p2align 4,0x90
 	.globl _foo
 _foo:
-	movl %r9d,(%rsp)
-	movl %r8d,4(%rsp)
+	subq $24,%rsp
+	movl %edi,(%rsp)
+	movl %esi,4(%rsp)
 			  #  t1 = i + j
-	movl i(%rip),%r10
-	movl j(%rip),%r11
+	movslq (%rsp),%r10
+	movslq 4(%rsp),%r11
 	addq %r11,%r10
-	movl %eax,8(%rsp)
+	movl %r10d,8(%rsp)
 			  #  return t1
-	movl t1(%rip),%eax
+	movslq 8(%rsp),%rax
 	addq $24,%rsp
 	ret
 			  # _main () (b, i, j)
 	.p2align 4,0x90
 	.globl _main
 _main:
+	subq $56,%rsp
 			  #  b = true
-	movl $1,%r10
+	movq $1,%r10
 	movl %r10d,(%rsp)
 			  #  t2 = call _foo(1, 2)
-	movl $1,%rdi
-	movl $2,%rsi
+	movq $1,%rdi
+	movq $2,%rsi
 	call _foo
 	movl %eax,12(%rsp)
 			  #  i = t2
-	movl t2(%rip),%r10
+	movslq 12(%rsp),%r10
 	movl %r10d,4(%rsp)
 			  #  t3 = 2 * 3
-	movl $2,%r10
-	movl $3,%r11
+	movq $2,%r10
+	movq $3,%r11
 	imulq %r11,%r10
-	movl %eax,16(%rsp)
+	movl %r10d,16(%rsp)
 			  #  j = t3
-	movl t3(%rip),%r10
+	movslq 16(%rsp),%r10
 	movl %r10d,8(%rsp)
 			  #  call _printBool(b)
-	movl b(%rip),%rdi
+	movslq (%rsp),%rdi
 	call _printBool
 			  #  call _printInt(i)
-	movl i(%rip),%rdi
+	movslq 4(%rsp),%rdi
 	call _printInt
 			  #  call _printInt(j)
-	movl j(%rip),%rdi
+	movslq 8(%rsp),%rdi
 	call _printInt
 			  #  return 
-			  # Total inst cnt: 34
+	addq $56,%rsp
+	ret
+			  # Total inst cnt: 38

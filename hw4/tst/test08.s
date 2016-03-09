@@ -3,85 +3,90 @@
 	.p2align 4,0x90
 	.globl _main
 _main:
+	subq $92,%rsp
 			  #  t1 = call _malloc(8)
-	movl $8,%rdi
+	movq $8,%rdi
 	call _malloc
 	movl %eax,12(%rsp)
 			  #  a = t1
-	movl t1(%rip),%r10
+	movslq 12(%rsp),%r10
 	movl %r10d,(%rsp)
 			  #  t2 = 0 * 4
-	movl $0,%r10
-	movl $4,%r11
+	movq $0,%r10
+	movq $4,%r11
 	imulq %r11,%r10
-	movl %eax,16(%rsp)
+	movl %r10d,16(%rsp)
 			  #  t3 = a + t2
-	movl a(%rip),%r10
-	movl t2(%rip),%r11
+	movslq (%rsp),%r10
+	movslq 16(%rsp),%r11
 	addq %r11,%r10
-	movl %eax,20(%rsp)
+	movl %r10d,20(%rsp)
 			  #  [t3] = 2
-	movl $2,%r10
-	movl t3(%rip),%r11
-	movq %r10d,%r11
+	movq $2,%r10
+	movslq 20(%rsp),%r11
+	movl %r10d,(%r11)
 			  #  t4 = 1 * 4
-	movl $1,%r10
-	movl $4,%r11
+	movq $1,%r10
+	movq $4,%r11
 	imulq %r11,%r10
-	movl %eax,24(%rsp)
+	movl %r10d,24(%rsp)
 			  #  t5 = a + t4
-	movl a(%rip),%r10
-	movl t4(%rip),%r11
+	movslq (%rsp),%r10
+	movslq 24(%rsp),%r11
 	addq %r11,%r10
-	movl %eax,28(%rsp)
+	movl %r10d,28(%rsp)
 			  #  [t5] = 4
-	movl $4,%r10
-	movl t5(%rip),%r11
-	movq %r10d,%r11
+	movq $4,%r10
+	movslq 28(%rsp),%r11
+	movl %r10d,(%r11)
 			  #  i = 0
-	movl $0,%r10
+	movq $0,%r10
 	movl %r10d,8(%rsp)
 			  #  t6 = i * 4
-	movl i(%rip),%r10
-	movl $4,%r11
+	movslq 8(%rsp),%r10
+	movq $4,%r11
 	imulq %r11,%r10
-	movl %eax,32(%rsp)
+	movl %r10d,32(%rsp)
 			  #  t7 = a + t6
-	movl a(%rip),%r10
-	movl t6(%rip),%r11
+	movslq (%rsp),%r10
+	movslq 32(%rsp),%r11
 	addq %r11,%r10
-	movl %eax,36(%rsp)
+	movl %r10d,36(%rsp)
 			  #  t8 = [t7]
-	movl t7(%rip),%r10
-	movq %r10,40(%rsp)
+	movslq 36(%rsp),%r10
+	movslq (%r10),%r11
+	movl %r11d,40(%rsp)
 			  #  t9 = i + 1
-	movl i(%rip),%r10
-	movl $1,%r11
+	movslq 8(%rsp),%r10
+	movq $1,%r11
 	addq %r11,%r10
-	movl %eax,44(%rsp)
+	movl %r10d,44(%rsp)
 			  #  t10 = t9 * 4
-	movl t9(%rip),%r10
-	movl $4,%r11
+	movslq 44(%rsp),%r10
+	movq $4,%r11
 	imulq %r11,%r10
-	movl %eax,48(%rsp)
+	movl %r10d,48(%rsp)
 			  #  t11 = a + t10
-	movl a(%rip),%r10
-	movl t10(%rip),%r11
+	movslq (%rsp),%r10
+	movslq 48(%rsp),%r11
 	addq %r11,%r10
-	movl %eax,52(%rsp)
+	movl %r10d,52(%rsp)
 			  #  t12 = [t11]
-	movl t11(%rip),%r10
-	movq %r10,56(%rsp)
+	movslq 52(%rsp),%r10
+	movslq (%r10),%r11
+	movl %r11d,56(%rsp)
 			  #  t13 = t8 + t12
-	movl t8(%rip),%r10
-	movl t12(%rip),%r11
+	movslq 40(%rsp),%r10
+	movslq 56(%rsp),%r11
 	addq %r11,%r10
-	movl %eax,60(%rsp)
+	movl %r10d,60(%rsp)
 			  #  b = t13
-	movl t13(%rip),%r10
+	movslq 60(%rsp),%r10
 	movl %r10d,4(%rsp)
 			  #  call _printInt(b)
-	movl b(%rip),%rdi
+	movslq 4(%rsp),%rdi
 	call _printInt
 			  #  return 
-			  # Total inst cnt: 64
+	addq $92,%rsp
+	ret
+			  # Total inst cnt: 69

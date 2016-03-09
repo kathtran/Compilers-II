@@ -202,10 +202,15 @@ class CodeGen {
 
     if (op instanceof IR1.AOP) {
       if (op == IR1.AOP.DIV) {
+
+        int idx = allVars.indexOf(n.dst.toString()) * 4;
+
         to_reg(n.src1, X86.RAX);
         X86.emit0("cqto");
-        to_reg(n.src2, tempReg1);
-        X86.emit2("idivq", tempReg1, X86.RAX);
+        to_reg(n.src2, tempReg2);
+        X86.emit1("idivq", tempReg2);
+        X86.emit2("movl", X86.EAX, new X86.Mem(X86.RSP, idx));
+        return;
       } else {
         to_reg(n.src1, tempReg1);
         to_reg(n.src2, tempReg2);
@@ -337,9 +342,11 @@ class CodeGen {
     if (!allVars.contains(n.dst.toString()))
       allVars.add(n.dst.toString());
 
+    int idx = allVars.indexOf(n.dst.toString()) * 4;
+
     X86.Mem mem = gen_addr(n.addr, tempReg1);
-    X86.Reg reg = X86.resize_reg(X86.Size.L, tempReg2);
-    X86.emit2("movslq", reg, mem);
+    X86.emit2("movslq", mem, tempReg2);
+    X86.emit2("movl", X86.resize_reg(X86.Size.L, tempReg2), new X86.Mem(X86.RSP, idx)); 
 
   }
 

@@ -3,46 +3,51 @@
 	.p2align 4,0x90
 	.globl _go
 _go:
+	subq $8,%rsp
 			  #  t1 = call _value(1, 2, 3)
-	movl $1,%rdi
-	movl $2,%rsi
-	movl $3,%rdx
+	movq $1,%rdi
+	movq $2,%rsi
+	movq $3,%rdx
 	call _value
 	movl %eax,(%rsp)
 			  #  return t1
-	movl t1(%rip),%eax
+	movslq (%rsp),%rax
 	addq $8,%rsp
 	ret
 			  # _value (i, j, k) 
 	.p2align 4,0x90
 	.globl _value
 _value:
-	movl %r9d,(%rsp)
-	movl %r8d,4(%rsp)
+	subq $24,%rsp
+	movl %edi,(%rsp)
+	movl %esi,4(%rsp)
 	movl %edx,8(%rsp)
 			  #  t2 = i + j
-	movl i(%rip),%r10
-	movl j(%rip),%r11
+	movslq (%rsp),%r10
+	movslq 4(%rsp),%r11
 	addq %r11,%r10
-	movl %eax,12(%rsp)
+	movl %r10d,12(%rsp)
 			  #  t3 = t2 + k
-	movl t2(%rip),%r10
-	movl k(%rip),%r11
+	movslq 12(%rsp),%r10
+	movslq 8(%rsp),%r11
 	addq %r11,%r10
-	movl %eax,16(%rsp)
+	movl %r10d,16(%rsp)
 			  #  return t3
-	movl t3(%rip),%eax
+	movslq 16(%rsp),%rax
 	addq $24,%rsp
 	ret
 			  # _main () 
 	.p2align 4,0x90
 	.globl _main
 _main:
+	subq $12,%rsp
 			  #  t4 = call _go()
 	call _go
 	movl %eax,(%rsp)
 			  #  call _printInt(t4)
-	movl t4(%rip),%rdi
+	movslq (%rsp),%rdi
 	call _printInt
 			  #  return 
-			  # Total inst cnt: 33
+	addq $12,%rsp
+	ret
+			  # Total inst cnt: 38

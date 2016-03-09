@@ -3,55 +3,60 @@
 	.p2align 4,0x90
 	.globl _go
 _go:
+	subq $8,%rsp
 			  #  t1 = call _value(true)
-	movl $1,%rdi
+	movq $1,%rdi
 	call _value
 	movl %eax,(%rsp)
 			  #  return t1
-	movl t1(%rip),%eax
+	movslq (%rsp),%rax
 	addq $8,%rsp
 	ret
 			  # _value (cond) (i, j, k)
 	.p2align 4,0x90
 	.globl _value
 _value:
-	movl %r9d,(%rsp)
+	subq $52,%rsp
+	movl %edi,(%rsp)
 			  #  i = 5
-	movl $5,%r10
+	movq $5,%r10
 	movl %r10d,4(%rsp)
 			  #  j = 6
-	movl $6,%r10
+	movq $6,%r10
 	movl %r10d,8(%rsp)
 			  #  if cond == false goto L0
-	movl cond(%rip),%r10
-	movl $0,%r11
-	cmpq %r11d,%r10d
+	movslq (%rsp),%r10
+	movq $0,%r11
+	cmpq %r11,%r10
 	je _value_L0
 			  #  k = i
-	movl i(%rip),%r10
+	movslq 4(%rsp),%r10
 	movl %r10d,12(%rsp)
 			  #  goto L1
 	jmp _value_L1
 			  # L0:
 _value_L0:
 			  #  k = j
-	movl j(%rip),%r10
+	movslq 8(%rsp),%r10
 	movl %r10d,12(%rsp)
 			  # L1:
 _value_L1:
 			  #  return k
-	movl k(%rip),%eax
+	movslq 12(%rsp),%rax
 	addq $52,%rsp
 	ret
 			  # _main () 
 	.p2align 4,0x90
 	.globl _main
 _main:
+	subq $12,%rsp
 			  #  t2 = call _go()
 	call _go
 	movl %eax,(%rsp)
 			  #  call _printInt(t2)
-	movl t2(%rip),%rdi
+	movslq (%rsp),%rdi
 	call _printInt
 			  #  return 
-			  # Total inst cnt: 34
+	addq $12,%rsp
+	ret
+			  # Total inst cnt: 39

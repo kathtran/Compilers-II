@@ -3,72 +3,77 @@
 	.p2align 4,0x90
 	.globl _main
 _main:
+	subq $28,%rsp
 			  #  t1 = 1
-	movl $1,%r10
+	movq $1,%r10
 	movl %r10d,4(%rsp)
 			  #  t2 = 2
-	movl $2,%r10
+	movq $2,%r10
 	movl %r10d,8(%rsp)
 			  #  t3 = 3
-	movl $3,%r10
+	movq $3,%r10
 	movl %r10d,12(%rsp)
 			  #  t4 = call _f(t1, t2, t3)
-	movl t1(%rip),%rdi
-	movl t2(%rip),%rsi
-	movl t3(%rip),%rdx
+	movslq 4(%rsp),%rdi
+	movslq 8(%rsp),%rsi
+	movslq 12(%rsp),%rdx
 	call _f
 	movl %eax,16(%rsp)
 			  #  call _printInt(t4)
-	movl t4(%rip),%rdi
+	movslq 16(%rsp),%rdi
 	call _printInt
 			  #  return 
+	addq $28,%rsp
+	ret
 			  # _f (a, b, c) 
 	.p2align 4,0x90
 	.globl _f
 _f:
-	movl %r9d,(%rsp)
-	movl %r8d,4(%rsp)
+	subq $28,%rsp
+	movl %edi,(%rsp)
+	movl %esi,4(%rsp)
 	movl %edx,8(%rsp)
 			  #  t1 = call _g(a, b, c)
-	movl a(%rip),%rdi
-	movl b(%rip),%rsi
-	movl c(%rip),%rdx
+	movslq (%rsp),%rdi
+	movslq 4(%rsp),%rsi
+	movslq 8(%rsp),%rdx
 	call _g
 	movl %eax,12(%rsp)
 			  #  t2 = call _g(b, c, a)
-	movl b(%rip),%rdi
-	movl c(%rip),%rsi
-	movl a(%rip),%rdx
+	movslq 4(%rsp),%rdi
+	movslq 8(%rsp),%rsi
+	movslq (%rsp),%rdx
 	call _g
 	movl %eax,16(%rsp)
 			  #  t3 = t2 - t1
-	movl t2(%rip),%r10
-	movl t1(%rip),%r11
+	movslq 16(%rsp),%r10
+	movslq 12(%rsp),%r11
 	subq %r11,%r10
-	movl %eax,20(%rsp)
+	movl %r10d,20(%rsp)
 			  #  return t3
-	movl t3(%rip),%eax
+	movslq 20(%rsp),%rax
 	addq $28,%rsp
 	ret
 			  # _g (x, y, z) 
 	.p2align 4,0x90
 	.globl _g
 _g:
-	movl %r9d,(%rsp)
-	movl %r8d,4(%rsp)
+	subq $24,%rsp
+	movl %edi,(%rsp)
+	movl %esi,4(%rsp)
 	movl %edx,8(%rsp)
 			  #  t1 = z + y
-	movl z(%rip),%r10
-	movl y(%rip),%r11
+	movslq 8(%rsp),%r10
+	movslq 4(%rsp),%r11
 	addq %r11,%r10
-	movl %eax,12(%rsp)
+	movl %r10d,12(%rsp)
 			  #  t2 = t1 - x
-	movl t1(%rip),%r10
-	movl x(%rip),%r11
+	movslq 12(%rsp),%r10
+	movslq (%rsp),%r11
 	subq %r11,%r10
-	movl %eax,16(%rsp)
+	movl %r10d,16(%rsp)
 			  #  return t2
-	movl t2(%rip),%eax
+	movslq 16(%rsp),%rax
 	addq $24,%rsp
 	ret
-			  # Total inst cnt: 54
+			  # Total inst cnt: 59
