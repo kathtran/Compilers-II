@@ -242,7 +242,7 @@ class CodeGen {
       to_reg(n.src1, tempReg1);
       to_reg(n.src2, tempReg2);
 
-      X86.Reg reg = new X86.Reg(10, X86.Size.B);
+      X86.Reg reg = new X86.Reg(tempReg1.r, X86.Size.B);
 
       X86.emit2("cmp" + tempReg1.s.suffix, tempReg2, tempReg1);
 
@@ -269,7 +269,7 @@ class CodeGen {
           throw new GenException("Invalid ROP: " + op);
       }
 
-      X86.emit2("movzbl", reg, new X86.Reg(10, X86.Size.L));
+      X86.emit2("movzbl", reg, new X86.Reg(tempReg1.r, X86.Size.L));
     } else
       throw new GenException("Invalid BOP: " + op);
 
